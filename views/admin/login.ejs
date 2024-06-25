@@ -1,0 +1,114 @@
+<%- include('adminheader') %>
+
+
+<style>
+
+html {
+    font-size: 16px; /* Base font size */
+}
+
+.home-main-container{
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #fff;
+    color: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 76vh;
+    flex-direction: column;
+}
+.home-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 40%;
+    padding: 1rem;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.home-login-box {
+    background-color: #000;
+    color: #fff;
+    padding: 2rem; /* 32px */
+    border-radius: 1.25rem; /* 20px */
+    box-shadow: 0 0.625rem 1.25rem rgba(0, 0, 0, 0.1); /* 10px 20px */
+    text-align: center;
+    max-width: 58.125rem; /* 930px */
+    width: 100%;
+}
+
+.home-title {
+    margin-bottom: 1.875rem; /* 30px */
+    font-size: 1.875rem; /* 30px */
+    font-weight: bold;
+}
+
+.home-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.home-input {
+    margin-bottom: 1rem; /* 16px */
+    padding: 0.625rem; /* 10px */
+    border: none;
+    border-radius: 0.3125rem; /* 5px */
+    font-size: 1rem; /* 16px */
+    width: 100%;
+    max-width: 20rem; /* 320px */
+    box-sizing: border-box;
+}
+
+.home-button {
+    padding: 0.625rem 1.25rem; /* 10px 20px */
+    background-color: #d9534f;
+    color: #fff;
+    border: none;
+    border-radius: 1.25rem; /* 20px */
+    font-size: 1rem; /* 16px */
+    cursor: pointer;
+    width: 100%;
+    max-width: 10rem; /* 160px */
+    box-sizing: border-box;
+}
+
+.home-button:hover {
+    background-color: #c9302c;
+}
+
+.home-footer {
+    margin-top: 2rem; /* 32px */
+    font-size: 1rem; /* 16px */
+    color: #000;
+    background-color: #000;
+    color: #fff;
+    width: 100%;
+    text-align: center;
+    padding: 1rem 0; /* 16px 0 */
+    position: absolute;
+    bottom: 0;
+}
+
+
+</style>
+
+
+<div class="home-main-container">
+    <div class="home-container">
+        <div class="home-login-box">
+            <h2 class="home-title">Admin Login</h2>
+            <form class="home-form">
+                <input type="email" name="email" placeholder="Email" class="home-input">
+                <input type="password" name="password" placeholder="Password" class="home-input">
+                <button type="submit" class="home-button">Login</button>
+            </form>
+        </div>
+    
+ </div>
+</div>
+
+<%- include('adminfooter') %>

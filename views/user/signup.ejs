@@ -1,0 +1,138 @@
+
+
+<style>
+
+
+    /* ------------main body------------- */
+    
+    html {
+        font-size: 16px; /* Base font size */
+    }
+    
+    .home-main-container {
+        /* margin: 0; */
+        font-family: Arial, sans-serif;
+        /* background-color: #000; */
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    
+    .home-container {
+        display: flex;
+        width: 80%;
+        max-width: 75rem; /* 1200px */
+        background-color: #000;
+        border-radius: 0.625rem; /* 10px */
+        overflow: hidden;
+    }
+    
+    .home-left {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #000;
+    }
+    
+    .home-image {
+        max-width: 100%;
+        height: auto;
+    }
+    
+    .home-right {
+        flex: 1;
+        padding: 2.5rem; /* 40px */
+        background-color: #000;
+    }
+    
+    .home-title {
+        margin-bottom: 1.875rem; /* 30px */
+        font-size: 1.5rem; /* 24px */
+        font-weight: bold;
+    }
+    
+    .home-form {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .home-input {
+        margin-bottom: 0.9375rem; /* 15px */
+        padding: 0.625rem; /* 10px */
+        border: none;
+        border-radius: 0.3125rem; /* 5px */
+        font-size: 1rem; /* 16px */
+    }
+    
+    .home-checkbox-container {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.25rem; /* 20px */
+    }
+    
+    .home-checkbox {
+        margin-right: 0.625rem; /* 10px */
+    }
+    
+    .home-checkbox-label {
+        font-size: 0.875rem; /* 14px */
+    }
+    
+    .home-button {
+        padding: 0.9375rem; /* 15px */
+        background-color: #ff6600;
+        color: #fff;
+        border: none;
+        border-radius: 0.3125rem; /* 5px */
+        font-size: 1rem; /* 16px */
+        cursor: pointer;
+    }
+    
+    .home-button:hover {
+        background-color: #e65c00;
+    }
+    
+    /* Responsive Styles */
+    @media (max-width: 48rem) { /* 768px */
+        .home-container {
+            flex-direction: column;
+        }
+    
+        .home-left, .home-right {
+            flex: none;
+            width: 100%;
+        }
+    
+        .home-right {
+            padding: 1.25rem; /* 20px */
+        }
+    }
+    
+        </style>
+        
+        <div class="home-main-container">
+             <div class="home-container">
+                 <div class="home-left">
+                     <img src="/public/user/img/logininage.webp" alt="Wine Bottle and Glass" class="home-image">
+                 </div>
+                 <div class="home-right">
+                     <h2 class="home-title">Create an account</h2>
+                     <form class="home-form">
+                         <input type="text" name="name" placeholder="Name" class="home-input">
+                         <input type="text" name="phone" placeholder="Phone" class="home-input">
+                         <input type="email" name="email" placeholder="Email" class="home-input">
+                         <input type="password" name="password" placeholder="Password" class="home-input">
+                         <div class="home-checkbox-container">
+                             <input type="checkbox" id="terms" name="terms" class="home-checkbox">
+                             <label for="terms" class="home-checkbox-label">By Creating An Account You Are Agreeing To Our Terms And Conditions And Privacy Policy</label>
+                         </div>
+                         <button type="submit" class="home-button">Create Account</button>
+                     </form>
+                 </div>
+             </div>
+         </div>  
+            
+    

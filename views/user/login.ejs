@@ -1,0 +1,200 @@
+
+<%- include('header') %>
+
+
+<style>
+    body, html {
+     
+        color: #fff;
+    }
+    .home-main{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-bottom: 30px;
+    }
+    .home-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 1.25rem;
+        width: 100%;
+        max-width: 50rem;
+    }
+    
+    .home-login-box {
+        display: flex;
+        background-color: #1e1e1e;
+        border-radius: 0.625rem;
+        overflow: hidden;
+        box-shadow: 0 0 0.625rem rgba(0, 0, 0, 0.5);
+    }
+    
+    .home-image {
+        width: 18.75rem;
+        object-fit: cover;
+    }
+    
+    .home-login-content {
+        padding: 1.25rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    h2 {
+        margin-bottom: 1.25rem;
+    }
+    
+    .home-input {
+        width: 100%;
+        padding: 0.625rem;
+        margin-bottom: 0.625rem;
+        border: none;
+        border-radius: 0.3125rem;
+        background-color: #333;
+        color: #fff;
+    }
+    
+    .home-forgot-password {
+        align-self: flex-end;
+        margin-bottom: 1.25rem;
+        color: #ff0000;
+        text-decoration: none;
+    }
+    
+    .home-button {
+        width: 90%;
+        padding: 0.625rem;
+        margin-bottom: 0.625rem;
+        border: none;
+        border-radius: 0.3125rem;
+        background-color: #ff4b5c;
+        color: #fff;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+    }
+    .home-button-main{
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+    
+    .home-button-facebook {
+        width: 100%;
+        padding: 0.625rem;
+        margin-bottom: 0.625rem;
+        border: none;
+        border-radius: 0.3125rem;
+        background-color: #3b5998;
+        color: #fff;
+        cursor: pointer;
+    }
+    
+    .home-button-google {
+        width: 100%;
+        padding: 0.625rem;
+        margin-bottom: 0.625rem;
+        border: none;
+        border-radius: 0.3125rem;
+        background-color: #db4437;
+        color: #fff;
+        cursor: pointer;
+    }
+    
+    .home-continue {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 1.25rem;
+    }
+    
+    .home-continue span {
+        margin-bottom: 0.625rem;
+    }
+    
+    .home-signup {
+        text-align: center;
+    }
+    
+    .home-signup a {
+        color: #ff0000;
+        text-decoration: none;
+    }
+    
+    /* Media Queries for Responsiveness */
+    @media (max-width: 768px) {
+        .home-login-box {
+            flex-direction: column;
+        }
+    
+        .home-image {
+            width: 100%;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .home-container {
+            padding: 0.625rem;
+        }
+    
+        .home-login-content {
+            padding: 0.625rem;
+        }
+    
+        h2 {
+            font-size: 1.25rem;
+        }
+    
+        .home-input, .home-button, .home-button-facebook, .home-button-google {
+            padding: 0.5rem;
+        }
+    
+        .home-continue span {
+            font-size: 0.875rem;
+        }
+    
+        .home-signup {
+            font-size: 0.875rem;
+        }
+    }
+    
+        </style>
+              <!-- //---------header---------// -->
+    
+       
+            <!-- ---------body------- -->
+    
+    
+            <div class="home-main">
+                <div class="home-container">
+                    <div class="home-login-box">
+                        <img src="/public/user/img/logininage.webp" alt="Van" class="home-image">
+                        <div class="home-login-content">
+                            <h2>Log in to Exclusive</h2>
+                            <form>
+                                <input type="text" placeholder="Email or Phone Number" class="home-input">
+                                <input type="password" placeholder="Password" class="home-input">
+                                <a href="#" class="home-forgot-password">Forget Password?</a>
+                                <div class="home-button-main">
+                                    <button type="submit" class="home-button">Log In</button>
+                                </div>
+                            </form>
+                            <div class="home-continue">
+                                <span>Or Continue With</span>
+                                <!-- <button class="home-button-facebook">Facebook</button> -->
+                                <button class="home-button-google">Google</button>
+                            </div>
+                            <div class="home-signup">
+                                <span>Don’t you have an account? <a href="#">Signup</a></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+            </div>
+    
+    
+            <%- include('footer') %>
