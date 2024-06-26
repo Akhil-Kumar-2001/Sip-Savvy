@@ -94,6 +94,9 @@
     .home-button:hover {
         background-color: #e65c00;
     }
+    .home-login{
+        margin-top: 1rem;
+    }
     
     /* Responsive Styles */
     @media (max-width: 48rem) { /* 768px */
@@ -120,7 +123,7 @@
                  </div>
                  <div class="home-right">
                      <h2 class="home-title">Create an account</h2>
-                     <form class="home-form">
+                     <form  action="/signup" method="post" class="home-form">
                          <input type="text" name="name" placeholder="Name" class="home-input">
                          <input type="text" name="phone" placeholder="Phone" class="home-input">
                          <input type="email" name="email" placeholder="Email" class="home-input">
@@ -130,6 +133,7 @@
                              <label for="terms" class="home-checkbox-label">By Creating An Account You Are Agreeing To Our Terms And Conditions And Privacy Policy</label>
                          </div>
                          <button type="submit" class="home-button">Create Account</button>
+                         <span class="home-login" >Already have an account ? <a class="text-danger" href="/login">Login</a> </span>
                      </form>
                  </div>
              </div>

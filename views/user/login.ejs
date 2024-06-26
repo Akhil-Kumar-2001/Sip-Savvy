@@ -1,5 +1,5 @@
 
-<%- include('header') %>
+<%- include('navbar') %>
 
 
 <style>
@@ -174,9 +174,9 @@
                         <img src="/public/user/img/logininage.webp" alt="Van" class="home-image">
                         <div class="home-login-content">
                             <h2>Log in to Exclusive</h2>
-                            <form>
-                                <input type="text" placeholder="Email or Phone Number" class="home-input">
-                                <input type="password" placeholder="Password" class="home-input">
+                            <form action="/login" method="post">
+                                <input type="text" name="email" placeholder="Email or Phone Number" class="home-input">
+                                <input type="password" name="password" placeholder="Password" class="home-input">
                                 <a href="#" class="home-forgot-password">Forget Password?</a>
                                 <div class="home-button-main">
                                     <button type="submit" class="home-button">Log In</button>
@@ -188,7 +188,7 @@
                                 <button class="home-button-google">Google</button>
                             </div>
                             <div class="home-signup">
-                                <span>Don’t you have an account? <a href="#">Signup</a></span>
+                                <span >Don’t you have an account? <a href="/signup">Signup</a></span>
                             </div>
                         </div>
                     </div>

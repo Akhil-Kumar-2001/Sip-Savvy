@@ -1,0 +1,23 @@
+
+
+
+<% if (alertMessage.length >0 ){%>
+
+<div class="alert alert-danger" role="alert">
+    <h6>
+        <%= alertMessage %>
+    </h2>
+</div>
+ 
+<% } %>
+
+
+<script>
+
+    const alertDuration = 5000;
+
+        setTimeout(()=>{
+            document.getElementsByClassName('alert')[0].style.display='none'
+        },alertDuration)
+
+</script>

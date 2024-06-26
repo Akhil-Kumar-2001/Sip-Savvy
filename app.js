@@ -1,8 +1,18 @@
 const express = require('express');
-const app = require('express')();
 const path = require('path');
+const nocache = require('nocache')
 const expressLayouts=require('express-ejs-layouts')
+const flash = require('connect-flash')
+ require("dotenv").config()
+const session = require('express-session')
+const {v4: uuidv4} = require('uuid')
 
+
+
+
+
+const app = express()
+const connectDB = require("./config/connection")
 
 
 //----------------------- Requiring Routes -------------------------
@@ -18,14 +28,24 @@ const port = process.env.PORT || 7275
 
 
 
+//--------------------- mongodb connection ---------------------
+
+connectDB()
 
 
 //--------------------- Setting view engine --------------------
 
-app.set('view engine','ejs');
+app.use(flash())
 
+app.use(expressLayouts);
+app.set('layout', './layouts/layout')
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
-
+// app.use((req,res,next)=>{
+//     res.locals.errorMessage = req.flash('alertMessage');
+//     next();
+// })
 
 //-----------------------public static files -------------------
 
@@ -40,16 +60,24 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true}));
 
 
+//-------------Middlewares----------------
+    
+app.use(nocache())
+app.use(session({
+    secret: uuidv4(),
+    resave:false,
+    saveUninitialized:false
+}))
 
+// setting express layouts
+app.use(expressLayouts);
+app.set('layout','./layouts/layout')
 
 // --------------Routes------------- //
 
 app.use('/', userRoutes);
 app.use('/admin', adminRoutes)
 
-// setting express layouts
-app.use(expressLayouts);
-app.set('layout','./layouts/layout')
 
 // --------------------First Route ------------------ //
 
@@ -60,14 +88,18 @@ app.get("/",(req,res)=>{
     } catch (error) {
         console.log(`error from main route ${error}`)
     }
-    
 })
+
+
+
 
 //  --------------Page not found---------------- //
 
 app.use("*",(req,res)=>{
     res.send("Page not found!");
 })
+
+
 
 
 // ----------------Server listening----------------- //
@@ -79,3 +111,6 @@ app.listen(port,(err)=>{
         console.log(`Server listening to  http://localhost:${port}`)
     }
 })
+
+
+
