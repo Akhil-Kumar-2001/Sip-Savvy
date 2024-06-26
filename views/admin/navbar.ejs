@@ -32,11 +32,13 @@ body {
     padding-right: 3rem;
 }
 
-.home-icon {
-    /* font-size: 20px; */
-    /* height: 2rem; */
-    width: 2.5rem;
-}
+
+ .home-icon{
+     width: 2rem;
+     height: 2.2rem;
+      font-size: 1.7rem;
+  }
+
 </style>
 
 <!-- //---------header---------// -->
@@ -50,7 +52,10 @@ body {
       
         <div class="home-icons">
            
-            <img src="/public/admin/img/profile.webp" class="home-icon" alt="">
+            <!-- <img src="/public/admin/img/profile.webp" class="home-icon" alt=""> -->
+            <i class="bi bi-person-circle home-icon"></i>
           
         </div>
     </header>
+
+    <%- include('alert')  %>

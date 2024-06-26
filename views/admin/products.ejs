@@ -1,0 +1,157 @@
+
+
+
+<style>
+    .admin-product {
+        width: 80%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .product-head {
+        border-radius: 10px;
+        margin: 24px;
+        background: black   ;
+        width: 90%;
+    }
+
+    .product-header {
+        margin-left: 30px;
+    }
+
+
+    .form-input {
+        height: 80%;
+    }
+
+    .form-product {
+        display: flex;
+        align-items: center;
+    }
+    .small-height-btn {
+    margin-top: 0.5rem; 
+    margin-bottom: 0.5rem;
+    margin-right: 0.5rem; 
+}
+
+
+</style>
+
+
+
+<%- include('navbar') %>
+
+<!------------------------------------------ Admin Menu ----------------------------------------------------->
+
+<div class="admin-home">
+    <div class="sidebar">
+        <div class="menu-item">
+            <a href="/admin/home">
+                <div class="admin-menu"><i class="bi bi-grid"></i>Dashboard</div>
+            </a>
+        </div>
+        <div class="menu-item">
+            <a href="/admin/collection">
+                <div class="admin-menu"><i class="bi bi-collection-fill"></i>Category</div>
+            </a>
+        </div>
+        <div class="menu-item">
+            <a href="/admin/products">
+                <div class="admin-menu"><i class="bi bi-basket-fill"></i>Products</div>
+            </a>
+        </div>
+        <div class="menu-item">
+            <a href="/admin/users">
+                <div class="admin-menu"><i class="bi bi-people"></i>Customers</div>
+            </a>
+        </div>
+        <div class="menu-item">
+            <a href="/admin/order">
+                <div class="admin-menu"><i class="bi bi-cart"></i>Orders</div>
+            </a>
+        </div>
+        <div class="menu-item">
+            <a href="#">
+                <div class="admin-menu"><i class="bi bi-receipt"></i>Coupons</div>
+            </a>
+        </div>
+        <div class="menu-item">
+            <a href="#">
+                <div class="admin-menu"><i class="bi bi-image"></i>Banner</div>
+            </a>
+        </div>
+        <div class="menu-item admin-menu-loyout">
+            <a href="/admin/logout">
+                <div class="admin-menu "><i class="bi bi-box-arrow-right"></i>Logout</div>
+            </a>
+        </div>
+    </div>
+
+    <!-------------------------------------- Products page header  -------------------------------------------------------->
+
+    <div class="admin-product mb-4">
+        <div class="product-head d-flex justify-content-between">
+            <div class="product-header d-flex justify-content-between align-items-center gap-5">
+                <h2 class="text-white">
+                    <%= title %>
+                </h2>
+                <form action="/admin/products" method="get" class="form-product  d-flex gap-1">
+                    <input type="text" name="search" placeholder="search" class="form-input form-control">
+                    <input type="submit" class="btn btn-danger submit-btn small-height-btn" value="Search">
+                </form>
+            </div>
+            <!-- <a href="/admin/addproduct" type="button" class="btn btn-danger submit-btn"> Add Product</a> -->
+            <button type="button" class="btn btn-danger submit-btn small-height-btn" data-bs-toggle="modal" data-bs-target="#addCollection">Add
+                Products</button>
+        </div>
+
+        <!--------------------------------------- product table ---------------------------------------------------->
+
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr scope="row" class="product-table-head">
+                        <th scope="col" class="product-table-first">SL.No</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Stock</th>
+                        <th scope="col">Collection</th>
+                        <th scope="col">Status</th>
+                        <th scope="col" class="product-table-last">Action</th>
+                    </tr>
+                </thead>
+           
+            </table>
+        </div>
+    </div>
+</div>
+
+<!------------------------------------ Pagination Controls -------------------------------->
+
+
+
+<%- include('footer') %>
+
+<script>
+    //------------------- sweet alert for delete confirmation --------------
+    const alertDelete = document.querySelectorAll('.sweet-alert-delete')
+        alertDelete.forEach(ele => {
+            ele.addEventListener('click', event => {
+                event.preventDefault()
+                Swal.fire({
+                    title: 'Delete the Product',
+                    text: 'Are you sure you want to delete the Product?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#DB4444',
+                    cancelButtonColor: '#D5D2FF',
+                    confirmButtonText: 'Confirm'
+                }).then(res => {
+                    if (res.isConfirmed) {
+                        window.location.href = event.target.closest('a').href
+                    }
+                })
+            })
+        })
+</script>

@@ -1,6 +1,10 @@
 const express = require('express')
 const admin = express.Router();
-const adminController = require('../controller/adminController/adminController')
+const loginController = require('../controller/adminController/loginController')
+const categoryController = require('../controller/adminController/categoryController')
+const productController = require('../controller/adminController/productController')
+const userController = require('../controller/adminController/userController')
+const adminSession = require('../middleware/adminSession')
 
 //------------------------------- main -------------------------------
 
@@ -8,8 +12,36 @@ const adminController = require('../controller/adminController/adminController')
 
 //------------------------------ login -------------------------------
 
+admin.get('/',loginController.admin)
+admin.get('/login',loginController.login)
+admin.post('/login',loginController.loginPost)
 
-admin.get('/login',adminController.login)
+//------------------------ admin home page --------------------------
+
+admin.get('/dashboard',loginController.dashboard)
+
+
+
+//-------------category---------------
+
+admin.get('/category',categoryController.category)
+
+
+//--------------Products----------------
+
+admin.get('/products',productController.products)
+
+
+//--------------------Logout------------------------
+
+admin.get('/users',userController.user)
+
+
+
+//--------------------Logout------------------------
+
+
+admin.get('/logout',loginController.logout) 
 
 
 

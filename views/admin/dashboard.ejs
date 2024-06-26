@@ -1,0 +1,293 @@
+<%- include('navbar') %>
+
+
+<style>
+   
+    /*--------------------- admin side bar ------------------------------*/
+
+.admin-home {
+display: flex;
+}
+
+.sidebar {
+width: 250px;
+margin: 20px;
+background-color: black;
+color: white;
+height: 80vh;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+border-radius: 10px;
+}
+
+.menu-item {
+width: 60%;
+height: 13%;
+margin-top: 20px;
+font-size: 1.3rem;
+cursor: pointer;
+transition: background-color 0.3s;
+border-radius: 10px;
+display: flex;
+align-items: center;
+}
+
+.menu-item a {
+text-decoration: none;
+color: #fefeeb;
+}
+
+.menu-item:hover{
+/* background-color: #DB4444; */
+background-color: white;
+
+}
+.menu-item:hover a {
+color: black;
+}
+.admin-menu {
+display: flex;
+justify-content: space-between;
+gap: 10px;
+margin-left: 12px;
+font-size: 1.2rem;
+}
+
+.admin-menu-loyout {
+margin-bottom: 20px;
+}
+
+/* Media Queries of admin main page and side bar */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .menu-item {
+        flex: 1 1 auto;
+        text-align: center;
+    }
+
+    .main-content {
+        padding: 10px;
+    }
+
+    .sidebar-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .controls {
+        margin-top: 10px;
+    }
+
+    .stats {
+        flex-direction: column;
+    }
+
+    .stat-item {
+        margin: 10px 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .sidebar-header h1 {
+        font-size: 18px;
+    }
+
+    .year-select,
+    .download-btn {
+        padding: 5px;
+        font-size: 14px;
+    }
+
+    .stat-item h2 {
+        font-size: 20px;
+    }
+
+    .stat-change {
+        font-size: 14px;
+    }
+}
+
+
+
+
+
+
+    .main-content {
+        color: #1a1a1a;
+        flex-grow: 1;
+        padding: 20px;
+        background-color: black;
+        height: 80vh;
+        margin-top: 20px;
+        border-radius: 10px;
+    }
+
+    .sidebar-header {
+        display: flex;
+    }
+
+    .controls {
+        width: 60%;
+        margin-left: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .year-select,
+    .download-btn {
+        border-radius: 10px;
+        padding: 10px;
+        margin-left: 10px;
+        font-size: 16px;
+    }
+
+    .stats {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+        flex-wrap: wrap;
+    }
+
+    .stat-item {
+        background-color: white;
+        padding: 20px;
+        flex: 1;
+        margin: 10px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    .stat-change {
+        display: block;
+        margin-top: 10px;
+        font-size: 16px;
+    }
+
+    .positive {
+        color: green;
+    }
+
+    .negative {
+        color: red;
+    }
+
+    .chart {
+        margin-top: 20px;
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .sales-chart {
+        width: 100%;
+    }
+</style>
+
+  <!----------------------------------------- Admin Menu ---------------------------------------------------->
+                
+  <div class="admin-home">
+    <div class="sidebar ">
+        <div class="menu-item ">
+            <a href="/admin/dashboard">
+                <div class="admin-menu"><i class="bi bi-grid"></i>Dashboard</div>
+            </a>
+        </div>
+        <div class="menu-item">
+            <a href="/admin/category">
+                <div class="admin-menu"><i class="bi bi-collection-fill"></i>Category</div>
+            </a>
+        </div>
+        <div class="menu-item">
+            <a href="/admin/products">
+                <div class="admin-menu"><i class="bi bi-basket-fill"></i>Products</div>
+            </a>
+        </div>
+        <div class="menu-item">
+            <a href="/admin/users">
+                <div class="admin-menu"><i class="bi bi-people"></i>Customers</div>
+            </a>
+        </div>
+        <div class="menu-item">
+            <a href="/admin/order">
+                <div class="admin-menu"><i class="bi bi-cart"></i>Orders</div>
+            </a>
+        </div>
+        <div class="menu-item">
+            <a href="#">
+                <div class="admin-menu"><i class="bi bi-receipt"></i>Coupons</div>
+            </a>
+        </div>
+        <div class="menu-item">
+            <a href="#">
+                <div class="admin-menu"><i class="bi bi-image"></i>Banner</div>
+            </a>
+        </div>
+        <div class="menu-item admin-menu-loyout">
+            <a href="/admin/logout">
+                <div class="admin-menu "><i class="bi bi-box-arrow-right"></i>Logout</div>
+            </a>
+        </div>
+    </div>
+
+
+
+    <!----------------------------------------- Admin Dashboard ---------------------------------------------------->
+        
+    <div class="main-content">
+        <div class="sidebar-header">
+            <h1 class="text-white">Sales Summary</h1>
+            <div class="controls">
+                <select class="year-select">
+                    <option value="2024">2024</option>
+                    <option value="2023">2023</option>
+                    <option value="2022">2022</option>
+                    <option value="2022">2021</option>
+                    <option value="2022">2020</option>
+                </select>
+                <button class="download-btn">Download</button>
+            </div>
+        </div>
+        <div class="stats">
+            <div class="stat-item">
+                <p>Revenue</p>
+                <h2>$7,825</h2>
+                <span class="stat-change positive">+22%</span>
+            </div>
+            <div class="stat-item">
+                <p>Orders</p>
+                <h2>920</h2>
+                <span class="stat-change negative">-25%</span>
+            </div>
+            <div class="stat-item">
+                <p>Products Sold</p>
+                <h2>15.5K</h2>
+                <span class="stat-change positive">+49%</span>
+            </div>
+            <div class="stat-item">
+                <p>Total Customers</p>
+                <h2>120</h2>
+                <span class="stat-change positive">+4%</span>
+            </div>
+        </div>
+        <div class="chart">
+            <img src="" class="sales-chart">
+        </div>
+    </div>
+</div>
+
+</div>
+
+
+<%- include('footer') %>

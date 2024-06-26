@@ -79,3 +79,118 @@ html {
     background-color: #c9302c;
 }
 
+
+
+/* ----------Side bar Dashboard ------------ */
+
+.admin-home {
+    display: flex;
+    }
+    
+    .sidebar {
+    width: 250px;
+    margin: 20px;
+    background-color: black;
+    color: white;
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    }
+    
+    .menu-item {
+    width: 60%;
+    height: 13%;
+    margin-top: 20px;
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    }
+    
+    .menu-item a {
+    text-decoration: none;
+    color: #fefeeb;
+    }
+    
+    .menu-item:hover{
+    /* background-color: #DB4444; */
+    background-color: white;
+    
+    }
+    .menu-item:hover a {
+    color: black;
+    }
+    .admin-menu {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-left: 12px;
+    font-size: 1.2rem;
+    }
+    
+    .admin-menu-loyout {
+    margin-bottom: 20px;
+    }
+    
+    /* Media Queries of admin main page and side bar */
+    @media (max-width: 768px) {
+        .sidebar {
+            width: 100%;
+            height: auto;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+    
+        .menu-item {
+            flex: 1 1 auto;
+            text-align: center;
+        }
+    
+        .main-content {
+            padding: 10px;
+        }
+    
+        .sidebar-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    
+        .controls {
+            margin-top: 10px;
+        }
+    
+        .stats {
+            flex-direction: column;
+        }
+    
+        .stat-item {
+            margin: 10px 0;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .sidebar-header h1 {
+            font-size: 18px;
+        }
+    
+        .year-select,
+        .download-btn {
+            padding: 5px;
+            font-size: 14px;
+        }
+    
+        .stat-item h2 {
+            font-size: 20px;
+        }
+    
+        .stat-change {
+            font-size: 14px;
+        }
+    }
+    

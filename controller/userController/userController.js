@@ -1,12 +1,15 @@
 const userSchema = require('../../model/userSchema')
 
+const user  = (req,res)=>{
+  try{
+    res.redirect('/home')
+  }catch(err){
+    console.log(`Error on rendering first home page ${err}`)
+  }
+}
+
 
 //--------------------------------- user login page Render ------------------------------
-
-
-
-
-
 
   const login =(req,res) => {
     try{
@@ -36,7 +39,7 @@ const userSchema = require('../../model/userSchema')
         req.flash('alert','Invalid username or password')
         res.redirect('/login')
       }else{
-        req.session.user=checkUser._id
+        req.session.user=checkUser.email
         res.redirect('/')
       }
 
@@ -129,7 +132,7 @@ const logout = (req, res) => {
 
   
   module.exports={
-    
+    user,
     login,
     loginPost,
     signup,

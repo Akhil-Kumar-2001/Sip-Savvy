@@ -63,6 +63,7 @@ app.use(express.urlencoded({ extended: true}));
 //-------------Middlewares----------------
     
 app.use(nocache())
+
 app.use(session({
     secret: uuidv4(),
     resave:false,

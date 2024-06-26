@@ -1,4 +1,4 @@
-<%- include('adminheader') %>
+<%- include('navbar') %>
 
 
 <style>
@@ -101,7 +101,7 @@ html {
     <div class="home-container">
         <div class="home-login-box">
             <h2 class="home-title">Admin Login</h2>
-            <form class="home-form">
+            <form action="/admin/login" method="post" class="home-form">
                 <input type="email" name="email" placeholder="Email" class="home-input">
                 <input type="password" name="password" placeholder="Password" class="home-input">
                 <button type="submit" class="home-button">Login</button>
@@ -111,4 +111,4 @@ html {
  </div>
 </div>
 
-<%- include('adminfooter') %>
+<%- include('footer') %>

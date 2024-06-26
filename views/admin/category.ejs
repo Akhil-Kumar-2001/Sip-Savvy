@@ -1,0 +1,315 @@
+<%- include('navbar') %>
+
+<style>
+
+.admin-home {
+display: flex;
+}
+
+.sidebar {
+width: 250px;
+margin: 20px;
+background-color: black;
+color: white;
+height: 80vh;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+border-radius: 10px;
+}
+
+.menu-item {
+width: 60%;
+height: 13%;
+margin-top: 20px;
+font-size: 1.3rem;
+cursor: pointer;
+transition: background-color 0.3s;
+border-radius: 10px;
+display: flex;
+align-items: center;
+}
+
+.menu-item a {
+text-decoration: none;
+color: #fefeeb;
+}
+
+.menu-item:hover{
+/* background-color: #DB4444; */
+background-color: white;
+
+}
+.menu-item:hover a {
+color: black;
+}
+.admin-menu {
+display: flex;
+justify-content: space-between;
+gap: 10px;
+margin-left: 12px;
+font-size: 1.2rem;
+}
+
+.admin-menu-loyout {
+margin-bottom: 20px;
+}
+
+/* Media Queries of admin main page and side bar */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .menu-item {
+        flex: 1 1 auto;
+        text-align: center;
+    }
+
+    .main-content {
+        padding: 10px;
+    }
+
+    .sidebar-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .controls {
+        margin-top: 10px;
+    }
+
+    .stats {
+        flex-direction: column;
+    }
+
+    .stat-item {
+        margin: 10px 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .sidebar-header h1 {
+        font-size: 18px;
+    }
+
+    .year-select,
+    .download-btn {
+        padding: 5px;
+        font-size: 14px;
+    }
+
+    .stat-item h2 {
+        font-size: 20px;
+    }
+
+    .stat-change {
+        font-size: 14px;
+    }
+}
+
+
+
+    .category {
+        width: 85%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .search-container {
+        border-radius: 10px;
+        margin: 24px;
+        background: black;
+        width: 90%;
+    }
+
+    .category-action a {
+        margin: 0.4rem;
+    }
+
+    .small-height-btn {
+    margin-top: 0.5rem; 
+    margin-bottom: 0.5rem;
+    margin-right: 0.5rem; 
+}
+
+.home-search input {
+    padding: 0.5rem;
+    background-color: black;
+    border-radius: 3rem;
+    color: #fff;
+    border-style:none;
+    border: 0.125rem; /*2px converted */
+    border-block-color: white;
+    height: 2.4rem;
+    width: 30rem;
+}
+</style>
+
+
+
+
+    <!----------------------------------------- Admin Menu ---------------------------------------------------->
+
+    <div class="admin-home">
+        <div class="sidebar">
+            <div class="menu-item">
+                <a href="/admin/home">
+                    <div class="admin-menu"><i class="bi bi-grid"></i>Dashboard</div>
+                </a>
+            </div>
+            <div class="menu-item">
+                <a href="/admin/collection">
+                    <div class="admin-menu"><i class="bi bi-collection-fill"></i>Category</div>
+                </a>
+            </div>
+            <div class="menu-item">
+                <a href="/admin/products">
+                    <div class="admin-menu"><i class="bi bi-basket-fill"></i>Products</div>
+                </a>
+            </div>
+            <div class="menu-item">
+                <a href="/admin/users">
+                    <div class="admin-menu"><i class="bi bi-people"></i>Customers</div>
+                </a>
+            </div>
+            <div class="menu-item">
+                <a href="/admin/order">
+                    <div class="admin-menu"><i class="bi bi-cart"></i>Orders</div>
+                </a>
+            </div>
+            <div class="menu-item">
+                <a href="#">
+                    <div class="admin-menu"><i class="bi bi-receipt"></i>Coupons</div>
+                </a>
+            </div>
+            <div class="menu-item">
+                <a href="#">
+                    <div class="admin-menu"><i class="bi bi-image"></i>Banner</div>
+                </a>
+            </div>
+            <div class="menu-item admin-menu-loyout">
+                <a href="/admin/logout">
+                    <div class="admin-menu "><i class="bi bi-box-arrow-right"></i>Logout</div>
+                </a>
+            </div>
+        </div>
+
+
+        <!------------------------------------- category page Header -------------------------------------------------------->
+        <div class="category ">
+            <div class="search-container d-flex  justify-content-between">
+                <div class="d-flex justify-content-between align-items-center gap-2 p-2">
+                    <h2 class="text-white mx-5">
+                        <%= title %>
+                    </h2>
+                    <form action="/admin/collection" method="get" class="form  d-flex align-items-center">
+                        <input type="text " name="search" placeholder="search" class=" form-input form-control ">
+                        <input type="submit" class="btn btn-danger mx-2 submit-btn" value="Search">
+                    </form>
+                </div>
+                <button type="button" class="btn btn-danger submit-btn small-height-btn" data-bs-toggle="modal" data-bs-target="#addCollection">Add
+                    Category</button>
+            </div>
+
+            <!----------------------------------------- category table --------------------------------------------------->
+
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr scope="row" class="product-table-head">
+                            <th scope="col" class="product-table-first">SL.No</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Added On</th>
+                            <th scope="col">Status</th>
+                            <th scope="col" class="product-table-last">Action</th>
+                        </tr>
+                    </thead>
+                  
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-------------------------- Add collection modal ------------------------------------------>
+
+    <div class="modal fade" id="addCollection">
+        <div class="modal-dialog">
+            <div class="modal-content collection-modal">
+                <div class="collection-container">
+                    <h2 class="text-center mb-4 mt-2">Add Collection</h2>
+                    <form class="form d-flex flex-column gap-3 pt-4" action="/admin/addcollection" method="post">
+                        <input type="text" name="collectionName" class="form-control form-input"
+                            placeholder="Collection Name" required>
+                        <button type="submit" class="btn submit-btn"> Add Collection</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!------------------------------ Edit collection ------------------------------------------------->
+
+    <div class="modal fade" id="editCollection">
+        <div class="modal-dialog">
+            <div class="modal-content collection-modal">
+                <div class="collection-container">
+                    <h2 class="text-center mb-4 mt-2">Collection</h2>
+                    <form class="form d-flex flex-column gap-3 pt-4" action="/admin/editcollection" method="post">
+                        <input type="hidden" name="collectionId" id="editCollectionId">
+                        <input type="text" name="collectionName" id="editCollectionName" class="form-control form-input"
+                            placeholder="Collection Name" required>
+                        <button type="submit" class="btn submit-btn edit-alert">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!------------------------------------ Pagination Controls -------------------------------->
+
+ 
+
+
+<%- include('footer') %>
+
+<script>
+    //------------------- sweet alert for delete confirmation --------------
+    const alertDelete = document.querySelectorAll('.sweet-alert-delete')
+    alertDelete.forEach(ele => {
+        ele.addEventListener('click', event => {
+            event.preventDefault()
+            Swal.fire({
+                title: 'Delete the category',
+                text: 'Are you sure you want to delete the category?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#DB4444',
+                cancelButtonColor: '#D5D2FF',
+                confirmButtonText: 'Confirm'
+            }).then(res => {
+                if (res.isConfirmed) {
+                    window.location.href = event.target.closest('a').href
+                }
+            })
+        })
+    })
+
+    // ----------------------------- edit collection modal view foreach --------------------------------------
+    const editCollection = document.querySelectorAll('#edit-collection-modal')
+    editCollection.forEach(ele => {
+        ele.addEventListener('click', function () {
+            const name = this.getAttribute('data-name')
+            const id = this.getAttribute('data-id')
+            document.getElementById('editCollectionName').value = name
+            document.getElementById('editCollectionId').value = id
+        })
+    })
+</script>
