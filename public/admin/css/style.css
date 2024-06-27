@@ -1,87 +1,4 @@
-
-
-
-
-html {
-    font-size: 16px; /* Base font size */
-}
-
-.home-main-container{
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #fff;
-    color: #000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 76vh;
-    flex-direction: column;
-}
-.home-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 40%;
-    padding: 1rem;
-    box-sizing: border-box;
-    position: relative;
-}
-
-.home-login-box {
-    background-color: #000;
-    color: #fff;
-    padding: 2rem; /* 32px */
-    border-radius: 1.25rem; /* 20px */
-    box-shadow: 0 0.625rem 1.25rem rgba(0, 0, 0, 0.1); /* 10px 20px */
-    text-align: center;
-    max-width: 58.125rem; /* 930px */
-    width: 100%;
-}
-
-.home-title {
-    margin-bottom: 1.875rem; /* 30px */
-    font-size: 1.875rem; /* 30px */
-    font-weight: bold;
-}
-
-.home-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.home-input {
-    margin-bottom: 1rem; /* 16px */
-    padding: 0.625rem; /* 10px */
-    border: none;
-    border-radius: 0.3125rem; /* 5px */
-    font-size: 1rem; /* 16px */
-    width: 100%;
-    max-width: 20rem; /* 320px */
-    box-sizing: border-box;
-}
-
-.home-button {
-    padding: 0.625rem 1.25rem; /* 10px 20px */
-    background-color: #d9534f;
-    color: #fff;
-    border: none;
-    border-radius: 1.25rem; /* 20px */
-    font-size: 1rem; /* 16px */
-    cursor: pointer;
-    width: 100%;
-    max-width: 10rem; /* 160px */
-    box-sizing: border-box;
-}
-
-.home-button:hover {
-    background-color: #c9302c;
-}
-
-
-
-/* ----------Side bar Dashboard ------------ */
+/*--------------------- admin side bar ------------------------------*/
 
 .admin-home {
     display: flex;
@@ -194,3 +111,113 @@ html {
         }
     }
     
+
+    /*--------------------- Table in admin page --------------------------*/
+
+.table-container {
+    width: 90%;
+    background: black;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(100, 98, 98, 0.5);
+    border-radius: 10px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 15px;
+    margin: 20px 0;
+    font-size: 1em;
+    width: 100%;
+    background: black;
+}
+
+.table thead th {
+    padding: 12px 15px;
+    background: black;
+    color: #fefeeb;
+    border-style: none;
+}
+
+.table tbody tr {
+    background: black;
+    border-radius: 10px;
+}
+
+.table tbody tr td {
+    padding: 12px 15px;
+    text-align: left;
+    background: black;
+    color: #fefeeb;
+}
+.product-table-first {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.product-table-last {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+.products-icon {
+    display: flex;
+    gap: 20px;
+}
+
+.status.active {
+    color: #4CAF50;
+}
+
+.status.block {
+    color: #F44336;
+}
+
+.bi.bi-trash3 {
+    color: #FF0000;
+}
+
+.submit-btn {
+    color: #fefeeb;
+    background: #DB4444;
+    margin: 20px;
+}
+
+.submit-btn:hover {
+    background: #CE5252;
+}
+
+
+
+@media (max-width: 600px) {
+    .table thead {
+        display: none;
+    }
+
+    .table,
+    .table tbody,
+    .table tr,
+    .table td {
+        display: block;
+        width: 100%;
+    }
+
+    .table tr {
+        margin-bottom: 15px;
+    }
+
+    .table td {
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+    }
+
+    .table td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 0;
+        width: 50%;
+        padding-left: 15px;
+        font-weight: bold;
+        text-align: left;
+    }
+}

@@ -15,7 +15,11 @@ const schema = new mongoose.Schema({
     password: {
         type:String,
     },
-    
-})
+    isActive:{
+        type:Boolean,
+        default:true
+    },
+
+},{timestamps:true})
 
 module.exports = mongoose.model('user',schema)

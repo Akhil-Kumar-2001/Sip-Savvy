@@ -1,4 +1,7 @@
 <style>
+
+
+
     .admin-product {
             width: 80%;
             display: flex;
@@ -10,7 +13,7 @@
         .product-head {
             border-radius: 10px;
             margin: 24px;
-            background: #232323;
+            background: black;
             width: 90%;
         }
     
@@ -108,7 +111,34 @@
                             <th scope="col" class="product-table-last">Action</th>
                         </tr>
                     </thead>
-                 
+                    <tbody>
+                        <% user.forEach((user,index)=> { %>
+                            <tr scope="row">
+                                <td>
+                                    <%= index+1 %>
+                                </td>
+                                <td>
+                                    <%= user.name %>
+                                </td>
+                                <td>
+                                    <%= user.email %>
+                                </td>
+                                <td>
+                                    <%= user.phone %>
+                                </td>
+                                <td>
+                                    <% if(user.isActive) { %>
+                                        <span class="status active">Active</span>
+                                    <% }else{ %>
+                                        <span class="status block">Blocked</span>
+                                    <% } %>
+                                </td>
+                                <td>
+                                    <a href="/admin/userstatus?id=<%= user.id %>&&status=<%= user.isActive%>"><i class="bi bi-x-circle"></i></a>
+                                </td>
+                            </tr>
+                            <% }) %>
+                    </tbody>
                 </table>
             </div>
         </div>

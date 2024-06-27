@@ -4,7 +4,7 @@ const loginController = require('../controller/adminController/loginController')
 const categoryController = require('../controller/adminController/categoryController')
 const productController = require('../controller/adminController/productController')
 const userController = require('../controller/adminController/userController')
-const adminSession = require('../middleware/adminSession')
+const isAdmin = require('../middleware/adminSession')
 
 //------------------------------- main -------------------------------
 
@@ -34,7 +34,8 @@ admin.get('/products',productController.products)
 
 //--------------------Logout------------------------
 
-admin.get('/users',userController.user)
+admin.get('/users',isAdmin,userController.users)
+admin.get('/userstatus',isAdmin,userController.status)
 
 
 

@@ -1,4 +1,10 @@
+const bcrypt = require('bcrypt')
 const userSchema = require('../../model/userSchema')
+
+
+
+
+//-------------first home route--------------
 
 const user  = (req,res)=>{
   try{
@@ -13,7 +19,12 @@ const user  = (req,res)=>{
 
   const login =(req,res) => {
     try{
-      res.render('user/login',{title:"Login",alertMessage:req.flash('alert'),user:req.session.user})
+      if(req.session.user){
+        res.redirect('/home')
+      }else{
+
+        res.render('user/login',{title:"Login",alertMessage:req.flash('alert'),user:req.session.user})
+      }
     }catch(error){
       console.log(`error while rendering user login ${error}`);
     }
@@ -33,18 +44,43 @@ const user  = (req,res)=>{
   const loginPost =async(req,res) => {
     try{
 
-        const checkUser = await userSchema.findOne({email:req.body.email,password:req.body.password})
+      const email = await userSchema.findOne({email:req.body.email})
 
-      if(!checkUser){
-        req.flash('alert','Invalid username or password')
-        res.redirect('/login')
-      }else{
-        req.session.user=checkUser.email
-        res.redirect('/')
-      }
+      if(email){
+
+        if(!email.isActive){
+          req.flash('alert', 'User access is blocked by admin')
+          res.redirect('/login')
+        }else{
+          const password = await bcrypt.compare(req.body.password,email.password)
+  
+          if (email && password) {
+            req.session.user = email.id
+            res.redirect('/home')
+          } else {
+            req.flash('alert', 'Invalid credentails')
+            res.redirect('/login')
+          }
+        }
+
+      }else {
+          req.flash('alert', 'Couldnt find user')
+          res.redirect('/login')
+        }
+    
+
+      //   const checkUser = await userSchema.findOne({email:req.body.email,password:req.body.password})
+
+      // if(!checkUser){
+      //   req.flash('alert','Invalid username or password')
+      //   res.redirect('/login')
+      // }else{
+      //   req.session.user=checkUser.email
+      //   res.redirect('/')
+      // }
 
     }catch(err){
-
+        console.log(`error while login in ${err}`);
     }
   }
 
@@ -82,8 +118,8 @@ const user  = (req,res)=>{
       const details = {
         name: req.body.name,
         email: req.body.email,
-        // password: await bcrypt.hash(req.body.password, 10),
-        password:req.body.password,
+        password: await bcrypt.hash(req.body.password, 10),
+        // password:req.body.password,
         phone: req.body.phone
       }
 
@@ -97,6 +133,7 @@ const user  = (req,res)=>{
           })
           console.log("new user");
         }else{
+          req.flash('alert','user already exist')
           console.log("user already exist");
         }
 
