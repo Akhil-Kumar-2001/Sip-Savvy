@@ -97,7 +97,8 @@ app.get("/",(req,res)=>{
 //  --------------Page not found---------------- //
 
 app.use("*",(req,res)=>{
-    res.send("Page not found!");
+    // res.send("Page not found!");
+    res.render('user/pagenotfound',{title:"404 page"})
 })
 
 
