@@ -25,9 +25,9 @@
     }
 
     .small-height-btn {
-    margin-top: 0.5rem; 
-    margin-bottom: 0.5rem;
-    margin-right: 0.5rem; 
+    margin-top: 1.5rem; 
+    margin-bottom: 1.5rem;
+    margin-right: 1.5rem; 
 }
 
 .home-search input {
@@ -51,12 +51,12 @@
     <div class="admin-home">
         <div class="sidebar">
             <div class="menu-item">
-                <a href="/admin/home">
+                <a href="/admin/dashboard">
                     <div class="admin-menu"><i class="bi bi-grid"></i>Dashboard</div>
                 </a>
             </div>
             <div class="menu-item">
-                <a href="/admin/collection">
+                <a href="/admin/category">
                     <div class="admin-menu"><i class="bi bi-collection-fill"></i>Category</div>
                 </a>
             </div>
@@ -100,7 +100,7 @@
                     <h2 class="text-white mx-5">
                         <%= title %>
                     </h2>
-                    <form action="/admin/collection" method="get" class="form  d-flex align-items-center">
+                    <form action="/admin/category" method="get" class="form  d-flex align-items-center">
                         <input type="text " name="search" placeholder="search" class=" form-input form-control ">
                         <input type="submit" class="btn btn-danger mx-2 submit-btn" value="Search">
                     </form>
@@ -122,7 +122,39 @@
                             <th scope="col" class="product-table-last">Action</th>
                         </tr>
                     </thead>
-                  
+                    <tbody>
+                        <% category.forEach((category,index)=> { %>
+                            <tr scope="row">
+                                <td>
+                                    <%= index +1 %>
+                                </td>
+                                <td>
+                                    <%= category.categoryName %>
+                                </td>
+                                <td>
+                                    <%= category.createdAt.toLocaleDateString() %>
+                                </td>
+                                <td>
+                                    <% if(category.isActive) { %>
+                                        <span class="status active">Active</span>
+                                        <% }else{ %>
+                                            <span class="status block">Blocked</span>
+                                            <% } %>
+                                </td>
+                              
+                                <td class="category-action">
+                                    <a href="" id="edit-category-modal" data-bs-toggle="modal"
+                                        data-bs-target="#editCategory" data-name="<%=category.categoryName%>"
+                                        data-id="<%=category.id %>"><i class="bi bi-pencil-square"></i></a>
+                                    <a
+                                        href="/admin/categorystatus?id=<%= category.id %>&status=<%=category.isActive %>"><i
+                                            class="bi bi-x-circle"></i></a>
+                                    <a href="/admin/deletecategory/<%= category.id %>" class="sweet-alert-delete"><i
+                                            class="bi bi-trash3"></i></a>
+                                </td>
+                            </tr>
+                            <% }) %>
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -134,11 +166,11 @@
         <div class="modal-dialog">
             <div class="modal-content collection-modal">
                 <div class="collection-container">
-                    <h2 class="text-center mb-4 mt-2">Add Collection</h2>
-                    <form class="form d-flex flex-column gap-3 pt-4" action="/admin/addcollection" method="post">
-                        <input type="text" name="collectionName" class="form-control form-input"
+                    <h2 class="text-center mb-4 mt-2">Add Category</h2>
+                    <form class="form d-flex flex-column gap-3 pt-4" action="/admin/addcategory" method="post">
+                        <input type="text" name="categoryName" class="form-control form-input"
                             placeholder="Collection Name" required>
-                        <button type="submit" class="btn submit-btn"> Add Collection</button>
+                        <button type="submit" class="btn submit-btn"> Add Category</button>
                     </form>
                 </div>
             </div>
@@ -146,17 +178,17 @@
     </div>
 
 
-    <!------------------------------ Edit collection ------------------------------------------------->
+    <!------------------------------ Edit category ------------------------------------------------->
 
-    <div class="modal fade" id="editCollection">
+    <div class="modal fade" id="editCategory">
         <div class="modal-dialog">
             <div class="modal-content collection-modal">
                 <div class="collection-container">
-                    <h2 class="text-center mb-4 mt-2">Collection</h2>
-                    <form class="form d-flex flex-column gap-3 pt-4" action="/admin/editcollection" method="post">
-                        <input type="hidden" name="collectionId" id="editCollectionId">
-                        <input type="text" name="collectionName" id="editCollectionName" class="form-control form-input"
-                            placeholder="Collection Name" required>
+                    <h2 class="text-center mb-4 mt-2">Category</h2>
+                    <form class="form d-flex flex-column gap-3 pt-4" action="/admin/editcategory" method="post">
+                        <input type="hidden" name="categoryId" id="editCategoryId">
+                        <input type="text" name="categoryName" id="editCategoryName" class="form-control form-input"
+                            placeholder="Category Name" required>
                         <button type="submit" class="btn submit-btn edit-alert">Save Changes</button>
                     </form>
                 </div>
@@ -174,33 +206,33 @@
 <script>
     //------------------- sweet alert for delete confirmation --------------
     const alertDelete = document.querySelectorAll('.sweet-alert-delete')
-    alertDelete.forEach(ele => {
-        ele.addEventListener('click', event => {
-            event.preventDefault()
-            Swal.fire({
-                title: 'Delete the category',
-                text: 'Are you sure you want to delete the category?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#DB4444',
-                cancelButtonColor: '#D5D2FF',
-                confirmButtonText: 'Confirm'
-            }).then(res => {
-                if (res.isConfirmed) {
-                    window.location.href = event.target.closest('a').href
-                }
+            alertDelete.forEach(ele => {
+                ele.addEventListener('click', event => {
+                    event.preventDefault()
+                    Swal.fire({
+                        title: 'Delete the category',
+                        text: 'Are you sure you want to delete the category?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#DB4444',
+                        cancelButtonColor: '#D5D2FF',
+                        confirmButtonText: 'Confirm'
+                    }).then(res => {
+                        if (res.isConfirmed) {
+                            window.location.href = event.target.closest('a').href
+                        }
+                    })
+                })
             })
-        })
-    })
 
     // ----------------------------- edit collection modal view foreach --------------------------------------
-    const editCollection = document.querySelectorAll('#edit-collection-modal')
-    editCollection.forEach(ele => {
+    const editCategory = document.querySelectorAll('#edit-category-modal')
+    editCategory.forEach(ele => {
         ele.addEventListener('click', function () {
             const name = this.getAttribute('data-name')
             const id = this.getAttribute('data-id')
-            document.getElementById('editCollectionName').value = name
-            document.getElementById('editCollectionId').value = id
+            document.getElementById('editCategoryName').value = name
+            document.getElementById('editCategoryId').value = id
         })
     })
 </script>

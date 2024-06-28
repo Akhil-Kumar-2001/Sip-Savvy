@@ -24,7 +24,11 @@ admin.get('/dashboard',loginController.dashboard)
 
 //-------------category---------------
 
-admin.get('/category',categoryController.category)
+admin.get('/category',isAdmin,categoryController.category)
+admin.post('/addcategory',isAdmin,categoryController.addCategoryPost)
+admin.get('/categorystatus',isAdmin,categoryController.status)
+admin.get('/deletecategory/:id',isAdmin,categoryController.deleteCategory)
+admin.post('/editcategory',isAdmin,categoryController.editCategory)
 
 
 //--------------Products----------------

@@ -3,6 +3,7 @@ const user = express.Router();
 const homeController = require('../controller/userController/homeController')
 const userController = require('../controller/userController/userController')
 const userSession = require('../middleware/userSession')
+const checkUser= require('../middleware/checkUserSession')
 //------------------------------- main -------------------------------
 
 user.get('/',userController.user)
@@ -20,7 +21,7 @@ user.get('/signup',userController.signup)
 user.post('/signup',userController.signupPost)
 
 //home controller
-user.get('/home',homeController.home)
+user.get('/home',checkUser,homeController.home)
 
 //--------------------Logout------------------------
 
