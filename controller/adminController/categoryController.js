@@ -8,11 +8,26 @@ const category=async(req,res)=>{
         try {
 
             const search = req.query.search || ''
+            const page = parseInt(req.query.page) || 1;
+            const limit = parseInt(req.query.limit) || 5;
 
             const category =  await categorySchema.find({categoryName:{$regex:search ,$options:'i'}})
             .sort({updatedAt:-1})
+            .limit(limit)
+            .skip((page-1)*limit)
 
-            res.render('admin/category',{title:'Category',alertMessage:req.flash('alert'),category,search})
+
+            const count = await categorySchema.countDocuments({ categoryName: { $regex: search, $options: 'i' } })
+
+            res.render('admin/category',{title:'Category',alertMessage:req.flash('alert'),
+            category,
+            totalPages: Math.ceil(count / limit),
+            currentPage: page,
+            search,
+            limit,
+            page})
+
+
         } catch (error) {
             console.log(`error while rendering category ${error}`);
         }
