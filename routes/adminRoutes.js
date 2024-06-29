@@ -33,7 +33,17 @@ admin.post('/editcategory',isAdmin,categoryController.editCategory)
 
 //--------------Products----------------
 
-admin.get('/products',productController.products)
+admin.get('/products',isAdmin,productController.products)
+admin.get('/products/:id',isAdmin,productController.deleteProduct)
+admin.get('/productstatus',isAdmin,productController.status)
+
+//----add products -----//
+admin.get('/addproduct',isAdmin,productController.addProduct)
+admin.post('/addproduct',isAdmin,productController.multer,productController.addProductPost)
+
+//----edit products -----//
+admin.get('/editproduct/:id',isAdmin,productController.editProduct)
+admin.post('/editproduct/:id',isAdmin,productController.multer,productController.editProductPost)
 
 
 //--------------------Logout------------------------

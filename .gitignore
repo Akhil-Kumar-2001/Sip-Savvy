@@ -1,2 +1,10 @@
+# ---------------env file------------
+
 .env
+
+# -----------modules---------------
 node_modules/
+
+# ----file that uploaded by admin-----
+
+uploads/*

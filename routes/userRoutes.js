@@ -25,9 +25,13 @@ user.post('/signup',userController.signupPost)
 user.get('/home',checkUser,homeController.home)
 
 
+
+//------------------ login using google ------------------ 
 user.get('/auth/google',userController.googleAuth);
 
 user.get( '/auth/google/callback',userController.googleAuthCallback);
+
+
 //--------------------Logout------------------------
 
 

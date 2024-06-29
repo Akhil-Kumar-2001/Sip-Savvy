@@ -58,7 +58,7 @@
             </a>
         </div>
         <div class="menu-item">
-            <a href="/admin/collection">
+            <a href="/admin/category">
                 <div class="admin-menu"><i class="bi bi-collection-fill"></i>Category</div>
             </a>
         </div>
@@ -107,9 +107,9 @@
                     <input type="submit" class="btn btn-danger submit-btn small-height-btn" value="Search">
                 </form>
             </div>
-            <!-- <a href="/admin/addproduct" type="button" class="btn btn-danger submit-btn"> Add Product</a> -->
-            <button type="button" class="btn btn-danger submit-btn small-height-btn" data-bs-toggle="modal" data-bs-target="#addCollection">Add
-                Products</button>
+            <a href="/admin/addproduct" type="button" class="btn btn-danger submit-btn"> Add Product</a>
+            <!-- <button type="button" class="btn btn-danger submit-btn small-height-btn" data-bs-toggle="modal" data-bs-target="#addCollection">Add -->
+                <!-- Products</button> -->
         </div>
 
         <!--------------------------------------- product table ---------------------------------------------------->
@@ -127,13 +127,78 @@
                         <th scope="col" class="product-table-last">Action</th>
                     </tr>
                 </thead>
-           
+                
+                <tbody>
+                    <% let slNo=(currentPage - 1) * limit + 1 ; %>
+                        <% products.forEach((product,index)=> { %>
+
+                            <tr scope="row">
+                                <td>
+                                    <%= index + 1 + ((page - 1) * 6) %>
+                                </td>
+                                <td>
+                                    <%= product.productName %>
+                                </td>
+                                <td>
+                                    <%= product.productPrice %>
+                                </td>
+                                <td>
+                                    <%= product.productQuantity %>
+                                </td>
+                                <td>
+                                    <%= product.productCategory %>
+                                </td>
+                                <td>
+                                    <% if(product.isActive) { %>
+                                        <span class="status active">Active</span>
+                                        <% }else{ %>
+                                            <span class="status block">Blocked</span>
+                                            <% } %>
+                                </td>
+                                <td class="products-icon">
+                                    <a href="/admin/editproduct/<%= product.id %>"><i
+                                            class="bi bi-pencil-square product-icons"></i></a>
+                                    <a
+                                        href="/admin/productstatus?id=<%= product.id %>&&status=<%= product.isActive%>"><i
+                                            class="bi bi-x-circle product-icons"></i></a>
+                                    <a href="/admin/products/<%= product.id %>" class="sweet-alert-delete"><i
+                                            class="bi bi-trash3 product-icons"></i></a>
+                                </td>
+                            </tr>
+                            <% slNo++; %>
+                                <% }) %>
+                </tbody>
+
             </table>
         </div>
     </div>
 </div>
 
 <!------------------------------------ Pagination Controls -------------------------------->
+
+
+<div class="pagination-controls d-flex ms-3 mt-3">
+    <ul class="pagination">
+        <% if (currentPage> 1) { %>
+            <li class="page-item"><a class="page-link"
+                    href="/admin/products?page=<%= currentPage - 1 %>&limit=<%= limit %>&search=<%= search %>">Previous</a>
+            </li>
+            <% } %>
+                <% for (let i=1; i <=totalPages; i++) { %>
+                    <li class="page-item <%= currentPage == i ? 'active' : '' %>">
+                        <a class="page-link"
+                            href="/admin/products?page=<%= i %>&limit=<%= limit %>&search=<%= search %>">
+                            <%= i %>
+                        </a>
+                    </li>
+                    <% } %>
+                        <% if (currentPage < totalPages) { %>
+                            <li class="page-item"><a class="page-link pagination-next-btn"
+                                    href="/admin/products?page=<%= currentPage + 1 %>&limit=<%= limit %>&search=<%= search %>">Next</a>
+                            </li>
+                            <% } %>
+    </ul>
+</div>
 
 
 
