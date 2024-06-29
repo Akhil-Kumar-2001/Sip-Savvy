@@ -4,6 +4,7 @@ const homeController = require('../controller/userController/homeController')
 const userController = require('../controller/userController/userController')
 const userSession = require('../middleware/userSession')
 const checkUser= require('../middleware/checkUserSession')
+
 //------------------------------- main -------------------------------
 
 user.get('/',userController.user)
@@ -23,7 +24,12 @@ user.post('/signup',userController.signupPost)
 //home controller
 user.get('/home',checkUser,homeController.home)
 
+
+user.get('/auth/google',userController.googleAuth);
+
+user.get( '/auth/google/callback',userController.googleAuthCallback);
 //--------------------Logout------------------------
+
 
 
 user.get('/logout',userController.logout)

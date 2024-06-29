@@ -6,7 +6,7 @@ const flash = require('connect-flash')
  require("dotenv").config()
 const session = require('express-session')
 const {v4: uuidv4} = require('uuid')
-
+const passport=require('passport')
 
 
 
@@ -50,6 +50,8 @@ app.set('views', path.join(__dirname, 'views'));
 //-----------------------public static files -------------------
 
 app.use('/public', express.static(path.join(__dirname,'public')));
+app.use('/uploads', express.static(path.join(__dirname,'uploads')));
+
 
 
 
@@ -73,6 +75,12 @@ app.use(session({
 // setting express layouts
 app.use(expressLayouts);
 app.set('layout','./layouts/layout')
+
+
+// google
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 // --------------Routes------------- //
 

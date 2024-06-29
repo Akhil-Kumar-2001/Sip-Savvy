@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt')
 const userSchema = require('../../model/userSchema')
-
+const passport=require('passport')
+const auth=require('../../service/googleAuth')
 
 
 
@@ -167,6 +168,44 @@ const logout = (req, res) => {
 
 
 
+
+const googleAuth = (req, res) => {
+  try {
+    passport.authenticate('google', {
+      scope: ['email', 'profile']
+    })(req, res);
+  } catch (err) {
+    console.error(`Error on Google authentication: ${err}`);
+  }
+};
+
+// Google auth callback from the auth service
+const googleAuthCallback = (req, res, next) => {
+  try {
+    passport.authenticate('google', (err, user, info) => {
+      if (err) {
+        console.error(`Error on Google auth callback: ${err}`);
+        return next(err);
+      }
+      if (!user) {
+        return res.redirect('/login');
+      }
+      req.logIn(user, (err) => {
+        if (err) {
+          console.error(`Error logging in user: ${err}`);
+          return next(err);
+        }
+        // Store the user ID in the session
+        req.session.user = user.id;
+        return res.redirect('/home');
+      });
+    })(req, res, next);
+  } catch (err) {
+    console.error(`Error on Google callback: ${err}`);
+    next(err); // Make sure to call next with the error
+  }
+};
+
   
   module.exports={
     user,
@@ -174,5 +213,7 @@ const logout = (req, res) => {
     loginPost,
     signup,
     signupPost,
-    logout
+    logout,
+    googleAuth,
+    googleAuthCallback
   }
