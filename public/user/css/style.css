@@ -10,7 +10,12 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    /* padding: 0.625rem 1.25rem;  10px 20px converted */
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    padding: 3px ;
     background-color: #000;
     color: #fff;
 }
@@ -85,7 +90,9 @@ body {
     text-align: center;
     margin-top: 1.875rem; /* 30px converted */
 }
-
+.home-banner{
+    margin-top: 6rem;
+}
 .home-banner img {
     width: 100%;
     max-width: 84.375rem; /* 1350px converted */
@@ -192,9 +199,7 @@ body {
     }
 }
 
-/* -------------shop-------------- */
-
-/* styles.css */
+/* -------------------- Product card -------------------- */
 
 body {
     font-family: Arial, sans-serif;
@@ -220,30 +225,42 @@ body {
 }
 
 .home-product {
-    border: 1px solid #ddd;
-    border-color: #000;
+    /* border: 1px solid #ddd;
+    border-color: #000; */
     /* border-radius: 5px; */
     padding: 10px;
     margin: 10px;
     width: 200px;
-    text-align: center;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
 }
-
+.product-new-arrival{ 
+    top: 0;
+    left: 0;
+    background-color: rgb(248, 180, 7);
+    color: white;
+    width: 6rem;
+}
 .home-product img {
     max-width: 100%;
     height: auto;
     border-bottom: 1px solid #ddd;
     margin-bottom: 10px;
+    margin-top: 1rem;
 }
 
 .home-product-name {
+    text-align: center;
     font-weight: bold;
 }
 
 .home-product-price {
+    text-align: center;
     color: #ff4500;
     margin: 10px 0;
+}
+.home-cart-icon{
+    text-align: center;
+    
 }
 
 .home-add-to-cart, .home-out-of-stock {

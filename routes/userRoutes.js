@@ -4,6 +4,7 @@ const homeController = require('../controller/userController/homeController')
 const userController = require('../controller/userController/userController')
 const userSession = require('../middleware/userSession')
 const checkUser= require('../middleware/checkUserSession')
+const productController = require('../controller/userController/productController')
 
 //------------------------------- main -------------------------------
 
@@ -17,12 +18,20 @@ user.post('/login',userController.loginPost)
 
 
 //------------------------------ signup -------------------------------
-user.get('/signup',userController.signup)
 
+user.get('/signup',userController.signup)
 user.post('/signup',userController.signupPost)
 
-//home controller
+//----------------home controller------------------------
+
 user.get('/home',checkUser,homeController.home)
+
+
+//------------------------------ product view -------------------------------
+
+user.get('/allproduct',checkUser,homeController.allProduct)
+user.get('/latestproduct',checkUser,homeController.latestProduct)
+user.get('/productdetail/:id',checkUser,productController.productDetail)
 
 
 

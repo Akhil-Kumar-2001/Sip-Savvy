@@ -1,0 +1,94 @@
+<style>
+    .product-sort{
+        display: flex;
+        justify-content: end;
+        margin-right: 10rem;
+        height: 2.5rem;
+    }
+    .product-sort select{
+        width: 20%;
+        background: #232323;
+        color: #fefeeb;
+        border-radius: 5px;
+    }
+</style>
+
+<%- include('navbar') %>
+
+<!---------------------- Breadcrumbs ----------------------->
+<nav class="breadcrumbs">
+    <ul>
+        <li><a href="/">Home</a></li>
+        <span>/</span>
+        <li><a href="/user/allproduct">All Product</a></li>
+    </ul>
+</nav>
+
+<!-------------------------------------------- All Products ------------------------------------------------->
+<div class="product-container">
+    <div class="product-sort mb-3">
+        <select name="sort-box" class="sort-box" onchange="sortbyCategory('<%= title %>')">
+            <option selected>Sort By</option>
+            <option value="1">Product Name Aa - Zz</option>
+            <option value="2">Product Name Zz - Aa</option>
+            <option value="3">Price low - high</option>
+            <option value="4">Price high - low</option>
+            <option value="5">New arrival</option>
+        </select>
+    </div>
+    <h2>Our Products</h2>
+    <div class="product-list-box container">
+        <% product.forEach((product) => { %>
+            <div class="product-box">
+                <% if(new Date(product.createdAt).getTime() > (Date.now() - (10 * 24 * 60 * 60 * 1000))) { %>
+                    <div class="product-discount-box">
+                        <h6>New Arrival</h6>
+                    </div>
+                <% } else if (product.productDiscount != 0) { %>
+                    <div class="product-newarrival-box">
+                        <h6>
+                            <%= product.productDiscount %> &percnt; OFF
+                        </h6>
+                    </div>
+                <% } %>
+                <div class="product-image-box">
+                    <a href="/user/productDetail/<%= product.id %>" class="product-name-link">
+                        <img src="/<%= product.productImage[0] %>" alt="">
+                    </a>
+                </div>
+                <div class="product-name-box">
+                    <h6 class="product-text-row">
+                        <%= product.productName %>
+                    </h6>
+                    <h5 class="product-price">
+                        <i class="fa-solid fa-indian-rupee-sign product-text-row"></i>
+                        <%= product.productPrice.toLocaleString() %>
+                    </h5>
+                </div>
+                <div>
+                    <a href="#" class="wishlist-icon"><i class="fas fa-heart"></i></a>
+                    <a onclick="addToCart('<%= product.id %>', '<%= product.productPrice %>', '<%= user %>')" class="cart-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                </div>
+                </a>
+            </div>
+        <% }) %>
+    </div>
+</div>
+
+<%- include('pagination') %>
+
+<%- include('footer') %>
+
+
+<script>
+    function sortbyCategory(params){
+        const sortBoxValue = document.getElementsByName('sort-box')[0].value
+        let location;
+        if(params)
+        {
+            location =`?sortby=${sortBoxValue}`
+        }
+        window.location.href=`/user/allproduct/${location}`
+    }
+</script>
