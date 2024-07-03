@@ -1,0 +1,67 @@
+ <!-- shop section -->
+
+
+ <style>
+    .product-icon{
+        font-size: 1.5rem;
+
+     
+        
+    }
+    .product-product img{
+        width: 10rem;
+    }
+ 
+    .product-new-arrival{ 
+    top: 0;
+    left: 0;
+    background-color: rgb(248, 180, 7);
+    background-color: rgb(252, 171, 58);
+    color: white;
+    width: 6rem;
+
+    }
+    
+ </style>
+ <!-------------- Line -------------->
+
+<div class="home-line-div">
+    <hr>
+</div>
+
+<!---------Similar products  --------->
+
+
+ <div class="home-container">
+     <h1 class="home-title"> Similar Products </h1>
+     <!-- <p class="home-all-products">See all  ></p> -->
+     
+    <div class="home-products">
+           <% for(let i = 0 ; i < similarProduct.length && i < 4 ; i++ ) { %>
+             <div class="home-product">
+                
+            <div class="product-image">
+                <a href="/productDetail/<%= similarProduct[i].id %>" class="product-name-link">
+                    <img src="/../<%=similarProduct[i].productImage[0]  %>" alt="">
+                </a>
+            </div>
+
+            <p class="home-product-name">
+                <%= similarProduct[i].productName %>
+            </p>
+            <p class="home-product-price">
+                <i class="bi bi-currency-rupee"></i>
+                <%= similarProduct[i].productPrice.toLocaleString() %>
+            </p>
+            <div class="home-cart-icon">
+                <i class="bi bi-heart product-icon"></i>
+                <i class="bi bi-cart-fill product-icon ms-3"></i>
+            
+            </div>
+            
+        </div>  
+        <% } %>
+    </div>
+</div>
+
+
