@@ -31,6 +31,7 @@ user.get('/home',checkUser,homeController.home)
 
 user.get('/allproduct',checkUser,homeController.allProduct)
 user.get('/latestproduct',checkUser,homeController.latestProduct)
+user.get('/product/:category',checkUser,homeController.category)
 user.get('/productdetail/:id',checkUser,productController.productDetail)
 
 

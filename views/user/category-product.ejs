@@ -1,0 +1,84 @@
+ <!-- shop section -->
+
+
+ <style>
+    .product-icon{
+        font-size: 1.5rem;
+
+     
+        
+    }
+    .product-product img{
+        width: 10rem;
+    }
+ 
+    .product-new-arrival{ 
+    top: 0;
+    left: 0;
+    background-color: rgb(248, 180, 7);
+    background-color: rgb(252, 171, 58);
+    color: white;
+    width: 6rem;
+
+    }
+    
+ </style>
+
+<%- include('navbar') %>
+
+<!--------- breadcrumbs --------->
+
+<nav class="breadcrumbs">
+    <ul>
+        <li><a href="/">Home</a></li>
+        <span>/</span>
+        <li><a href="">
+                <%= title %>
+            </a></li>
+    </ul>
+</nav>
+
+ <div class="home-container">
+     <h1 class="home-title"> <%= title %> </h1>
+     <!-- <p class="home-all-products">See all  ></p> -->
+     
+    <div class="home-products">
+
+            <% product.forEach((product)=>{ %>
+                <% if(new Date(product.createdAt).getTime()> (Date.now() - (10 * 24 * 60 * 60 * 1000))){ %>
+             <div class="home-product">
+                 <div class="product-new-arrival">
+                      <h6 class="ms-1">New Arrival</h6>
+                  </div>
+             <% } else if(product.productDiscount !=0) { %>
+                <div class="product-new-arrival">
+                    <h6 class="ms-1">
+                        <%= product.productDiscount %> &percnt; OFF
+                    </h6>
+                </div>
+                <% } %>
+            <div class="product-image">
+                <a href="/productDetail/<%= product.id %>" class="product-name-link">
+                    <img src="/<%= product.productImage[0] %>" alt="">
+                </a>
+            </div>
+
+            <p class="home-product-name">
+                <%= product.productName %>
+            </p>
+            <p class="home-product-price">
+                <i class="bi bi-currency-rupee"></i>
+                <%= product.productPrice.toLocaleString() %>
+            </p>
+            <div class="home-cart-icon">
+                <i class="bi bi-heart product-icon"></i>
+                <i class="bi bi-cart-fill product-icon ms-3"></i>
+            
+            </div>
+            
+        </div>  
+        <% }) %>
+    </div>
+</div>
+
+<%- include('footer') %>

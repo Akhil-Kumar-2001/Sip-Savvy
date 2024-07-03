@@ -10,12 +10,12 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    position: fixed;
+    /* position: fixed;
     width: 100%;
     z-index: 1000;
     top: 0;
     left: 0;
-    padding: 3px ;
+    padding: 3px ; */
     background-color: #000;
     color: #fff;
 }
@@ -91,7 +91,7 @@ body {
     margin-top: 1.875rem; /* 30px converted */
 }
 .home-banner{
-    margin-top: 6rem;
+    /* margin-top: 6rem; */
 }
 .home-banner img {
     width: 100%;
@@ -138,7 +138,7 @@ body {
 
 
 
-/* most popular category */
+/*------------ most popular category -------------*/
 
 .home-most-popular-categories {
     text-align: center;
@@ -155,19 +155,29 @@ body {
     justify-content: center;
     gap: 3.25rem; /* 20px / 16px = 1.25rem */
     margin-top: 3rem;
+    display: flex;
+    /* justify-content: space-around; */
+    align-items: center;
+    text-align: center;
 }
 
 .home-category {
-    background-color: #f0f0f0;
-    padding: 0.625rem; /* 10px / 16px = 0.625rem */
+    /* background-color: #f0f0f0; */
+    background-color: black;
+    /* padding: 0.625rem; 10px / 16px = 0.625rem */
     border-radius: 0.3125rem; /* 5px / 16px = 0.3125rem */
     box-shadow: 0 0 0.625rem rgba(0,0,0,0.1); /* 10px / 16px = 0.625rem */
     transition: transform 0.3s;
+    color: white;
+     flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .home-category img {
     width: 16.25rem; /* 100px / 16px = 6.25rem */
     height: auto;
+    border-radius:0.4rem ;
 }
 .home-vodka img{
     margin-top: 89px;
@@ -199,7 +209,53 @@ body {
     }
 }
 
+
+/*--------------------------------- Breadcrumbs ---------------------------------*/
+
+
+.breadcrumbs {
+    font-size: 16px;
+    height: 5rem;
+    width: 14rem;
+    display: flex;
+    justify-content: end;
+    align-items: end;
+    margin-left: 10rem;
+}
+
+.breadcrumbs ul {
+    list-style-type: none;
+    display: flex;
+}
+
+.breadcrumbs ul span {
+    /* color: #fefeeb; */
+    color: #000;
+    margin: 0rem 1rem;
+}
+
+.breadcrumbs li:last-child {
+    font-weight: bold;
+}
+
+.breadcrumbs a {
+    text-decoration: none;
+    /* color: #fefeeb; */
+    color: #000;
+}
+
+.breadcrumbs a:hover {
+    /* color: #f55; */
+    color: red;
+}
+
+
+
+
 /* -------------------- Product card -------------------- */
+
+
+
 
 body {
     font-family: Arial, sans-serif;
@@ -240,6 +296,15 @@ body {
     color: white;
     width: 6rem;
 }
+/* .product-image{
+    width: 100%;
+    height: 14rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 10px;
+} */
 .home-product img {
     max-width: 100%;
     height: auto;
