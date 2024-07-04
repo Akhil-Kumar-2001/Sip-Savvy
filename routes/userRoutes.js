@@ -22,6 +22,13 @@ user.post('/login',userController.loginPost)
 user.get('/signup',userController.signup)
 user.post('/signup',userController.signupPost)
 
+
+// --------------------Otp verify---------------------------
+
+user.get('/OTP',userController.getOTPPage)
+user.post('/OTP',userController.otpPost)
+user.get('/resend',userController.otpResend)
+
 //----------------home controller------------------------
 
 user.get('/home',checkUser,homeController.home)

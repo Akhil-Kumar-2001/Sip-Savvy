@@ -1,0 +1,101 @@
+<style>
+    .card {
+    box-shadow: 0 20px 27px 0 rgb(0 0 0 / 5%);
+}
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 0 solid rgba(0,0,0,.125);
+    border-radius: 1rem;
+}
+.img-thumbnail {
+    padding: .25rem;
+    background-color: #ecf2f5;
+    border: 1px solid #dee2e6;
+    border-radius: .25rem;
+    max-width: 100%;
+    height: auto;
+}
+.avatar-lg {
+    height: 150px;
+    width: 150px;
+}
+</style>
+
+<%- include('alert')  %>
+
+<div class="container">
+    <br>
+    <div class="row">
+        <div class="col-lg-5 col-md-7 mx-auto my-auto">
+            <div class="card">
+                <div class="card-body px-lg-5 py-lg-5 text-center">
+                    <img src="https://bootdey.com/img/Content/avatar/avatar7.png" class="rounded-circle avatar-lg img-thumbnail mb-4" alt="profile-image">
+                    <h2 class="text-info">2FA Security</h2>
+                    <p class="mb-4">Enter 6-digits code from your athenticatior app.</p>
+                    <form method="post" action="/OTP">
+                        <div class="row mb-4">
+                            <div class="col-lg-2 col-md-2 col-2 ps-0 ps-md-2">
+                                <input type="text" minlength="1" maxlength="1" class="form-control text-lg text-center" placeholder="_" aria-label="2fa" name="otp[]">
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-2 ps-0 ps-md-2">
+                                <input type="text" minlength="1" maxlength="1" class="form-control text-lg text-center" placeholder="_" aria-label="2fa" name="otp[]">
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-2 ps-0 ps-md-2">
+                                <input type="text" minlength="1" maxlength="1" class="form-control text-lg text-center" placeholder="_" aria-label="2fa" name="otp[]">
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-2 pe-0 pe-md-2">
+                                <input type="text" minlength="1" maxlength="1" class="form-control text-lg text-center" placeholder="_" aria-label="2fa" name="otp[]">
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-2 pe-0 pe-md-2">
+                                <input type="text" minlength="1" maxlength="1" class="form-control text-lg text-center" placeholder="_" aria-label="2fa" name="otp[]">
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-2 pe-0 pe-md-2">
+                                <input type="text" minlength="1" maxlength="1" class="form-control text-lg text-center" placeholder="_" aria-label="2fa" name="otp[]">
+                            </div>
+                        </div>
+                        <div class="text-center pt-3 " style="width: 70%; padding-left: 7rem; ">
+                            <a href="/resend" id="resend-btn" class="btn btn-danger submit-btn  " style="display: none;  ">Resend</a>
+                        </div>
+                        <button id="verify-btn" type="submit" class="mt-4 btn bg-info btn-lg my-4">Verify</button>
+                    </form>
+                    
+                    <div id="otpTimer" class="mt-3 text-black"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const otpTimer = document.getElementById('otpTimer');
+    const verifyBtn = document.getElementById('verify-btn');
+    const resendBtn = document.getElementById('resend-btn');
+    const duration = 60   * 1000;
+    const otpTime = Date.now();
+
+    function countDown() {
+        const interval = setInterval(() => {
+            const now = Date.now();
+            let remain = duration - (now - otpTime);
+
+            if (remain <= 0) {
+                otpTimer.remove();
+                verifyBtn.disabled = true;
+                resendBtn.style.display = 'block';
+                clearInterval(interval);
+            } else {
+                const min = Math.floor((remain % (1000 * 60 * 60)) / (1000 * 60));
+                const sec = Math.floor((remain % (1000 * 60)) / 1000);
+                otpTimer.innerHTML = `Time remaining: ${min}:${sec < 10 ? '0' : ''}${sec}`;
+            }
+        }, 1000);
+    }
+
+    countDown();
+</script>
