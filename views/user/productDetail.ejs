@@ -26,9 +26,7 @@
       <div class="row gx-5">
         <aside class="col-lg-6">
           <div class="border rounded-4 mb-3 d-flex justify-content-center">
-            <a data-fslightbox="mygalley" class="rounded-4 main-image" target="_blank" data-type="image" href="">
-              <img id="image-view" style="max-width: 100%; max-height: 60vh; margin: auto;" class="rounded-4 fit" src="../../<%= product.productImage[0]%>" />
-            </a>
+              <img id="image-view" style="max-width: 100%; max-height: 60vh; margin: auto; cursor: pointer;" class="rounded-4 fit" src="../../<%= product.productImage[0]%>" />
           </div>
           <div class="d-flex justify-content-center mb-3">
             <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image" href="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big1.webp" class="item-thumb">
@@ -36,7 +34,7 @@
               <% product.productImage.forEach((img,index)=>{ %>
                 <a>
                     <div class="product-image-min " width="60" height="60" onclick="changeImage(`<%=img.replace(/\\/g, '\\\\')%>`)">
-                        <img width="100" height="100" class="rounded-2" src="../../<%= img %>" alt="">
+                        <img width="100" height="100" style="cursor: pointer;" class="rounded-2" src="../../<%= img %>" alt="">
                     </div>
                 </a>
                 <% }) %>
@@ -75,11 +73,13 @@
               <!-- <span class="text-muted">/per box</span> -->
             </div>
             <p class="text-danger fs-4">
-              <% if(product.productQuantity<=20) { %>
+              <% if(product.productQuantity <= 20 && product.productQuantity > 0 ) { %>
                 Only
               <%= product.productQuantity %>
               left 
-              <% } %>
+              <% }else if(product.productQuantity<=0) { %>
+                Out of stock
+                <% } %>
             </p>
   
             <p>

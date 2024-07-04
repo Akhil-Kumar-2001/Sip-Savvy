@@ -61,7 +61,7 @@
                 </a>
             </div>
             <div class="menu-item">
-                <a href="/admin/order">
+                <a href="#">
                     <div class="admin-menu"><i class="bi bi-cart"></i>Orders</div>
                 </a>
             </div>
@@ -112,10 +112,11 @@
                         </tr>
                     </thead>
                     <tbody>
+                     <% let slNo=(currentPage - 1) * limit + 1 ; %>
                         <% user.forEach((user,index)=> { %>
                             <tr scope="row">
                                 <td>
-                                    <%= index+1 %>
+                                    <%= index+1+ ((page - 1) * 5) %>
                                 </td>
                                 <td>
                                     <%= user.name %>
@@ -137,6 +138,7 @@
                                     <a href="/admin/userstatus?id=<%= user.id %>&&status=<%= user.isActive%>"><i class="bi bi-x-circle"></i></a>
                                 </td>
                             </tr>
+                            <% slNo++; %>
                             <% }) %>
                     </tbody>
                 </table>
@@ -145,7 +147,29 @@
     </div>
     
         <!------------------------------------ Pagination Controls -------------------------------->
-    
+
+        <div class="pagination-controls d-flex  mt-3">
+            <ul class="pagination">
+                <% if (currentPage> 1) { %>
+                    <li class="page-item"><a class="page-link"
+                            href="/admin/users=<%= currentPage - 1 %>&limit=<%= limit %>&search=<%= search %>">Previous</a>
+                    </li>
+                    <% } %>
+                        <% for (let i=1; i <=totalPages; i++) { %>
+                            <li class="page-item <%= currentPage == i ? 'active' : '' %>">
+                                <a class="page-link"
+                                    href="/admin/users?page=<%= i %>&limit=<%= limit %>&search=<%= search %>">
+                                    <%= i %>
+                                </a>
+                            </li>
+                            <% } %>
+                                <% if (currentPage < totalPages) { %>
+                                    <li class="page-item"><a class="page-link pagination-next-btn"
+                                            href="/admin/users?page=<%= currentPage + 1 %>&limit=<%= limit %>&search=<%= search %>">Next</a>
+                                    </li>
+                                    <% } %>
+            </ul>
+        </div>
        
     
     <%- include('footer') %>

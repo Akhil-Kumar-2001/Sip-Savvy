@@ -147,7 +147,11 @@
     const signUpButton = document.getElementById('register-btn')
 
     function checkEmail(email) {
-        const re = /\S+@\S+\.\s+/;
+        // const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        // const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        // const re = /^(?!.\.\d)(?=[a-zA-Z0-9._%+-][a-zA-Z]{3,}\d*@)[a-zA-Z0-9._%+-]+@[a-z]{3,}\.[a-z]{2,}$/i;
+
+        const re = /\[a-z\d]+@\S+\.\s+/;
         return re.test(email)
     }
     function validatePassword(password){

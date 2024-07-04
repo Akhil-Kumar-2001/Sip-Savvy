@@ -20,12 +20,13 @@ const home = async(req, res) => {
 
 const allProduct = async(req,res)=>{
   try {
-    const search = req.query.search || ''
+    const search = req.query.search || ""
 
     const product = await productSchema.find({ isActive: true })
 
-    res.render('user/allproduct',
+    res.render('user/allproducts',
         { title: 'All Product',
+          alertMessage:req.flash('alert'),
           user:req.session.user,
           product,
           search
@@ -56,7 +57,6 @@ const latestProduct = async(req,res)=>{
                       break;
             case '5': sort = {createdAt: -1}
                       break;
-
         }
       }else{
          sort = {createdAt: -1}
@@ -76,6 +76,43 @@ const latestProduct = async(req,res)=>{
     }
 }
 
+const category = async(req,res)=>{
+  const categoryName = req.params.category || ""
+  const sortby = req.query.sortby || "" 
+  try {
+
+    let sort = ""
+    if(sortby){
+      switch(sortby){
+        case '1' : sort = {productName:1}
+                  break;
+        case '2' : sort = {productName:-1}
+                  break;
+        case '3' : sort = {productName:1}
+                  break;
+        case '4' : sort = {productName:-1}
+                  break;
+        case '5' : sort = {createdAt: -1}
+                  break;
+      
+      }
+    }else{
+      sort = {createdAt: -1}
+    }
+
+    const categoryProduct = await productSchema.find({productCategory:categoryName,isActive:true})
+                            .sort(sort)
+    res.render('user/category-product',{title:categoryName,
+        alertMessage:req.flash('alert'),
+        product:categoryProduct,
+        user:req.session.user
+    })
+
+  } catch (error) {
+    console.log(`error in category wise product rendering ${error}`)
+  }
+}
+
 
 
 
@@ -85,6 +122,7 @@ const latestProduct = async(req,res)=>{
     home,
     allProduct,
     latestProduct,
+    category
 
   
   }

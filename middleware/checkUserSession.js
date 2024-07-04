@@ -8,7 +8,8 @@ async function checkUser (req, res, next) {
         next()
       } else {
         req.session.user = ''
-        res.redirect('/user/login')
+        req.flash('alert','Your account has been temporarily blocked by the admin')
+        res.redirect('/login')
       }
     } else {
       next()

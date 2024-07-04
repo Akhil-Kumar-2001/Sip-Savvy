@@ -2,8 +2,10 @@
 
 .admin-home {
     display: flex;
-    padding-top: 5rem;
+    padding-bottom: 5rem;
+
     }
+    
     
     .sidebar {
     width: 250px;

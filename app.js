@@ -56,7 +56,7 @@ app.use('/uploads', express.static(path.join(__dirname,'uploads')));
 
 
 
-//------------------------- url encoded data -------------------
+//------------------------- url encoded data ---------------------
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true}));
