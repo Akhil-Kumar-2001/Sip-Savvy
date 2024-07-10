@@ -1,0 +1,509 @@
+<style>
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus {
+        -webkit-text-fill-color: #fefeeb;
+        transition: background-color 5000s ease-in-out 0s;
+    }
+
+    .card {
+        background-color: #000000;
+        border: none;
+    }
+
+    .profile-text {
+        color: #fefeeb;
+    }
+
+    .card-body {
+        color: #fefeeb;
+        display: flex;
+        align-items: center;
+        gap: 10rem;
+        justify-content: center;
+    }
+
+    .card-address {
+        color: #fefeeb;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .pen-option {
+        display: flex;
+        justify-content: end;
+        margin-right: 5rem;
+        margin-bottom: 2rem;
+    }
+
+    .pen-option a {
+        color: #fefeeb;
+        font-size: 20px;
+    }
+
+    .user-profile-div {
+        margin-bottom: 20px;
+        height: 95%;
+    }
+
+    .address-cards {
+        display: flex;
+        gap: 10px;
+    }
+
+    .single-address-div {
+        border: 1px solid #444;
+        /* border-radius: 10px; */
+        padding: 20px;
+        margin-bottom: 10px;
+        width: 90%;
+    }
+
+    .main-profile-address {
+        display: flex;
+        justify-content: end;
+    }
+
+    .address-profile h1 {
+        display: flex;
+        justify-content: center;
+    }
+
+    .address-icons {
+        display: flex;
+        justify-content: end;
+    }
+
+    .address-icons a {
+        margin-right: 10px;
+    }
+
+    #update-btn {
+        background-color: #DB4444;
+        border: none;
+        color: #fefeeb;
+    }
+
+    #update-btn:hover {
+        background-color: #f55;
+    }
+
+    .close-btn {
+        background-color: #555;
+        border: none;
+        color: #fefeeb;
+    }
+
+    .modal-content {
+        background-color: #000;
+        color: #fefeeb;
+    }
+
+    .form-control {
+        display: block;
+        width: 100%;
+        padding: 0.875rem 1.125rem;
+        font-size: 0.875rem;
+        font-weight: 400;
+        line-height: 1;
+        color: #fefeeb;
+        background-color: transparent;
+        background-clip: padding-box;
+        border: 1px solid #c5ccd6;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        /* border-radius: 0.35rem; */
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
+    .form-control:focus {
+        background: #232323;
+        color: #fefeeb;
+    }
+
+    .user-side-div {
+        height: 95%;
+    }
+
+    .card-sidebar {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 100%;
+    }
+
+    .card-sidebar h2 {
+        padding: 1.5rem;
+        color: #fefeeb;
+        display: flex;
+        gap: 1rem;
+    }
+
+    .list-group {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .list-group-item {
+        background: transparent;
+        border: none;
+        font-size: 1.1rem;
+        border-radius: 5px;
+    }
+
+    .list-group-item:hover {
+        background: #fff;
+
+    }
+
+    .list-group-item:hover a {
+        color: black;
+    }
+
+    .list-group-item a {
+        color: #fefeeb;
+        text-decoration: none;
+        display: flex;
+        gap: 1rem;
+    }
+</style>
+
+<%- include('navbar')%>
+
+    <!---------------------------------- User Profile ---------------------------------------->
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="card user-side-div">
+                    <div class="card-sidebar">
+                        <h2><i class="bi bi-list"></i>Menu</h2>
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <a href="/profile"><i class="bi bi-person-fill"></i>Profile</a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="#"><i class="bi bi-tag"></i>My Orders</a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="#"><i class="bi bi-wallet-fill"></i>Wallet</a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="/forgotpassword"><i class="bi bi-x-octagon"></i>Reset Password</a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="/logout"><i class="bi bi-box-arrow-right"></i>logout</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!--------- profile ----------->
+            <div class="col-lg-9">
+                <div class="card user-profile-div">
+                    <div class="card-body">
+                        <div>
+                            <i class="bi bi-person-square" style="font-size: 10rem;"></i>
+                            <h2>Your Profile</h2>
+                        </div>
+                        <form method="post" action="/update-profile" style="width: 40%;">
+                            <div class="form-group mb-3">
+                                <label class="profile-text">Name</label>
+                                <input type="text" class="form-control" name="userName" required value="<%= userDetail.name %>" />
+                            </div>
+                            <div class="form-group mb-3">
+                                <label class="profile-text">Email address</label>
+                                <input type="email" class="form-control" name="email" required value="<%= userDetail.email %>" readonly />
+                            </div>
+                            <div class="form-group mb-5">
+                                <label class="profile-text">Phone Number</label>
+                                <input type="text" class="form-control" name="phoneNumber" required value="<%= userDetail.phone %>" />
+                            </div>
+                            <button type="submit" class="btn btn-primary-hover-outline w-100 mb-4"
+                                id="update-btn">Update</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-------- Address Column ------->
+        <div class="main-profile-address">
+
+            <div class="col-lg-9">
+                <div class="card user-profile-div">
+                    <div class="card-address">
+                        <div class="address-profile" style="width: 100%;">
+                            <h1>Your Address</h1>
+                            <div class="pen-option text-right">
+                                <% if (userDetail.address.length < 4) { %>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#addressModal"
+                                        title="Add New Address" class="btn btn-danger address-add">
+                                        Add Address</i>
+                                    </a>
+                                    <% } else { %>
+                                        <span>Maximum 4 addresses reached</span>
+                                        <% } %>
+                            </div>
+                            <div class="address-cards">
+                                <% if (!userDetail.address || userDetail.address.length===0) { %>
+                                    <p class="mt-5">No Address Found. Please add an Address.</p>
+                                    <% } else { %>
+                                        <% userDetail.address.forEach((address, index)=> { %>
+                                            <div class="single-address-div">
+                                                <div class="address-icons">
+                                                    <a href="/edit-address/<%= index %>" title="Edit Address">
+                                                        <i class="bi bi-pencil"></i>
+                                                    </a>
+                                                    <a href="#" class="delete-address" data-address-index="<%= index %>"
+                                                        title="Delete Address">
+                                                        <i class="bi bi-trash"></i>
+                                                    </a>
+                                                </div>
+                                                <div class="address">
+                                                    <p>
+                                                        <span>
+                                                            <%= address.building %> ,
+                                                        </span>
+                                                        <span>
+                                                            <%= address.street %> ,
+                                                        </span>
+                                                    </p>
+                                                    <p>
+                                                        <%= address.city %> ,
+                                                    </p>
+                                                    <p>
+                                                        <%= address.state %>, <%= address.country %>, <%=
+                                                                    address.pincode %>
+                                                    </p>
+                                                    <p>
+                                                        <%=address.phonenumber %>
+                                                    </p>
+                                                    <span>
+                                                        <%= address.landmark %>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <% }) %>
+                                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('footer')%>
+
+
+        <!---------------------------------- Address adding modal box ---------------------------------------->
+
+        <div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Add New Address</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="addressForm" method="post" action="/add-address">
+                            <div class="form-group mb-2">
+                                <label for="building">Flat, House no., Building, Company, Apartment</label>
+                                <input type="text" name="building" class="form-control" id="building"
+                                    placeholder="Enter your address" required>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label for="street">Area, Street, Sector, Village</label>
+                                <input type="text" name="street" class="form-control" id="street"
+                                    placeholder="Enter your Area" required>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label for="city">Town/City</label>
+                                <input type="text" name="city" class="form-control" id="city"
+                                    placeholder="Enter your City" required>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="phonenumber">Phone Number</label>
+                                        <input type="tel" name="phonenumber" class="form-control" id="phonenumber"
+                                            placeholder="Contact Number" required>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="pincode">Pincode</label>
+                                        <input type="text" name="pincode" class="form-control" id="pincode"
+                                            placeholder="Enter your Pincode" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label for="landmark">Landmark</label>
+                                <input type="text" name="landmark" class="form-control" id="landmark"
+                                    placeholder="Enter Nearest Landmark" required>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="state">State</label>
+                                        <input type="text" name="state" class="form-control" id="state"
+                                            placeholder="Enter your state" required>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="country">Country</label>
+                                        <input type="text" name="country" class="form-control" id="country"
+                                            placeholder="Enter your Country" required>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary close-btn" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-danger">Save</button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!----------------------------------- Sweet Alert For Delete ---------------------------------------->
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const deleteButtons = document.querySelectorAll('.delete-address');
+
+                deleteButtons.forEach(button => {
+                    button.addEventListener('click', function (event) {
+                        event.preventDefault();
+                        const addressIndex = parseInt(this.getAttribute('data-address-index'));
+                        if (!isNaN(addressIndex) && addressIndex >= 0) {
+                            Swal.fire({
+                                title: 'Are you sure?',
+                                text: "You won't be able to revert this!",
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Yes, delete it!'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.href = "/remove-address/" + addressIndex;
+                                }
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Invalid Address Index',
+                                text: 'The address index is invalid. Please try again.'
+                            });
+                        }
+                    });
+                });
+            });
+
+
+            // validation for modal
+
+            document.addEventListener('DOMContentLoaded', (event) => {
+                const addressForm = document.getElementById('addressForm');
+                const building = document.getElementsByName('building')[0];
+                const street = document.getElementsByName('street')[0];
+                const city = document.getElementsByName('city')[0];
+                const phone = document.getElementsByName('phonenumber')[0];
+                const pincode = document.getElementsByName('pincode')[0];
+                const landmark = document.getElementsByName('landmark')[0];
+                const state = document.getElementsByName('state')[0];
+                const country = document.getElementsByName('country')[0];
+
+                function validatePhone(phone) {
+                    const phoneRe = /^\d{10}$/;
+                    return phoneRe.test(phone);
+                }
+                function validatePincode(pincode) {
+                    const pincodeRe = /^\d{6}$/;
+                    return pincodeRe.test(pincode);
+                }
+                addressForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    if (building.value.trim() === "" || !isNaN(building.value)) {
+                        Swal.fire({
+                            title: "Error",
+                            text: "Building field must not be empty and Not a Number.",
+                            icon: "error"
+                        });
+                    } else if (building.value.length > 25 || building.value.length < 4) {
+                        Swal.fire({
+                            title: "Error",
+                            text: "Building field must be Greater than 4 letters and less than 25 letters.",
+                            icon: "error"
+                        });
+                    } else if (street.value.trim() === "" || !isNaN(street.value)) {
+                        Swal.fire({
+                            title: "Error",
+                            text: "Street field must not be empty and Not a Number.",
+                            icon: "error"
+                        });
+                    } else if (street.value.length > 25 || street.value.length < 4) {
+                        Swal.fire({
+                            title: "Error",
+                            text: "Street Field Must be Greater than 4 Letters and less than 25 letters.",
+                            icon: "error"
+                        });
+                    } else if (city.value.trim() === "" || !isNaN(city.value)) {
+                        Swal.fire({
+                            title: "Error",
+                            text: "City field must not be empty and Not a Number.",
+                            icon: "error"
+                        });
+                    } else if (city.value.length > 25 || city.value.length < 4) {
+                        Swal.fire({
+                            title: "Error",
+                            text: "City field must be Greater than 4 Words and less than 25 Words.",
+                            icon: "error"
+                        });
+                    } else if (!validatePhone(phone.value)) {
+                        Swal.fire({
+                            title: "Error",
+                            text: "Phone number must be 10 digits.",
+                            icon: "error"
+                        });
+                    } else if (!validatePincode(pincode.value)) {
+                        Swal.fire({
+                            title: "Error",
+                            text: "Pincode must be 6 digits.",
+                            icon: "error"
+                        });
+                    } else if (landmark.value.trim() === "" || !isNaN(landmark.value)) {
+                        Swal.fire({
+                            title: "Error",
+                            text: "Landmark field must not be empty.",
+                            icon: "error"
+                        });
+                    } else if (state.value.trim() === "" || !isNaN(state.value)) {
+                        Swal.fire({
+                            title: "Error",
+                            text: "State field must not be empty.",
+                            icon: "error"
+                        });
+                    } else if (country.value.trim() === "" || !isNaN(country.value)) {
+                        Swal.fire({
+                            title: "Error",
+                            text: "Country field must not be empty.",
+                            icon: "error"
+                        });
+                    } else {
+                        addressForm.submit();
+                    }
+                });
+            });
+
+
+
+        </script>

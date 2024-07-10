@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const addressSchema = require('./addressSchema')
 
 const schema = new mongoose.Schema({
     name:{
@@ -18,6 +19,13 @@ const schema = new mongoose.Schema({
     isActive:{
         type:Boolean,
         default:true
+    },
+    address: {
+        type: [addressSchema],
+        default: []
+    },
+    googleID: {
+        type: String
     },
 
 },{timestamps:true})
