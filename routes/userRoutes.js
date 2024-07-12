@@ -7,6 +7,7 @@ const checkUser= require('../middleware/checkUserSession')
 const productController = require('../controller/userController/productController');
 const forgotPassword = require('../controller/userController/forgotPassword');
 const profileController = require('../controller/userController/profileController')
+const cartController = require('../controller/userController/cartController')
 
 //------------------------------- main -------------------------------
 
@@ -53,6 +54,17 @@ user.post('/add-address',activeUser,profileController.addAddress)
 user.get('/remove-address/:index',activeUser,profileController.removeAddress)
 user.get('/edit-address/:index',activeUser,profileController.editAddress)
 user.post('/update-address/:index',activeUser,profileController.updateAddress)
+
+
+
+//----------------------------- Cart route --------------------------
+
+user.get('/cart',activeUser,cartController.cart)
+user.get('/add-to-cart/:id',activeUser,cartController.addToCartPost)
+user.delete('/remove-item/:id',activeUser,cartController.removeItem)
+user.post('/cart/increment',activeUser,cartController.increment)
+user.post('/cart/decrement',activeUser,cartController.decrement)
+
 
 
 //------------------ login using google ------------------ 
