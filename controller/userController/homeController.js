@@ -63,7 +63,6 @@ const latestProduct = async(req,res)=>{
       }
 
       const product = await productSchema.find({isActive :true}).sort(sort)
-      console.log(product)
 
       res.render('user/latestproduct',
       {title: "Latest Products",
@@ -94,13 +93,13 @@ const category = async(req,res)=>{
                   break;
         case '5' : sort = {createdAt: -1}
                   break;
-      
+
       }
     }else{
       sort = {createdAt: -1}
     }
 
-    const categoryProduct = await productSchema.find({productCategory:categoryName,isActive:true})
+    const categoryProduct = await productSchema.find({productCategory:categoryName, isActive:true })
                             .sort(sort)
     res.render('user/category-product',{title:categoryName,
         alertMessage:req.flash('alert'),

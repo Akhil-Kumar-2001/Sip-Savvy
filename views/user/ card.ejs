@@ -1,0 +1,407 @@
+<style>
+    .cart-title {
+        margin-bottom: 5vh;
+    }
+
+    .cart-card {
+        display: flex;
+        justify-content: center;
+    }
+
+    .card {
+        margin: 2rem 0rem;
+        max-width: 1400px;
+        width: 90%;
+        border-radius: 1rem;
+        border: transparent;
+        background: #232323;
+    }
+
+    .cart-count a {
+        text-decoration: none;
+        color: #fefeeb;
+        padding: 0 1vh;
+    }
+
+    .cart-count a:hover {
+        color: #000;
+    }
+
+    .cart-category {
+        font-size: .8rem;
+        padding: 1rem 0rem;
+    }
+
+    .quantity button {
+        color: #fefeeb;
+        border: 1px solid #fefeeb;
+    }
+
+    .cart-price {
+        display: flex;
+        justify-content: center;
+    }
+
+    .num-product {
+        background: transparent;
+        border: 1px solid #fefeeb;
+        width: 24%;
+        border-radius: 5px;
+    }
+
+    @media(max-width:767px) {
+        .card {
+            margin: 3vh auto;
+        }
+    }
+
+    .cart {
+        color: #fefeeb;
+        background-color: #232323;
+        padding: 4vh 5vh;
+        border-bottom-left-radius: 1rem;
+        border-top-left-radius: 1rem;
+    }
+
+    @media(max-width:767px) {
+        .cart {
+            padding: 4vh;
+            border-bottom-left-radius: unset;
+            border-top-right-radius: 1rem;
+        }
+    }
+
+    .summary {
+        background-color: #ddd;
+        border-top-right-radius: 1rem;
+        border-bottom-right-radius: 1rem;
+        padding: 4vh;
+        color: rgb(65, 65, 65);
+    }
+
+    @media(max-width:767px) {
+        .summary {
+            border-top-right-radius: unset;
+            border-bottom-left-radius: 1rem;
+        }
+    }
+
+    .summary .col-2 {
+        padding: 0;
+    }
+
+    .summary .col-10 {
+        padding: 0;
+    }
+
+    .row {
+        margin: 0;
+    }
+
+    .cart-title b {
+        font-size: 1.5rem;
+    }
+
+    .cart-main {
+        margin: 0;
+        padding: 2vh 0;
+        width: 100%;
+    }
+
+    .col-2,
+    .col {
+        padding: 0 1vh;
+    }
+
+    .cart-img {
+        width: 4rem;
+        height: 4rem;
+        border-radius: 10px;
+    }
+
+    .back-to-shop {
+        margin-top: 4.5rem;
+    }
+
+    .back-shop {
+        color: #fefeeb;
+        padding: .5rem .5rem;
+        background: #000;
+        border-radius: 5px;
+    }
+
+    .back-shop:hover {
+        background: #1a1a1a;
+    }
+
+    .back-shop {
+        text-decoration: none;
+    }
+
+    .cart-summary {
+        margin-top: 4vh
+    }
+
+    .summary-product {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .cart-line {
+        margin-top: 1.25rem;
+    }
+
+    .cart-shipping {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    #code {
+        border: 1px solid rgba(0, 0, 0, 0.137);
+        padding: 1vh;
+        margin-bottom: 4vh;
+        outline: none;
+        width: 100%;
+        background-color: rgb(247, 247, 247);
+        background-image: linear-gradient(to left, rgba(255, 255, 255, 0.253), rgba(255, 255, 255, 0.185)), url("https://img.icons8.com/small/16/000000/long-arrow-right.png");
+        background-repeat: no-repeat;
+        background-position-x: 95%;
+        background-position-y: center;
+    }
+
+    #code:focus::-webkit-input-placeholder {
+        color: transparent;
+    }
+
+    .cart-empty {
+        display: flex;
+        justify-content: center;
+    }
+
+    .empty-cart {
+        margin: 2rem 0rem;
+        max-width: 1400px;
+        width: 90%;
+        border-radius: 1rem;
+        border: transparent;
+        background: #232323;
+        height: 500px;
+    }
+
+    .empty-items {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .empty-items img {
+        max-width: 200px;
+        border-radius: 10px;
+    }
+
+    .empty-items h2 {
+        color: #fefeeb;
+    }
+
+    .empty-cart p {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #fefeeb;
+        margin: 0;
+    }
+
+    .cart-product-quantity {
+        width: 25%;
+        display: flex;
+        justify-content: center;
+    }
+
+    .cart-product-quantity input {
+        width: 30%;
+        background: transparent;
+        color: #fefeeb;
+    }
+
+    .cart-product-quantity input:focus {
+        background: transparent;
+        color: #fefeeb;
+    }
+
+    .empty-p {
+        text-decoration: none;
+        margin: 0rem .7rem;
+    }
+
+    .cart-checkout {
+        display: flex;
+        justify-content: center;
+        margin: 1rem;
+    }
+
+    .cart-checkout-button {
+        width: 75%;
+        height: 8%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        background: #1a1a1a;
+        color: #fefeeb;
+    }
+</style>
+
+<%- include('navbar') %>
+
+  
+        <div class="cart-card">
+            <div class="card">
+                <div class="row">
+                    <div class="col-md-8 cart">
+                        <div class="cart-title">
+                            <div class="row">
+                                <div class="col">
+                                    <h4><b>Shopping Cart</b></h4>
+                                </div>
+                                <div class="col align-self-center">
+                                  
+                                </div>
+                            </div>
+                        </div>
+                       
+                            <div class="row border-top border-bottom">
+                                <div class="row cart-main align-items-center">
+                                    <div class="col-2">
+                                        <img class="img-fluid cart-img" src=""
+                                            alt="">
+                                    </div>
+                                    <div class="col">
+                                        <div class="row">
+                                          
+                                        </div>
+                                        <div class="row cart-category">
+                                        </div>
+                                    </div>
+                                    <div class="cart-product-quantity">
+                                        <button class="btn btn-outline-secondary btn-sm"
+                                            onclick="decrement(`1`)">-</button>
+                                        <input type="text" class="form-control text-center" id="quantity"
+                                            value="" readonly>
+                                        <button class="btn btn-outline-secondary btn-sm"
+                                            onclick="increment(`1`)">+</button>
+                                    </div>
+                                    <div class="col cart-price">
+                                        <i class="fa-solid fa-indian-rupee-sign product-text-row"></i>
+                                    </div>
+                                    <div class="col-md-1 col-lg-1 col-xl-1 text-end">
+                                        <a href="#" class="text-danger delete-link" data-id="">
+                                            <i class="fas fa-trash fa-lg"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                                <div class="back-to-shop">
+                                    <a href="/home" class="back-shop">&leftarrow; <span class="text-white">Back to
+                                            shop</span></a>
+                                </div>
+                    </div>
+                    <div class="col-md-4 summary">
+                        <div>
+                            <h5 class="cart-summary"><b>Summary</b></h5>
+                        </div>
+                        <hr class="cart-line">
+                        <div class="row">
+                            <div class="col" style="padding-left:0;">
+                                
+                                    <div class="p-1 summary-product">
+                                        <div>
+                                         
+                                        </div>
+                                        <div>
+                                           
+                                        </div>
+                                        <div>
+                                            <i class="fa-solid fa-indian-rupee-sign product-text-row"></i>
+                                           
+                                        </div>
+                                    </div>
+                             
+                            </div>
+                        </div>
+                        <form class="cart-form">
+                            <hr class="cart-line">
+                            <h6 class="mb-3">Apply Coupon</h6>
+                            <input id="code" placeholder="Enter your code">
+                        </form>
+                        <div>
+                            <hr class="cart-line mt-0">
+                            <h6>Delivery</h6>
+                            <div class="cart-shipping">
+                             
+                                    <p class="mt-2">Shipping Charge</p>
+                                    <p>
+                                        <i class="fa-solid fa-indian-rupee-sign product-text-row"></i> Free Shipping
+                                    </p>
+                                  
+                                        <p class="mt-2">Shipping Charge</p>
+                                        <p>
+                                            <i class="fa-solid fa-indian-rupee-sign product-text-row"></i> 50
+                                        </p>
+                                    
+                            </div>
+                        </div>
+                        <div class="row" style="border-top: 1px solid rgba(0,0,0,.1); padding: 2vh 0;">
+                            <div class="col">GST</div>
+                            <div class="col">12%</div>
+                            <div class="col text-right d-flex justify-content-end">
+                                <i class="fa-solid fa-indian-rupee-sign product-text-row"></i>
+                                
+                            </div>
+                        </div>
+                        <div class="row" style="border-top: 1px solid rgba(0,0,0,.1); padding: 2vh 0;">
+                            <div class="col">TOTAL PRICE</div>
+                            <div class="col text-right d-flex justify-content-end">
+                                <i class="fa-solid fa-indian-rupee-sign product-text-row"></i>
+                              
+                            </div>
+                        </div>
+                        <div class="cart-checkout">
+                         
+                                                        <a href="/checkout"
+                                                            class="btn btn-secondary cart-checkout-button">CHECKOUT</a>
+                                                   
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <div class="cart-empty">
+                <div class="empty-cart">
+                    <div class="empty-items">
+                        <img src="/public/assets/empty-cart-image.webp">
+                        <h2 class="fw-bold">
+                            Your cart is empty!
+                        </h2>
+                        <p>
+                            Your Shopping Cart lives to serve. Give it purpose , Fill it with Toys,
+                        </p>
+                        <p>
+                            Continue shopping on then <a href="/home" class="empty-p">wuzzy's homepage </a> ,
+                        </p>
+                        <p>
+                            learn about today's deals, or visit your <a href="/view-more" class="empty-p">New
+                                Arivals </a> ,
+                        </p>
+                        <a href="/home" class="btn btn-primary checkout">
+                            <i class="bi bi-arrow-left-circle" style="margin-right: 2rem;"></i>Shop Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+         
+
+                <%- include('footer') %>

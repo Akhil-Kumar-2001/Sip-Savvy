@@ -22,6 +22,87 @@
         height: 2.2rem;
         font-size: 1.7rem;
     }
+
+    /* Media query for small screens */
+@media (max-width: 768px) {
+    /* Hide all elements except the logo and the hamburger menu */
+    .home-search,
+    .home-nav,
+    .home-icons > :not(.menu-icon) {
+        display: none;
+    }
+
+    /* Show the hamburger menu icon */
+    .home-icons .menu-icon {
+        display: block;
+    }
+
+    /* Optional: Adjust header alignment */
+    .home-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 10px;
+    }  
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 993px) {
+
+    .home-search {
+        margin-left: 1rem;
+       
+    }
+    .home-search input{
+        max-width: 60%; /* Allow the search bar to take the full width of the smaller screen */
+        height: 2.2rem;
+    }
+
+     .home-search input[type="text"] {
+        padding: 8px;
+        font-size: 0.9rem;
+    } 
+ 
+    .im {
+        font-size: 1.2rem;
+        translate: 800% -83%;
+    } 
+    .home-nav{
+        display: none;
+    }
+    .home-icons{
+   padding-left: 135px;
+}
+}
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+
+.home-search {
+    margin-left: 1rem;
+   
+}
+.home-search input{
+    max-width: 285px; /* Allow the search bar to take the full width of the smaller screen */
+    height: 2.2rem;
+}
+
+ .home-search input[type="text"] {
+    padding: 8px;
+    font-size: 0.9rem;
+} 
+
+.im {
+    font-size: 1.2rem;
+    translate: 800% -83%;
+} 
+
+}
+/* .home-icon:hover{
+    color: red;
+} */
+
+
     </style>
           <!-- //---------header---------// -->
 
@@ -52,6 +133,7 @@
                         <a href="/product/Rum" class="dropdown-item">Rum</a>
                         <a href="/product/Gin" class="dropdown-item">Gin</a>
                         <a href="/product/Beer" class="dropdown-item">Beer</a>
+                        <a href="/allproduct" class="dropdown-item">All Product</a>
                     </div>
                 </div>
                 <li><a href="#">About</a></li>
@@ -62,16 +144,19 @@
         </div>
         <div class="home-icons">
             <i class="bi bi-heart-fill home-icon"></i>
-            <i class="bi bi-cart3 home-icon"></i>
+            <a href="/cart">
+                <i class="bi bi-cart3 home-icon text-white"></i>
+            </a>
 
             <% if(user){ %>
 
-                <a href="/logout" class="text-white">
-                    <i class="bi bi-box-arrow-right home-icon"></i>
+                <a href="/profile" class="text-white">
+                    <!-- <i class="bi bi-box-arrow-right home-icon"></i> -->
+                    <i class="bi bi-person-circle home-icon"></i>
                 </a>
             <% }else{ %>
                 <a href="/login" class="text-white">
-                    <i class="bi bi-person-circle home-icon"></i>
+                    <i class="bi bi-box-arrow-in-left home-icon"></i>
                 </a>
             <% } %>
            
