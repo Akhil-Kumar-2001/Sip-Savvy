@@ -84,7 +84,9 @@
                     </p>
                     <div class="home-cart-icon">
                         <i class="bi bi-heart product-icon"></i>
-                        <i class="bi bi-cart-fill product-icon ms-3"></i>
+                        <!-- <i class="bi bi-cart-fill product-icon ms-3"></i> -->
+                        <a onclick="addToCart('<%= product.id %>','<%= product.productPrice %>','<%=user %>')"
+                            class="cart-icon"><i class="bi bi-cart-fill product-icon ms-3 text-black"></i></a>
                     </div>
                 </div>  
             <% }) %>
