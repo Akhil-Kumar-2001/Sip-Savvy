@@ -5,6 +5,7 @@ const categoryController = require('../controller/adminController/categoryContro
 const productController = require('../controller/adminController/productController')
 const userController = require('../controller/adminController/userController')
 const isAdmin = require('../middleware/adminSession')
+const orderController = require('../controller/adminController/orderController')
 
 //------------------------------- main -------------------------------
 
@@ -46,10 +47,21 @@ admin.get('/editproduct/:id',isAdmin,productController.editProduct)
 admin.post('/editproduct/:id',isAdmin,productController.multer,productController.editProductPost)
 
 
-//--------------------Logout------------------------
+
+//--------------------Customer Details------------------------
 
 admin.get('/users',isAdmin,userController.users)
 admin.get('/userstatus',isAdmin,userController.status)
+
+
+
+// ----------------------------- Order Details ----------------------------
+
+admin.get('/order', isAdmin,orderController.orderPage)
+admin.get('/order-view/:id', isAdmin, orderController.orderView)
+admin.post('/order/:orderId/status', isAdmin, orderController.orderStatus)
+
+
 
 
 

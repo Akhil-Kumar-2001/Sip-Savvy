@@ -1,0 +1,138 @@
+
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0.3);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.05);
+                opacity: 1;
+            }
+            70% {
+                transform: scale(0.9);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            animation: fadeIn 1s ease-out;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            border: 1px solid #dee2e6;
+            background: linear-gradient(to bottom right, #ffffff, #f2f5f8);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container h1 {
+            color: #28a745;
+            animation: bounceIn 0.6s ease-out;
+            margin-bottom: 20px;
+        }
+
+        .container p {
+            color: #6c757d;
+            animation: fadeIn 1.2s ease-out;
+        }
+
+        .container .order-details {
+            margin-top: 20px;
+            font-size: 1.1em;
+            animation: fadeIn 1.4s ease-out;
+        }
+
+        .container .order-details p {
+            margin-bottom: 10px;
+        }
+
+        .container .order-details span {
+            font-weight: bold;
+        }
+
+        .container .button {
+            margin-top: 30px;
+            animation: fadeIn 1.6s ease-out;
+        }
+
+        .container .button a {
+            text-decoration: none;
+            color: white;
+            background-color: #007bff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            animation: pulse 2s infinite alternate;
+        }
+
+        .container .button a:hover {
+            background-color: #0056b3;
+        }
+
+        .container::before,
+        .container::after {
+            content: '';
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: rgba(0, 123, 255, 0.1);
+            top: -50px;
+            left: -50px;
+            animation: fadeIn 1.8s ease-out;
+        }
+
+        .container::after {
+            background: rgba(40, 167, 69, 0.1);
+            bottom: -50px;
+            right: -50px;
+        }
+    </style>
+
+<body>
+    <div class="container">
+        <h1>Order Confirmed!</h1>
+        <p>Thank you for your purchase. Your order has been successfully placed.</p>
+        <div class="order-details">
+            <p><span>Order Number:</span> #123456789</p>
+            <p><span>Date:</span> July 15, 2024</p>
+            <p><span>Total:</span> $99.99</p>
+        </div>
+        <div class="button">
+            <a href="/orders">Continue Shopping</a>
+        </div>
+    </div>
+</body>
+

@@ -1,0 +1,275 @@
+<style>
+    .admin-product {
+        width: 80%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .product-head {
+        border-radius: 10px;
+        margin: 24px;
+        background: #000;
+        width: 90%;
+    }
+
+    .product-header {
+        margin-left: 30px;
+    }
+
+    .form-input {
+        height: 80%;
+    }
+
+    .form-product {
+        display: flex;
+        align-items: center;
+    }
+
+
+    .status-dropdown {
+        background: #232323;
+        color: #fefeeb;
+        border-radius: 5px;
+        padding: 0.4rem;
+    }
+
+     /*---------------------- pagination --------------------------0*/
+
+  .pagination-controls {
+    display: flex;
+    justify-content: end;
+    margin-right: 4rem;
+    padding-left: 2.5rem;
+}
+
+.paginationn {
+    display: flex;
+    list-style: none;
+    padding: 18px;
+    width: 100%;
+    justify-content: center;
+    background: black;
+    border-radius: 10px;
+}
+
+.page-item {
+    margin: 0 5px;
+}
+
+.page-link {
+    padding: 8px 16px;
+    color: #DB4444;
+    text-decoration: none;
+    background: none;
+    border: none;
+}
+
+.page-link:hover {
+    background-color: #DB4444;
+    color: #fefeeb;
+}
+
+.page-item.active .page-link {
+    background-color: #DB4444;
+    color: #fefeeb;
+}
+
+.pagination-next-btn {
+    background: none;
+    border: none;
+}   
+</style>
+
+<%- include('navbar') %>
+
+    <div class="admin-home">
+        <div class="sidebar">
+            <div class="menu-item">
+                <a href="/admin/dashboard">
+                    <div class="admin-menu"><i class="bi bi-grid"></i>Dashboard</div>
+                </a>
+            </div>
+            <!-- <div class="menu-item">
+                <a href="/admin/salesReport">
+                    <div class="admin-menu"><i class="bi bi-bar-chart"></i>Sales Report</div>
+                </a>
+            </div> -->
+            <div class="menu-item">
+                <a href="/admin/category">
+                    <div class="admin-menu"><i class="bi bi-collection-fill"></i>Category</div>
+                </a>
+            </div>
+            <div class="menu-item">
+                <a href="/admin/products">
+                    <div class="admin-menu"><i class="bi bi-box"></i>Products</div>
+                </a>
+            </div>
+            <div class="menu-item">
+                <a href="/admin/users">
+                    <div class="admin-menu"><i class="bi bi-people"></i>Customers</div>
+                </a>
+            </div>
+            <div class="menu-item">
+                <a href="/admin/order">
+                    <div class="admin-menu"><i class="bi bi-cart"></i>Orders</div>
+                </a>
+            </div>
+            <div class="menu-item">
+                <a href="#">
+                    <div class="admin-menu"><i class="bi bi-ticket-perforated"></i>Coupons</div>
+                </a>
+            </div>
+            <!-- <div class="menu-item">
+                <a href="#>
+                    <div class="admin-menu"><i class="bi bi-gift"></i>Offer</div>
+                </a>
+            </div> -->
+            <!-- <div class="menu-item">
+                <a href="#">
+                    <div class="admin-menu"><i class="bi bi-exclamation-triangle"></i>Popups</div>
+                </a>
+            </div> -->
+            <div class="menu-item">
+                <a href="#">
+                    <div class="admin-menu"><i class="bi bi-image"></i>Banner</div>
+                </a>
+            </div>
+            <div class="menu-item admin-menu-loyout">
+                <a href="/admin/logout">
+                    <div class="admin-menu"><i class="bi bi-box-arrow-right"></i>Logout</div>
+                </a>
+            </div>
+        </div>
+
+        <div class="admin-product mb-4">
+            <div class="product-head d-flex justify-content-between">
+                <div class="product-header d-flex justify-content-between align-items-center gap-5">
+                    <h2 class="text-white">
+                        <%= title %>
+                    </h2>
+                    <form action="/admin/order" method="get" class="form-product d-flex gap-1">
+                        <input type="text" name="search" placeholder="search" class="form-input form-control">
+                        <input type="submit" class="btn btn-danger submit-btn" value="Search">
+                    </form>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr class="product-table-head">
+                            <th scope="col" class="product-table-first">SL.No</th>
+                            <th scope="col">OrderID</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Amount</th>
+                            <th scope="col">Payment</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Action</th>
+                            <th scope="col" class="product-table-last">View</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% let slNo=(currentPage - 1) * limit + 1; %>
+                            <% orders.forEach((order, index)=> { %>
+                                <tr>
+                                    <td>
+                                        <%= slNo %>
+                                    </td>
+                                    <td>
+                                        <%= order.order_id %>
+                                    </td>
+                                    <td>
+                                        <%= order.createdAt.toDateString() %>
+                                    </td>
+                                    <td>
+                                        <%= order.totalPrice %>
+                                    </td>
+                                    <td>
+                                        <%= order.paymentMethod %>
+                                    </td>
+                                    <td>
+                                        <%= order.orderStatus %>
+                                    </td>
+                                    <td>
+                                        <% if (order.orderStatus !=='Delivered' && order.orderStatus !=='Cancelled' &&
+                                            order.orderStatus !=='Returned' ) {%>
+                                            <select class="status-dropdown"
+                                                onchange="updateOrderStatus('<%= order._id %>', this.value)">
+                                                <option value="Confirmed">Confirmed</option>
+                                                <option value="Shipped">Shipped</option>
+                                                <option value="Delivered">Delivered</option>
+                                                <option value="Cancelled">Cancelled</option>
+                                                <option value="Returned">Returned</option>
+                                            </select>
+                                            <% } %>
+                                    </td>
+                                    <td>
+                                        <a href="/admin/order-view/<%= order._id %>"><i class="bi bi-eye"
+                                                style="color: #db4444;;"></i></a>
+                                    </td>
+                                </tr>
+                                <% slNo++; %>
+                                    <% }); %>
+                    </tbody>
+                </table>
+            </div>
+
+
+                  <!------------------------------- pagination ---------------------->
+                  <div class="pagination-controls d-flex mt-3">
+                    <ul class="paginationn">
+                        <% if (currentPage> 1) { %>
+                            <li class="page-item"><a class="page-link"
+                                    href="/admin/order?page=<%= currentPage - 1 %>&limit=<%= limit %>&search=<%= search %>">Previous</a>
+                            </li>
+                            <% } %>
+                                <% for (let i=1; i <=totalPages; i++) { %>
+                                    <li class="page-item <%= currentPage == i ? 'active' : '' %>">
+                                        <a class="page-link"
+                                            href="/admin/order?page=<%= i %>&limit=<%= limit %>&search=<%= search %>">
+                                            <%= i %>
+                                        </a>
+                                    </li>
+                                    <% } %>
+                                        <% if (currentPage < totalPages) { %>
+                                            <li class="page-item"><a class="page-link pagination-next-btn"
+                                                    href="/admin/order?page=<%= currentPage + 1 %>&limit=<%= limit %>&search=<%= search %>">Next</a>
+                                            </li>
+                                            <% } %>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+            <%- include('footer') %>
+
+
+            <script>
+                function updateOrderStatus(orderId, newStatus) {
+                    fetch(`/admin/order/${orderId}/status`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ status: newStatus })
+                    })
+                        .then(response => {
+                            if (response.ok) {
+                                Swal.fire({
+                                    position: "top-end",
+                                    icon: "success",
+                                    title: "Status Changes",
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                                setTimeout(() => {
+                                    location.reload();
+                                }, 1700)
+                            } else {
+                                response.text().then(text => alert(text));
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                }
+            </script>

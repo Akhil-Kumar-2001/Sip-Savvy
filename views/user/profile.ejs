@@ -186,7 +186,7 @@
                                 <a href="/profile"><i class="bi bi-person-fill"></i>Profile</a>
                             </li>
                             <li class="list-group-item">
-                                <a href="#"><i class="bi bi-tag"></i>My Orders</a>
+                                <a href="/orders"><i class="bi bi-tag"></i>My Orders</a>
                             </li>
                             <li class="list-group-item">
                                 <a href="#"><i class="bi bi-wallet-fill"></i>Wallet</a>
@@ -239,7 +239,7 @@
                         <div class="address-profile" style="width: 100%;">
                             <h1>Your Address</h1>
                             <div class="pen-option text-right">
-                                <% if (userDetail.address.length < 4) { %>
+                                <% if (userDetail.address.length < 3) { %>
                                     <a href="#" data-bs-toggle="modal" data-bs-target="#addressModal"
                                         title="Add New Address" class="btn btn-danger address-add">
                                         Add Address</i>

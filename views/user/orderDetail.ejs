@@ -1,0 +1,296 @@
+<style>
+    body{
+        background-color: #000;
+    }
+    #content {
+        max-width: 1200px;
+        margin: 20px auto;
+        padding: 20px;
+        background: #000;
+        color: #fefeeb;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /*----------------- Title ---------------------*/
+
+    h1,
+    h2 {
+        color: #fefeeb;
+        margin-bottom: 20px;
+    }
+
+    /* Cards */
+    .card {
+        background: #000;
+        color: #fefeeb;
+        border-radius: 8px;
+        border-color: #fefeeb;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        padding: 20px;
+    }
+
+    .card-title {
+        margin: 0 0 15px;
+        font-size: 18px;
+        color: #fefeeb;
+        display: flex;
+        align-items: center;
+    }
+
+    .card-body {
+        font-size: 14px;
+    }
+
+    .shipping-card .card-title,
+    .payment-card .card-title {
+        color: #6596f0;
+    }
+
+    /*--------------------- Payment Status -----------------*/
+
+    .payment-status-alert {
+        color: #e74c3c;
+        display: flex;
+        align-items: center;
+    }
+
+    .payment-status-alert i {
+        font-size: 1em;
+    }
+
+    /* Order Grid */
+    .order-grid {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .order-row {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+
+    .product-card {
+        background: #000;
+        border-radius: 8px;
+        border: 2px solid #fefeeb;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        width: 23%;
+        margin-bottom: 20px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .product-card img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    .product-details {
+        padding: 15px;
+        text-align: center;
+    }
+
+    .product-title {
+        font-size: 16px;
+        margin: 10px 0;
+        color: #fefeeb;
+    }
+
+    .product-info {
+        font-size: 14px;
+        margin: 5px 0;
+    }
+
+    .product-status {
+        padding: 2px 5px;
+        border-radius: 3px;
+        color: #fefeeb;
+    }
+
+    .status-delivered {
+        background-color: #2ecc71;
+    }
+
+    .status-pending {
+        background-color: #f39c12;
+    }
+
+    .placeholder {
+        width: 100%;
+        height: 200px;
+        background: #eee;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        color: #aaa;
+    }
+
+    .admin-orderDetails {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 3rem;
+    }
+
+    .order-details {
+        font-size: 16px;
+        height: 5rem;
+        width: 14rem;
+        display: flex;
+        justify-content: end;
+        align-items: end;
+    }
+
+    .order-details ul {
+        list-style-type: none;
+        display: flex;
+    }
+
+    .order-details ul span {
+        color: #fefeeb;
+        margin: 0rem 1rem;
+    }
+
+    .order-details li:last-child {
+        font-weight: bold;
+    }
+
+    .order-details a {
+        text-decoration: none;
+        color: #fefeeb;
+    }
+
+    .order-details a:hover {
+        color: #f55;
+    }
+</style>
+
+
+
+<%- include('navbar') %>
+
+    <div id="content">
+        <!---------------------- Breadcrumbs ----------------------->
+        <nav class="order-details">
+            <ul>
+                <li><a href="/orders">Order</a></li>
+                <span>/</span>
+                <li><a href="">Order Details</a></li>
+            </ul>
+        </nav>
+        <h1 class="admin-orderDetails">Order Details</h1>
+        <div class="row" style="margin-bottom: 30px;">
+            <div class="col-md-6">
+                <div class="card shipping-card">
+                    <h4 class="card-title"> Shipping Address</h4>
+                    <div class="card-body">
+                        <% if (orderDetails.address) { %>
+                            <p class="card-text">
+                                <strong>Name:</strong>
+                                <%= orderDetails.address.customer_email %><br>
+                                    <strong>Address:</strong>
+                                    <%= orderDetails.address.building %><br>
+                                        <strong>District:</strong>
+                                        <%= orderDetails.address.street %><br>
+                                            <strong>State:</strong>
+                                            <%= orderDetails.address.city %><br>
+                                                <strong>Pincode:</strong>
+                                                <%= orderDetails.address.pincode %>
+                            </p>
+                            <% } else { %>
+                                <p class="card-text">Address Not Available</p>
+                                <% } %>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card payment-card">
+                    <h4 class="card-title"> Payment Details</h4>
+                    <div class="card-body">
+                        <p class="card-text">
+                            <strong>Method:</strong> <span class="text-success">
+                                <%= orderDetails.paymentMethod %>
+                            </span><br>
+                            <strong>Status:</strong> <span class="payment-status-alert">
+                                <%= orderDetails.orderStatus %>
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!----------------------------- Ordered Items Section --------------------------------->
+
+        <h2>Ordered Items</h2>
+        <div class="order-grid">
+            <% for (let i=0; i < orderDetails.products.length; i +=4) { %>
+                <div class="order-row">
+                    <% for (let j=i; j < i + 4 && j < orderDetails.products.length; j++) { %>
+                        <% let item=orderDetails.products[j]; %>
+                            <div class="product-card">
+                                <% if (item.product_image && item.product_image.length> 0) { %>
+                                    <img src="/<%= item.product_image %>" class="product-image" alt="Product Image">
+                                    <% } else { %>
+                                        <img src="placeholder.jpg" class="product-image" alt="Product Image">
+                                        <% } %>
+                                            <div class="product-details">
+                                                <h5 class="product-title">
+                                                    <%= item.product_name %>
+                                                </h5>
+                                                <p class="product-info"><strong>Qty:</strong>
+                                                    <%= item.product_quantity %>
+                                                </p>
+                                                <p class="product-info"><strong>Total:</strong> ₹<%= item.product_price
+                                                        * item.product_quantity %>
+                                                </p>
+                                                <p class="product-info">
+                                                    <strong>Status:</strong>
+                                                    <% if(orderDetails.orderStatus==='Pending' ) { %>
+                                                        <p class="btn btn-primary">
+                                                            <%= orderDetails.orderStatus %>
+                                                        </p>
+                                                        <% } else if(orderDetails.orderStatus==='Confirmed' ) { %>
+                                                            <p class="btn btn-primary">
+                                                                <%= orderDetails.orderStatus %>
+                                                            </p>
+                                                            <% } else if(orderDetails.orderStatus==='Returned' ) { %>
+                                                                <p class="btn btn-danger">
+                                                                    <%= orderDetails.orderStatus %>
+                                                                </p>
+                                                                <% } else if(orderDetails.orderStatus==='Delivered' ) {
+                                                                    %>
+                                                                    <p class="btn btn-success">
+                                                                        <%= orderDetails.orderStatus %>
+                                                                    </p>
+                                                                    <% } else if(orderDetails.orderStatus==='Cancelled'
+                                                                        ) { %>
+                                                                        <p class="btn btn-warning">
+                                                                            <%= orderDetails.orderStatus %>
+                                                                        </p>
+                                                                        <% } else
+                                                                            if(orderDetails.orderStatus==='Shipped' ) {
+                                                                            %>
+                                                                            <p class="btn btn-secondary">
+                                                                                <%= orderDetails.orderStatus %>
+                                                                            </p>
+                                                                            <% } %>
+                                                </p>
+                                            </div>
+                            </div>
+                            <% } %>
+                                <% for (let k=orderDetails.products.length % 4; k < 4; k++) { %>
+                                    <div class="product-card" style="visibility: hidden;"></div>
+                                    <% } %>
+                </div>
+                <% } %>
+        </div>
+    </div>
+
+
+    <%- include('footer') %>

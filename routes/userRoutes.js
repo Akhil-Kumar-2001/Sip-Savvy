@@ -8,6 +8,8 @@ const productController = require('../controller/userController/productControlle
 const forgotPassword = require('../controller/userController/forgotPassword');
 const profileController = require('../controller/userController/profileController')
 const cartController = require('../controller/userController/cartController')
+const checkoutController = require('../controller/userController/checkoutController')
+const orderController = require('../controller/userController/orderController')
 
 //------------------------------- main -------------------------------
 
@@ -64,6 +66,23 @@ user.get('/add-to-cart/:id',activeUser,cartController.addToCartPost)
 user.delete('/remove-item/:id',activeUser,cartController.removeItem)
 user.post('/cart/increment',activeUser,cartController.increment)
 user.post('/cart/decrement',activeUser,cartController.decrement)
+
+
+
+//-------------------- Checout route --------------------
+
+user.get('/checkout',activeUser,checkoutController.checkout)
+user.post('/checkout-address',activeUser,checkoutController.addAddress)
+user.get('/conform-order',activeUser,checkoutController.orderPage)
+user.post('/place-order/:address/:payment',activeUser,checkoutController.placeOrder)
+
+
+
+// ------------- Order route ------------------
+user.get('/orders',activeUser,orderController.orderPage)
+user.post('/cancelOrder/:id', activeUser , orderController.cancelOrder)
+user.get("/orderDetail/:id", activeUser , orderController.orderDetail)
+
 
 
 
