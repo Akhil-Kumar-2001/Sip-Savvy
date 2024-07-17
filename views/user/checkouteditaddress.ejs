@@ -1,0 +1,203 @@
+<style>
+    .modal-dialog{
+        margin: 2rem 0rem;
+        display: flex;
+        justify-content: center;
+    }
+    .modal-content{
+        width: 50%;
+        padding: 3rem;
+        background: #000;
+        border-radius: 10px;
+        color: #fefeeb;
+    }
+    .modal-footer{
+        gap: 2rem;
+        margin: 1rem;
+    }
+    .form-control{
+        background: #000;
+        color: #fefeeb;
+    }
+    .form-control:focus{
+        background: #232323;
+        color: #fefeeb;
+    }
+</style>
+
+<%-include('navbar') %>
+
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <h2>
+                Edit Address
+            </h2>
+            <div class="modal-body">
+                <form method="post" id="editaddress" action="/updateaddress/<%=index%>">
+
+                    <div class="form-group mb-2 mt-4">
+                        <label for="address-input mb-5">Flat, House no., Building, Company, Apartment</label>
+                        <input type="text" name="building" class="form-control" id="address-input"
+                            value="<%= data.building%>" required>
+                    </div>
+
+                    <div class="form-group  mb-2">
+                        <label for="address-input mb-5">Area, Street, Sector, Village</label>
+                        <input type="text" name="street" class="form-control" id="address-input"
+                            value="<%= data.street%>" required>
+                    </div>
+
+                    <div class="form-group  mb-2">
+                        <label for="address-input mb-5">Town/City</label>
+                        <input type="text" name="city" class="form-control" id="address-input" value="<%= data.city%>"
+                            required>
+                    </div>
+                    <div class="row  mb-2">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="address-input mb-5">Phone Number</label>
+                                <input type="text" name="phonenumber" class="form-control" id="address-input"
+                                    value="<%= data.phonenumber%>" required>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="address-input mb-5">Pincode</label>
+                                <input type="text" name="pincode" class="form-control" id="address-input"
+                                    value="<%= data.pincode%>" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group  mb-2">
+                        <label for="address-input mb-5">Land Mark</label>
+                        <input type="text" name="landmark" class="form-control" id="address-input"
+                            value="<%= data.landmark%>" required>
+                    </div>
+                    <div class="row  mb-2">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="address-input mb-5">State</label>
+                                <input type="text" name="state" class="form-control" id="address-input"
+                                    value="<%= data.state%>" required>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="address-input mb-5">Country</label>
+                                <input type="text" name="country" class="form-control" id="address-input"
+                                    value="<%= data.country%>" required>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+            <div class="modal-footer">
+                <a href="/checkout"><button type="button" class="btn btn-secondary"data-bs-dismiss="modal">Close</button></a>
+                <button type="submit" class="btn btn-danger">Update</button>
+            </div>
+            </form>
+        </div>
+    </div>
+
+    <%- include('footer') %>
+
+
+
+    <script>
+        //---------------------- validation for the edit address ------------------------------
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+                const editaddress = document.getElementById('editaddress');
+                const building = document.getElementsByName('building')[0];
+                const street = document.getElementsByName('street')[0];
+                const city = document.getElementsByName('city')[0];
+                const phone = document.getElementsByName('phonenumber')[0];
+                const pincode = document.getElementsByName('pincode')[0];
+                const landmark = document.getElementsByName('landmark')[0];
+                const state = document.getElementsByName('state')[0];
+                const country = document.getElementsByName('country')[0];
+
+                function validatePhone(phone) {
+                    const phoneRe = /^\d{10}$/;
+                    return phoneRe.test(phone);
+                }
+                function validatePincode(pincode) {
+                    const pincodeRe = /^\d{6}$/;
+                    return pincodeRe.test(pincode);
+                }
+                editaddress.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    if (building.value.trim() === "" || !isNaN(building.value)) {
+                        Swal.fire({
+                            title: "Error",
+                            text: "Building field must not be empty and Not a Number.",
+                            icon: "error"
+                        });
+                    } else if ( building.value.length > 25 || building.value.length < 4) {
+                        Swal.fire({
+                            title: "Error",
+                            text: "Building field must be Greater than 4 letters and less than 25 letters.",
+                            icon: "error"
+                        });
+                    }else if (street.value.trim() === "" || !isNaN(street.value) ) {
+                        Swal.fire({
+                            title: "Error",
+                            text: "Street field must not be empty and Not a Number.",
+                            icon: "error"
+                        });
+                    }else if (street.value.length > 25 || street.value.length < 4 ) {
+                        Swal.fire({
+                            title: "Error",
+                            text: "Street Field Must be Greater than 4 Letters and less than 25 letters.",
+                            icon: "error"
+                        });
+                    }else if (city.value.trim() === "" || !isNaN(city.value)) {
+                        Swal.fire({
+                            title: "Error",
+                            text: "City field must not be empty and Not a Number.",
+                            icon: "error"
+                        });
+                    }else if (city.value.length > 25 || city.value.length < 4) {
+                        Swal.fire({
+                            title: "Error",
+                            text: "City field must be Greater than 4 Words and less than 25 Words.",
+                            icon: "error"
+                        });
+                    }else if (!validatePhone(phone.value)) {
+                        Swal.fire({
+                            title: "Error",
+                            text: "Phone number must be 10 digits.",
+                            icon: "error"
+                        });
+                    } else if (!validatePincode(pincode.value)) {
+                        Swal.fire({
+                            title: "Error",
+                            text: "Pincode must be 6 digits.",
+                            icon: "error"
+                        });
+                    } else if (landmark.value.trim() === "" || !isNaN(landmark.value)) {
+                        Swal.fire({
+                            title: "Error",
+                            text: "Landmark field must not be empty.",
+                            icon: "error"
+                        });
+                    } else if (state.value.trim() === "" || !isNaN(state.value) ) {
+                        Swal.fire({
+                            title: "Error",
+                            text: "State field must not be empty.",
+                            icon: "error"
+                        });
+                    } else if (country.value.trim() === "" || !isNaN(country.value) ) {
+                        Swal.fire({
+                            title: "Error",
+                            text: "Country field must not be empty.",
+                            icon: "error"
+                        });
+                    } else {
+                        editaddress.submit();
+                    }
+                });
+            });
+    </script>

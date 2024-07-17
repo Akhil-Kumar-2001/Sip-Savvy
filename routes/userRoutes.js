@@ -75,6 +75,10 @@ user.get('/checkout',activeUser,checkoutController.checkout)
 user.post('/checkout-address',activeUser,checkoutController.addAddress)
 user.get('/conform-order',activeUser,checkoutController.orderPage)
 user.post('/place-order/:address/:payment',activeUser,checkoutController.placeOrder)
+user.get('/removeaddress/:index',activeUser,checkoutController.removeAddress)
+user.get('/editaddress/:index',activeUser,checkoutController.editAddress)
+user.post('/updateaddress/:index',activeUser,checkoutController.updateAddress)
+
 
 
 

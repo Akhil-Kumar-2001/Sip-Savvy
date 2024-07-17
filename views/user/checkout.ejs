@@ -414,10 +414,10 @@ a {
 
                                                             <div class="card-radio text-truncate p-3">
                                                                 <div class="address-icons">
-                                                                    <a href="/profile" title="Edit Address">
+                                                                    <a href="/editaddress/<%= index %>" title="Edit Address">
                                                                         <i class="bi bi-pencil"></i>
                                                                     </a>
-                                                                    <a href="/profile" class="delete-address" data-address-index=""
+                                                                    <a href="/removeaddress/<%= index %>" class="delete-address" data-address-index=""
                                                                         title="Delete Address">
                                                                         <i class="bi bi-trash"></i>
                                                                     </a>
@@ -429,11 +429,7 @@ a {
                                                                 <span class="text-muted fw-normal d-block"> <%= address.pincode %></span>
                                                             </div>
                                                         </label>
-                                                        <div class="edit-btn bg-light  rounded">
-                                                            <a href="#" data-bs-toggle="tooltip" data-placement="top" title="" data-bs-original-title="Edit">
-                                                                <i class="bx bx-pencil font-size-16"></i>
-                                                            </a>
-                                                        </div>
+                                                       
                                                     </div>
                                                 </div>
                                                     <% }) %>

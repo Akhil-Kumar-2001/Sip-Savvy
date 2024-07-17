@@ -4,6 +4,7 @@ const userSchema = require('../../model/userSchema')
 const orderSchema =  require('../../model/orderSchema')
 const addressSchema = require('../../model/addressSchema')
 const mongoose = require('mongoose')
+const { ObjectId } = require('mongodb');
 
 
 
@@ -161,7 +162,7 @@ const addAddress = async (req, res) => {
         const user = await userSchema.findById(req.session.user)
         if (user.address.length > 3) {
             req.flash("alert", "Maximum Address limit Reached")
-            return res.redirect('/profile')
+            return res.redirect('/checkout')
         }
         user.address.push(userAddress);
         await user.save();
@@ -173,12 +174,103 @@ const addAddress = async (req, res) => {
     }
 }
 
+// ---------------Remove Address--------------
+
+const removeAddress = async(req,res)=>{
+    try {
+       const userId = req.session.user
+       const index = parseInt(req.params.index,10) 
+
+       const user = await userSchema.findById(userId).populate('address');
+       if(!user){
+        req.flash('alert','User not found')
+        return res.redirect('/checkout')
+       }
+
+       if(isNaN(index) || index < 0 || index > user.address.length){
+        req.flash('alert','Invalid Address')
+        return res.redirect('/checkout')
+       }
+
+       user.address.splice(index,1)
+       await user.save();
+
+       req.flash('alert','Address Removed Successfully')
+       res. redirect('/checkout')
+    } catch (error) {
+        req.flash('alert','Error while removing the address')
+        console.log(`Error while removing the Address ${error}`)
+        res.redirect('/checkout')
+        
+    }
+}
+
+// ------------ Edit address page load  -------------
+
+const editAddress = async(req,res)=>{
+    const index = Number(req.params.index)
+    const id = req.session.user;
+
+
+    try {
+        const getAddress = await userSchema.findOne({_id:id},{address:{$slice:[index,1]}});
+
+        if(getAddress){
+            res.render('user/checkouteditaddress',{title:'Edit Address',alertMessage:req.flash('alert'),data:getAddress.address[0],index,user:req.session.user});
+          
+        }
+        else{
+            res.redirect('/checkout')
+        }
+    } catch (error) {
+        req.flash('alert','error while entering edit address page, Please try again later')
+        console.log(`Error while rendering address edit page ${error}`)
+        res.redirect('/checkout');
+    }
+}
+
+
+   // ----------------Update existing addresss--------------------
+
+   const updateAddress = async(req,res)=>{
+    const id = req.session.user
+    const index = parseInt(req.params.index,10)
+    const data = {
+        building: req.body.building,
+        street: req.body.street,
+        city: req.body.city,
+        state: req.body.state,
+        county: req.body.country,
+        pincode: req.body.pincode,
+        phonenumber: req.body.phonenumber,
+        landmark: req.body.landmark
+    }
+    try {
+        const updateQuery = {};
+        updateQuery[`address.${index}`] = data;
+
+        await userSchema.updateOne(
+            { _id: new ObjectId(id) },
+            { $set: updateQuery }
+        );
+        req.flash('alert','Address updated Successfully');
+        res.redirect('/checkout');
+
+    } catch (error) {
+        console.log(`error while editing the address ${error}`)
+        req.flash('alert','Unable to update the address right now . Please try again later.');
+        res.redirect(`/editaddress/${index}`); 
+    }
+}
+
 
 
 module.exports = {
                     checkout,
                     placeOrder,
                     orderPage,
-                    addAddress
-
+                    addAddress,
+                    editAddress,
+                    removeAddress,
+                    updateAddress
                  }
