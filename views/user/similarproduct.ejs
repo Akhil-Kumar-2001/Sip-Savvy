@@ -21,6 +21,11 @@
     width: 6rem;
 
     }
+    .product-image-size {
+    width: 200px; /* Set the desired width */
+    height: 200px; /* Set the desired height */
+    object-fit: cover; /* Ensures the image covers the container without distortion */
+}
     
  </style>
  <!-------------- Line -------------->
@@ -36,13 +41,13 @@
      <h1 class="home-title"> Similar Products </h1>
      <!-- <p class="home-all-products">See all  ></p> -->
      
-    <div class="home-products">
+    <div class="home-products" data-aos="fade-left">
            <% for(let i = 0 ; i < similarProduct.length && i < 4 ; i++ ) { %>
              <div class="home-product">
                 
             <div class="product-image">
                 <a href="/productDetail/<%= similarProduct[i].id %>" class="product-name-link">
-                    <img src="/../<%=similarProduct[i].productImage[0]  %>" alt="">
+                    <img src="/../<%=similarProduct[i].productImage[0]  %>" class="product-image-size" alt="">
                 </a>
             </div>
 

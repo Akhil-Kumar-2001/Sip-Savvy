@@ -238,7 +238,8 @@ body {
 }
 
 .home-category:hover {
-    transform: scale(1.05);
+    transform: scale(1.2);
+    color: goldenrod;
 }
 
 @media (max-width: 48rem) { /* 768px / 16px = 48rem */

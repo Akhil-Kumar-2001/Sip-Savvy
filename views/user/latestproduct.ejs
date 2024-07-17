@@ -28,7 +28,7 @@
      <h1 class="home-title">Latest products</h1>
      <!-- <p class="home-all-products">See all  ></p> -->
      
-    <div class="home-products">
+    <div class="home-products" data-aos="zoom-in-right">
         <% let count = 0; %>
 
             <% product.forEach((product)=>{ const productAge =(Date.now() - new Date(product.createdAt).getTime()) / (24 * 60 * 60* 1000);

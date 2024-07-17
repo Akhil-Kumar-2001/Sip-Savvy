@@ -57,7 +57,7 @@
         <div class="home-products">
     
             <% product.forEach((product) => { %>
-                <div class="home-product">
+                <div class="home-product" data-aos="zoom-in-right">
                     <% if (new Date(product.createdAt).getTime() > (Date.now() - (10 * 24 * 60 * 60 * 1000))) { %>
                         <div class="product-new-arrival">
                             <h6 class="ms-1">New Arrival</h6>
