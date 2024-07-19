@@ -20,7 +20,7 @@ const home = async(req, res) => {
 
 const allProduct = async(req,res)=>{
   try {
-    const search = req.query.search || ""
+    // const search = req.query.search || ""
     const sortby = req.query.sortby || "";
     let sort="";
     if(sortby){
@@ -47,7 +47,7 @@ const allProduct = async(req,res)=>{
           alertMessage:req.flash('alert'),
           user:req.session.user,
           product,
-          search
+          // search
         }
     )
 

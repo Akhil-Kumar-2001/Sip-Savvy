@@ -1,0 +1,294 @@
+
+
+
+<style>
+    body {
+        background-color: black;
+    }
+   
+
+    
+
+   
+
+    
+    
+
+
+   
+
+   
+
+ 
+
+
+
+
+
+
+   
+
+    
+
+    
+   
+
+
+
+  
+
+
+    .filter-sort-container {
+        padding: 20px 0;
+        background-color: black;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        color: #e6e1e1;
+    }
+
+    /* Label Styling */
+    .filter-sort-container .form-label {
+        font-weight: bold;
+        margin-bottom: 10px;
+        display: block;
+    }
+
+    /* Select Styling */
+    .filter-sort-container .form-select {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+        background-color: #e6dfdf;
+        transition: border-color 0.2s ease-in-out;
+    }
+
+    /* Select Hover and Focus Effects */
+    .filter-sort-container .form-select:hover,
+    .filter-sort-container .form-select:focus {
+        border-color: #80bdff;
+        outline: none;
+    }
+
+    /* Row Styling */
+    .filter-sort-container .row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    /* Column Styling */
+    .filter-sort-container .col-md-6 {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 10px;
+    }
+
+    /* // now added */
+
+    #filter-btn {
+        /* position: relative; */
+        width: 10%;
+      
+        color: #ffffff; /* White text color */
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+ 
+
+    .filter-panel {
+        position: absolute;
+        top: 220px;
+        /* Adjusted to position right under the filter button */
+        left: 120px;
+        z-index: 1000;
+        width: 400px;
+        display: none;
+        background-color: #333333;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        padding: 15px;
+        color: white;
+    }
+
+     /* Sort Dropdown */
+     .dropdown-toggle::after {
+        vertical-align: middle;
+        margin-left: 0.5rem;
+    }
+
+    .dropdown-menu {
+        background-color: #333333; /* Dark dropdown background */
+        border: 1px solid #555555; /* Dark border */
+    }
+
+    .dropdown-item {
+        color: #ffffff; /* White dropdown item text */
+    }
+
+    .dropdown-item:hover,
+    .dropdown-item:focus {
+        background-color: #555555; /* Dark hover background */
+        color: #ffffff; /* White text on hover */
+    }
+
+    .close-icon {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        cursor: pointer;
+    }
+
+    .selected-filters {
+        margin-top: 15px;
+    }
+
+
+    .selected-filters .badge {
+        margin-right: 5px;
+    }
+
+
+
+
+
+
+
+  
+    @media (max-width: 768px) {
+        .filter-sort-container .row {
+            flex-direction: column;
+        }
+
+        .filter-sort-container .col-md-6 {
+            width: 100%;
+        }
+    }
+</style>
+
+
+<div class="">
+    <div class="text-center nav-explore-background">
+
+
+      
+        <div class="d-flex justify-content-between ms-4"  data-aos="fade-down-left">
+            <button class="btn btn-secondary" id="filter-btn">Filter</button>
+          
+
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle me-4" type="button" id="sortDropdown"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    Sort by
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="sortDropdown">
+                    <li><a class="dropdown-item" href="#" onclick="applySort('price-high-low')">Price: High to Low</a></li>
+                    <li><a class="dropdown-item" href="#" onclick="applySort('price-low-high')">Price: Low to High</a></li>
+                    <li><a class="dropdown-item" href="#" onclick="applySort('latest')">Latest Arrival</a></li>
+                    <li><a class="dropdown-item" href="#" onclick="applySort('a-z')">A-Z</a></li>
+                    <li><a class="dropdown-item" href="#" onclick="applySort('z-a')">Z-A</a></li>
+                </ul>
+            </div>
+            
+        </div>
+        <hr>
+    </div>
+</div>
+
+
+
+
+<div class="filter-panel" id="filter-panel" >
+    <span class="close-icon" id="close-filter-panel">&times;</span> <!-- Close icon -->
+    <form id="filter-form" method="get" action="/user/productSeemore">
+        <div class="mb-3">
+            <label class="form-label">Category</label>
+            <div>
+                <input class="form-check-input" type="checkbox" name="collections" value="Novels"> Novels
+                <br>
+                <input class="form-check-input" type="checkbox" name="collections" value="Fiction"> Fiction<br>
+                <input class="form-check-input" type="checkbox" name="collections" value="Non-Fiction">
+                Non-Fiction<br>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Price Range</label>
+            <div>
+                <input class="form-control" type="text" class="form-control" placeholder="Min Price"
+                    name="minPrice">
+                    <br>
+                <input class="form-control" type="text" class="form-control" placeholder="Max Price"
+                    name="maxPrice">
+            </div>
+        </div>
+        <!-- <div class="mb-3">
+            <label class="form-label">Ratings</label>
+            <div>
+                <input class="form-check-input" type="checkbox" name="ratings" value="1"> 1 Star<br>
+                <input class="form-check-input" type="checkbox" name="ratings" value="2"> 2 Star<br>
+                <input class="form-check-input" type="checkbox" name="ratings" value="3"> 3 Star<br>
+                <input class="form-check-input" type="checkbox" name="ratings" value="4"> 4 Star<br>
+                <input class="form-check-input" type="checkbox" name="ratings" value="5"> 5 Star<br>
+            </div>
+        </div> -->
+        <div class="mb-3">
+            <label class="form-label">Availability</label>
+            <div>
+                <input class="form-check-input" type="checkbox" name="availability" value="in-stock"> In
+                Stock<br>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary" id="apply-filters">Apply Filters</button>
+        <button type="button" class="btn btn-secondary" id="clear-filters">Clear Filters</button>
+        <!-- Clear Filters button -->
+    </form>
+</div>
+
+
+
+<script>
+
+      // Function to handle sorting
+    //   function applySort(sortOption) {
+    //         const urlParams = new URLSearchParams(window.location.search);
+    //         urlParams.set('sort', sortOption);
+    //         window.location.href = `${window.location.pathname}?${urlParams.toString()}`;
+    //     }
+
+       
+
+
+        // Function to handle filter panel toggle
+        document.getElementById('filter-btn').addEventListener('click', function () {
+            var filterPanel = document.getElementById('filter-panel');
+            filterPanel.style.display = filterPanel.style.display === 'none' || filterPanel.style.display === '' ? 'block' : 'none';
+        });
+
+        document.getElementById('close-filter-panel').addEventListener('click', function () {
+            var filterPanel = document.getElementById('filter-panel');
+            filterPanel.style.display = 'none';
+        });
+
+
+        // Function to handle clear filters
+        document.getElementById('clear-filters').addEventListener('click', function () {
+            // Reset the form fields
+            document.getElementById('filter-form').reset();
+
+            // Clear the URL parameters for filters
+            const urlParams = new URLSearchParams(window.location.search);
+            urlParams.delete('collections');
+            urlParams.delete('minPrice');
+            urlParams.delete('maxPrice');
+            urlParams.delete('ratings');
+            urlParams.delete('availability');
+            urlParams.delete('sort');
+
+            // Redirect to the same page without filter parameters
+            window.location.href = `${window.location.pathname}`;
+        });
+</script>
