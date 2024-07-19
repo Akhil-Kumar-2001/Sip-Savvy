@@ -296,7 +296,10 @@
                                     </div>
                                     <div class="col cart-price">
                                         <i class="fa-solid fa-indian-rupee-sign product-text-row"></i>
-                                        <%= item.productPrice.toFixed(2) %>
+                                       
+                                        &#8377;<%=
+                                            (item.productId.productPrice*(1-item.productId.productDiscount/100)*(item.productCount)).toLocaleString()
+                                            %></i>
                                     </div>
                                     <div class="col-md-1 col-lg-1 col-xl-1 text-end">
                                         <a href="#" class=" fs-4 text-danger delete-link" data-id="<%= item.productId._id %>">

@@ -12,7 +12,7 @@ const home = async(req, res) => {
     const product = await productSchema.find({isActive: true})
     res.render('user/home',{title:"home",alertMessage:req.flash('alert'),user:req.session.user,product})
   } catch (error) {
-    console.log(`error while rendering user page ${error}`)
+    console.log(`error while rendering user page ${error}`)   
   }
 }
 
@@ -21,9 +21,27 @@ const home = async(req, res) => {
 const allProduct = async(req,res)=>{
   try {
     const search = req.query.search || ""
+    const sortby = req.query.sortby || "";
+    let sort="";
+    if(sortby){
+        switch(sortby){
+          case '1': sort = {productName: 1}
+                  break;
+          case '2': sort = {productName: -1}
+                  break;
+          case '3': sort = {productPrice: 1}
+                  break;
+          case '4': sort = {productPrice: -1}
+                  break;
+          case '5': sort = {createdAt: -1}
+                  break;
+      }
+    }else{
+      sort={createdAt:-1}
+    }
 
     const product = await productSchema.find({ isActive: true })
-
+          .sort(sort)
     res.render('user/allproducts',
         { title: 'All Product',
           alertMessage:req.flash('alert'),

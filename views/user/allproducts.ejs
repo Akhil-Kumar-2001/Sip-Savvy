@@ -2,6 +2,18 @@
 
 
  <style>
+    .product-sort{
+        display: flex;
+        justify-content: end;
+        margin-right: 10rem;
+        height: 2.5rem;
+    }
+    .product-sort select{
+        width: 20%;
+        background: white;
+        /* color: #fefeeb; */
+        border-radius: 5px;
+    }
     .product-icon{
         font-size: 1.5rem;
 
@@ -33,6 +45,17 @@
 
  <div class="home-container">
      <h1 class="home-title"> <%= title %> </h1>
+
+     <div class="product-sort mb-3">
+        <select name="sort-box" class="sort-box" onchange="sortbyCategory('<%= title %>')">
+            <option selected>Sort By</option>
+            <option value="1">Product Name Aa - Zz</option>
+            <option value="2">Product Name Zz - Aa</option>
+            <option value="3">Price low - high</option>
+            <option value="4">Price high - low</option>
+            <option value="5">New arrival</option>
+        </select>
+    </div>
      <!-- <p class="home-all-products">See all  ></p> -->
      
     <div class="home-products">
@@ -79,3 +102,16 @@
 </div>
 
 <%- include('footer') %>
+
+
+<script>
+    function sortbyCategory(params){
+        const sortBoxValue = document.getElementsByName('sort-box')[0].value
+        let location;
+        if(params)
+        {
+            location =`?sortby=${sortBoxValue}`
+        }
+        window.location.href=`/allproduct/${location}`
+    }
+</script>
