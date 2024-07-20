@@ -43,9 +43,11 @@
 
 <%- include('navbar') %>
 
- <div class="home-container">
-     <h1 class="home-title"> <%= title %> </h1>
-
+<div class="home-container">
+    <h1 class="home-title"> <%= title %> </h1
+        <%- include('filter') %>
+        
+<!-- 
      <div class="product-sort mb-3">
         <select name="sort-box" class="sort-box" onchange="sortbyCategory('<%= title %>')">
             <option selected>Sort By</option>
@@ -55,12 +57,12 @@
             <option value="4">Price high - low</option>
             <option value="5">New arrival</option>
         </select>
-    </div>
+    </div> -->
      <!-- <p class="home-all-products">See all  ></p> -->
      
     <div class="home-products">
 
-            <% product.forEach((product) => { %>     
+            <% products.forEach((product) => { %>     
                     <div class="home-product" data-aos="zoom-in-right">
                  <% if(new Date(product.createdAt).getTime() > (Date.now() - (10 * 24 * 60 * 60 * 1000))) { %>
           
