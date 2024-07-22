@@ -35,7 +35,7 @@
     }
     .product-image-size {
     width: 200px; /* Set the desired width */
-    height: 200px; /* Set the desired height */
+    height: 250px; /* Set the desired height */
     object-fit: cover; /* Ensures the image covers the container without distortion */
 }
     
@@ -62,7 +62,7 @@
      
     <div class="home-products">
 
-            <% products.forEach((product) => { %>     
+            <% product.forEach((product) => { %>     
                     <div class="home-product" data-aos="zoom-in-right">
                  <% if(new Date(product.createdAt).getTime() > (Date.now() - (10 * 24 * 60 * 60 * 1000))) { %>
           

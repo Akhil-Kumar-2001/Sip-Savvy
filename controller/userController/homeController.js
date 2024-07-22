@@ -9,7 +9,7 @@ const categorySchema =require('../../model/categorySchema')
 
 const home = async(req, res) => {
   try {
-    const products = await productSchema.find({isActive: true})
+    const products = await productSchema.find({isActive :true}).sort({createdAt: -1})
     res.render('user/home',
       {title:"home",
         alertMessage:req.flash('alert'),
@@ -111,7 +111,7 @@ const allProducts = async(req,res)=>{
 
           // Fetching products with applied filters and sorting
 
-          const products = await productSchema.find(productQuery)
+          const product = await productSchema.find(productQuery)
           .sort(sortOption)
 
           // console.log(products)
@@ -122,7 +122,7 @@ const allProducts = async(req,res)=>{
             title: 'All Product',
             alertMessage: req.flash('errorMessage'),
             user: req.session.user,
-            products,
+            product,
             categories,
             query: req.query
         });
@@ -138,39 +138,20 @@ const allProducts = async(req,res)=>{
 
 // ---------------------Latest products----------------------
 
-const latestProduct = async(req,res)=>{
-    try {
-      const sortby = req.query.sortby || ''
-      let sort = '';
-      if(sortby){
-        switch(sortby){
-            case '1': sort = {productName: 1}
-                      break;
-            case '2': sort = {productName: -1}
-                      break;
-            case '3': sort = {productName: 1}
-                      break;
-            case '4': sort = {productName: -1}
-                      break;
-            case '5': sort = {createdAt: -1}
-                      break;
-        }
-      }else{
-         sort = {createdAt: -1}
-      }
+// const latestProduct = async(req,res)=>{
+//     try {
+//       const item = await productSchema.find({isActive :true}).sort({createdAt: -1})
+//       // console.log(product)
+//       res.render('user/latestproduct',
+//       {title: "Latest Products",
+//         item,
+//         user:req.session.user
+//       })
 
-      const product = await productSchema.find({isActive :true}).sort(sort)
-
-      res.render('user/latestproduct',
-      {title: "Latest Products",
-        product,
-        user:req.session.user
-      })
-
-    } catch (error) {
-      console.log(`Error while rendering Latest Product page ${error}`)
-    }
-}
+//     } catch (error) {
+//       console.log(`Error while rendering Latest Product page ${error}`)
+//     }
+// }
 
 const category = async(req,res)=>{
   const categoryName = req.params.category || ""
@@ -216,8 +197,7 @@ const category = async(req,res)=>{
 
   module.exports={
     home,
-    // allProduct,
-    latestProduct,
+    // latestProduct,
     category,
     allProducts
   }

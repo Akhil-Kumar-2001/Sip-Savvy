@@ -26,12 +26,12 @@
             <div class="border rounded-4 mb-3 d-flex justify-content-center main-image">
                 <img id="image-view" style="max-width: 100%; max-height: 60vh; margin: auto; cursor: pointer;" class="rounded-4 fit" src="../../<%= product.productImage[0]%>" />
             </div>
-            <div class="d-flex justify-content-center mb-3">
+            <div class="d-flex justify-content-center mb-3 gap-2">
               <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image" href="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big1.webp" class="item-thumb">
                 <% product.productImage.forEach((img, index) => { %>
                 <a>
                   <div class="product-image-min " width="60" height="60" onclick="changeImage('<%= img.replace(/\\/g, '\\\\')%>')">
-                    <img width="100" height="100" style="cursor: pointer;" class="rounded-2" src="../../<%= img %>" alt="">
+                    <img width="100" height="130" style="cursor: pointer;" class="rounded-2" src="../../<%= img %>" alt="">
                   </div>
                 </a>
                 <% }) %>
