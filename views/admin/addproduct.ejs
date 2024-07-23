@@ -151,7 +151,7 @@
                     <select name="productCategory" id="productCategory" class="form-control form-input" required>
                         <option value="" selected disabled>Select a category</option>
                         <% productCategory.forEach((category) => { %>
-                            <option value="<%= category.categoryName %>">
+                            <option value="<%= category._id %>">
                                 <%= category.categoryName %>
                             </option>
                         <% }) %>

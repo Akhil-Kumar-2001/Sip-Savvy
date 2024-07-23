@@ -28,11 +28,13 @@
         border-radius: 0.625rem;
         overflow: hidden;
         box-shadow: 0 0 0.625rem rgba(0, 0, 0, 0.5);
+        width: 900px;
     }
     
     .home-image {
         width: 18.75rem;
         object-fit: cover;
+        width: 50%;
     }
     
     .home-login-content {
@@ -40,7 +42,8 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
-        align-items: center;
+        /* align-items: center; */
+        width: 50%;
     }
     
     h2 {
@@ -94,7 +97,7 @@
     }
     
     .home-button-google {
-        width: 100%;
+        width: 90%;
         padding: 0.625rem;
         margin-bottom: 0.625rem;
         border: none;
@@ -160,6 +163,13 @@
             font-size: 0.875rem;
         }
     }
+
+    .eye-input{
+        width: 100%;
+    }
+    .eye-icon{
+
+    }
     
         </style>
               <!-- //---------header---------// -->
@@ -176,7 +186,19 @@
                             <h2>Log in to Exclusive</h2>
                             <form action="/login" method="post">
                                 <input type="text" name="email" placeholder="Email or Phone Number" class="home-input">
-                                <input type="password" name="password" placeholder="Password" class="home-input">
+                                <!-- <div class="class="home-input"">
+                                    <input type="password" name="password" placeholder="Password" id="password" class="home-input">
+                                    <span id="toggle-password" class="password-toggle align-content-center position-absolute">
+                                        <i class="bi bi-eye eye-icon"></i>
+                                    </span>
+                                </div> -->
+                                <div class="form-group position-relative d-flex align-items-center">
+                                    <input class="home-input" type="password" name="password" placeholder="Password" id="password" required>
+                                    <span id="toggle-password" class="me-1 password-toggle align-content-center position-absolute end-0">
+                                        <i class="bi bi-eye"></i>
+                                    </span>
+                                </div>
+
                                 <a href="/forgotpassword" class="home-forgot-password">Forget Password?</a>
                                 <div class="home-button-main">
                                     <button type="submit" class="home-button">Log In</button>
@@ -198,3 +220,15 @@
     
     
             <%- include('footer') %>
+            <script>
+                document.getElementById('toggle-password').addEventListener('click', function() {
+                    togglePassword('password', this);
+                });
+            
+                function togglePassword(id, toggle) {
+                    const pass = document.getElementById(id);
+                    const type = pass.getAttribute('type') === 'password' ? 'text' : 'password';
+                    pass.setAttribute('type', type);
+                    toggle.innerHTML = type === 'password' ? '<i class="bi bi-eye"></i>' : '<i class="bi bi-eye-slash"></i>';
+                }
+            </script>

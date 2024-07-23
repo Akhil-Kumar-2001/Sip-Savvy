@@ -39,7 +39,7 @@ const category=async(req,res)=>{
 const addCategoryPost = async(req,res)=>{
     try {
         const name = req.body.categoryName
-        console.log(name)
+        // console.log(name)
         const category ={
             categoryName:name,
             isActive:true

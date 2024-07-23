@@ -3,6 +3,8 @@ const categorySchema = require('../../model/categorySchema')
 const upload = require('../../middleware/multer')
 const fs = require('fs')
 
+const mongoose=require('mongoose')
+
 //------------------Find product by search-------------------- 
 
 
@@ -16,7 +18,7 @@ const products = async(req,res)=>{
         
         
         //---- Fetch product with pagination ----
-        const products = await productSchema.find({productName:{ $regex: search , $options:'i'} })
+        const products = await productSchema.find({productName:{ $regex: search , $options:'i'} }).populate('productCategory')
         .limit(limit)
         .skip((page - 1) * limit)
         .sort({updatedAt : -1})
@@ -77,7 +79,7 @@ const addProductPost = async(req,res)=>{
     const product = {
         productName: req.body.productName,
         productPrice: req.body.productPrice,
-        productCategory: req.body.productCategory,
+        productCategory: new mongoose.Types.ObjectId(req.body.productCategory),
         productQuantity: req.body.productQuantity,
         productDiscount: req.body.productDiscount,
         productDescription: req.body.productDescription,

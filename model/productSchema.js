@@ -20,9 +20,14 @@ const schema = new mongoose.Schema({
     productDiscount:{
         type:Number,
     },
-    productCategory: {
-        type: String,
-        required: true
+    // productCategory: {
+    //     type: String,
+    //     required: true
+    // },
+    productCategory : {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : 'category',
+        required : true
     },
     productImage: {
         type: Array,

@@ -38,6 +38,13 @@
     height: 250px; /* Set the desired height */
     object-fit: cover; /* Ensures the image covers the container without distortion */
 }
+.empty-category{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 5rem;
+        gap: 2rem;
+    }
     
  </style>
 
@@ -60,9 +67,11 @@
     </div> -->
      <!-- <p class="home-all-products">See all  ></p> -->
      
+     <% if(product.length >0 ) { %>    
     <div class="home-products">
 
-            <% product.forEach((product) => { %>     
+            <% product.forEach((product) => { %>    
+
                     <div class="home-product" data-aos="zoom-in-right">
                  <% if(new Date(product.createdAt).getTime() > (Date.now() - (10 * 24 * 60 * 60 * 1000))) { %>
           
@@ -83,7 +92,7 @@
                      <img src="/<%= product.productImage[0] %>" alt="" class="product-image-size">
                  </a>
              </div>
-            <p class="home-product-name">
+            <p class="text-truncate home-product-name">
                 <%= product.productName %>
             </p>
             <p class="home-product-price">
@@ -101,6 +110,16 @@
         </div>  
         <% } ) %>
     </div>
+    <% } else { %>
+        <div class="empty-category">
+            <h1 class="text-danger">
+                Product is not Available
+            </h1>
+            <h3>
+                Available Soon
+            </h3>
+        </div>
+        <% } %>
 </div>
 
 <%- include('footer') %>
