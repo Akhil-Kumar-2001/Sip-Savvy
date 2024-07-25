@@ -1,9 +1,10 @@
 const productSchema = require('../../model/productSchema')
 const cartSchema = require('../../model/ cartSchema')
 const userSchema = require('../../model/userSchema')
-const orderSchema =  require('../../model/orderSchema')
+const orderSchema = require('../../model/orderSchema')
 const addressSchema = require('../../model/addressSchema')
 const mongoose = require('mongoose')
+const Razorpay = require('razorpay')
 const { ObjectId } = require('mongodb');
 
 
@@ -13,34 +14,35 @@ const { ObjectId } = require('mongodb');
 // ---------------Check out page render-------------------
 
 
-const checkout = async(req,res)=>{
+const checkout = async (req, res) => {
     try {
-        if(!req.session.user){
-            req.flash('alert','User not found. Try logging in again.')
+        if (!req.session.user) {
+            req.flash('alert', 'User not found. Try logging in again.')
             return res.redirect('/login')
         }
         const userId = req.session.user;
         const user = await userSchema.findById(userId);
-        if(!user){
+        if (!user) {
             return res.status(404).send('User not found');
         }
-        const cartDetails = await cartSchema.findOne({userId}).populate("items.productId")
-        if(!cartDetails){
+        const cartDetails = await cartSchema.findOne({ userId }).populate("items.productId")
+        if (!cartDetails) {
             return res.status(404).send('Cart not found. Check and try again.')
         }
 
         const items = cartDetails.items
-        if(items.length === 0){
+        if (items.length === 0) {
             res.redirect('/cart')
         }
 
         res.render('user/checkout',
-                  {title:'Checkout',
-                  alertMessage:req.flash('alert'),  
-                  cartDetails,
-                  user,
-                  userDetails:user
-                  });
+            {
+                title: 'Checkout',
+                alertMessage: req.flash('alert'),
+                cartDetails,
+                user,
+                userDetails: user
+            });
     } catch (error) {
         console.log(`Error while rendering Checkout page ${error}`)
         res.status(500).send('Error processing request. Please retry.')
@@ -50,15 +52,22 @@ const checkout = async(req,res)=>{
 
 // ---------------- order palacing ---------------
 
-const placeOrder = async(req,res)=>{
+const placeOrder = async (req, res) => {
     try {
         const userId = req.session.user
-        const addressIndex =parseInt(req.params.address);
+        const addressIndex = parseInt(req.params.address);
         const paymentMode = parseInt(req.params.payment)
+        let paymentId = "";
+        const { razorpay_payment_id, razorpay_order_id, razorpay_signature, payment_status } = req.body;
 
-        const cartItems = await cartSchema.findOne({userId}).populate("items.productId");
-        if(!cartItems || !cartItems.items || cartItems.items.length === 0){
-            return res.status(400).json({success:false, message:"It seems your cart is empty or unavailable at the moment."});
+        if (paymentMode === 2) {
+            paymentId = razorpay_payment_id;
+        }
+
+
+        const cartItems = await cartSchema.findOne({ userId }).populate("items.productId");
+        if (!cartItems || !cartItems.items || cartItems.items.length === 0) {
+            return res.status(400).json({ success: false, message: "It seems your cart is empty or unavailable at the moment." });
         }
 
         const paymentDetails = ["Cash on delivery", "Wallet", "razorpay"];
@@ -71,7 +80,7 @@ const placeOrder = async(req,res)=>{
                 product_category: item.productId.productCategory,
                 product_quantity: item.productCount,
                 product_price: item.productId.productPrice,
-                product_discount:item.productId.productDiscount,
+                product_discount: item.productId.productDiscount,
                 product_image: item.productId.productImage[0],
                 product_status: 'Confirmed'
             });
@@ -101,8 +110,9 @@ const placeOrder = async(req,res)=>{
                 landMark: userDetails.address[addressIndex].landmark
             },
             paymentMethod: paymentDetails[paymentMode],
-            orderStatus: "Confirmed",
-          
+            orderStatus: payment_status === "Pending" ? "Pending" : "Confirmed",
+            paymentId: paymentId,
+            paymentStatus: payment_status,
             isCancelled: false
         });
         await newOrder.save();
@@ -125,7 +135,7 @@ const placeOrder = async(req,res)=>{
         return res.status(500).json({ success: false, message: `Error on placing order: ${err.message}` });
     }
 
-}   
+}
 
 
 //---------------------------------- Order Successfull page ------------
@@ -135,13 +145,47 @@ const orderPage = async (req, res) => {
         const userId = req.session.user;
         const user = await userSchema.findById(userId);
 
-        const orders = await orderSchema.findOne({ customer_id: user._id }).sort({createdAt : -1}).limit(1)
+        const orders = await orderSchema.findOne({ customer_id: user._id }).sort({ createdAt: -1 }).limit(1)
 
-        res.render('user/conform-order', { title: "Order conformed",alertMessage:req.flash('alert'), orders: orders });
+        res.render('user/conform-order', { title: "Order conformed", alertMessage: req.flash('alert'), orders: orders });
     } catch (err) {
         console.log(`Error on render in conform order ${err}`);
-        req.flash('alert',"user is not found , please Login again")
+        req.flash('alert', "user is not found , please Login again")
         res.redirect("/login")
+    }
+}
+
+
+// Razor pay
+
+const paymentRender = async (req, res) => {
+    try {
+        const totalAmount = req.params.amount;
+        if (!totalAmount) {
+            return res.status(404).json({ error: 'Amount parameter is missing' })
+        }
+
+        const instance = new Razorpay({
+            key_id: process.env.RAZORPAY_KEY_ID,
+            key_secret: process.env.RAZORPAY_KEY_SECRET
+        })
+
+        const options = {
+            amount: totalAmount * 100,
+            currency: "INR",
+            receipt: "receipt#1"
+        };
+
+        instance.orders.create(options,(error,order) =>{
+            if(error){
+                console.log(`Failed to create order ${error}`);
+                return res.status(500).json({error:`Failed to create order: ${error.message}`})
+            }
+            return res.status(200).json({orderID:order.id});
+        })
+    } catch (error) {
+        console.log(`Error while ordering in checkout ${error}`)
+        return res.status(500).json({error:`Internal Server error`})
     }
 }
 
@@ -150,14 +194,14 @@ const orderPage = async (req, res) => {
 const addAddress = async (req, res) => {
     try {
         const userAddress = {
-            building:req.body.building,
-            street:req.body.street,
-            city:req.body.city,
-            phonenumber:req.body.phonenumber,
-            pincode:req.body.pincode,
-            landmark:req.body.landmark,
-            state:req.body.state,
-            country:req.body.country
+            building: req.body.building,
+            street: req.body.street,
+            city: req.body.city,
+            phonenumber: req.body.phonenumber,
+            pincode: req.body.pincode,
+            landmark: req.body.landmark,
+            state: req.body.state,
+            country: req.body.country
         }
         const user = await userSchema.findById(req.session.user)
         if (user.address.length > 3) {
@@ -176,65 +220,65 @@ const addAddress = async (req, res) => {
 
 // ---------------Remove Address--------------
 
-const removeAddress = async(req,res)=>{
+const removeAddress = async (req, res) => {
     try {
-       const userId = req.session.user
-       const index = parseInt(req.params.index,10) 
+        const userId = req.session.user
+        const index = parseInt(req.params.index, 10)
 
-       const user = await userSchema.findById(userId).populate('address');
-       if(!user){
-        req.flash('alert','User not found')
-        return res.redirect('/checkout')
-       }
+        const user = await userSchema.findById(userId).populate('address');
+        if (!user) {
+            req.flash('alert', 'User not found')
+            return res.redirect('/checkout')
+        }
 
-       if(isNaN(index) || index < 0 || index > user.address.length){
-        req.flash('alert','Invalid Address')
-        return res.redirect('/checkout')
-       }
+        if (isNaN(index) || index < 0 || index > user.address.length) {
+            req.flash('alert', 'Invalid Address')
+            return res.redirect('/checkout')
+        }
 
-       user.address.splice(index,1)
-       await user.save();
+        user.address.splice(index, 1)
+        await user.save();
 
-       req.flash('alert','Address Removed Successfully')
-       res. redirect('/checkout')
+        req.flash('alert', 'Address Removed Successfully')
+        res.redirect('/checkout')
     } catch (error) {
-        req.flash('alert','Error while removing the address')
+        req.flash('alert', 'Error while removing the address')
         console.log(`Error while removing the Address ${error}`)
         res.redirect('/checkout')
-        
+
     }
 }
 
 // ------------ Edit address page load  -------------
 
-const editAddress = async(req,res)=>{
+const editAddress = async (req, res) => {
     const index = Number(req.params.index)
     const id = req.session.user;
 
 
     try {
-        const getAddress = await userSchema.findOne({_id:id},{address:{$slice:[index,1]}});
+        const getAddress = await userSchema.findOne({ _id: id }, { address: { $slice: [index, 1] } });
 
-        if(getAddress){
-            res.render('user/checkouteditaddress',{title:'Edit Address',alertMessage:req.flash('alert'),data:getAddress.address[0],index,user:req.session.user});
-          
+        if (getAddress) {
+            res.render('user/checkouteditaddress', { title: 'Edit Address', alertMessage: req.flash('alert'), data: getAddress.address[0], index, user: req.session.user });
+
         }
-        else{
+        else {
             res.redirect('/checkout')
         }
     } catch (error) {
-        req.flash('alert','error while entering edit address page, Please try again later')
+        req.flash('alert', 'error while entering edit address page, Please try again later')
         console.log(`Error while rendering address edit page ${error}`)
         res.redirect('/checkout');
     }
 }
 
 
-   // ----------------Update existing addresss--------------------
+// ----------------Update existing addresss--------------------
 
-   const updateAddress = async(req,res)=>{
+const updateAddress = async (req, res) => {
     const id = req.session.user
-    const index = parseInt(req.params.index,10)
+    const index = parseInt(req.params.index, 10)
     const data = {
         building: req.body.building,
         street: req.body.street,
@@ -253,24 +297,25 @@ const editAddress = async(req,res)=>{
             { _id: new ObjectId(id) },
             { $set: updateQuery }
         );
-        req.flash('alert','Address updated Successfully');
+        req.flash('alert', 'Address updated Successfully');
         res.redirect('/checkout');
 
     } catch (error) {
         console.log(`error while editing the address ${error}`)
-        req.flash('alert','Unable to update the address right now . Please try again later.');
-        res.redirect(`/editaddress/${index}`); 
+        req.flash('alert', 'Unable to update the address right now . Please try again later.');
+        res.redirect(`/editaddress/${index}`);
     }
 }
 
 
 
 module.exports = {
-                    checkout,
-                    placeOrder,
-                    orderPage,
-                    addAddress,
-                    editAddress,
-                    removeAddress,
-                    updateAddress
-                 }
+    checkout,
+    placeOrder,
+    orderPage,
+    addAddress,
+    editAddress,
+    removeAddress,
+    updateAddress,
+    paymentRender
+}

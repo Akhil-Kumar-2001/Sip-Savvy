@@ -57,6 +57,10 @@ const schema = new mongoose.Schema({
         required: true,
         enum: ['Cash on delivery','razorpay', 'Wallet']
     },
+    paymentStatus:{
+        type:String,
+        required: false
+    },
     isCancelled: {
         type: Boolean,
         default: false

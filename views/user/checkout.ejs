@@ -668,7 +668,7 @@ a {
         </div>
 
 </body>
-
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>                                                    t
 
  <script>
 
@@ -737,10 +737,10 @@ a {
                 .then(data => {
                     if (data.orderID) {
                         const options = {
-                            key: "rzp_test_jyh8u3FB51sm3I",
+                            key: "rzp_test_GBUWvZQkO6TOrv",
                             amount: totalAmount * 100,
                             currency: "INR",
-                            name: "Wuzzy's Toys",
+                            name: "Sip Savvy",
                             order_id: data.orderID,
                             handler: function (response) {
                                 const URL = `/place-order/${selectedAddressIndex}/${selectedPaymentMethod}`;
