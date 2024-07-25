@@ -95,6 +95,7 @@ user.post('/updateaddress/:index',activeUser,checkoutController.updateAddress)
 user.get('/orders',activeUser,orderController.orderPage)
 user.post('/cancelOrder/:id', activeUser , orderController.cancelOrder)
 user.get("/orderDetail/:id", activeUser , orderController.orderDetail)
+user.get('/wallet',activeUser,orderController.walletPage)
 
 
 

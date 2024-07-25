@@ -1,6 +1,8 @@
 const orderSchema = require('../../model/orderSchema')
 const userSchema = require('../../model/userSchema')
 const productSchema = require('../../model/productSchema')
+const walletSchema = require('../../model/walletSchema')
+const Razorpay = require('razorpay')
 const mongoose = require('mongoose')
 const path = require('path')
 
@@ -42,6 +44,35 @@ const cancelOrder = async (req, res) => {
             req.flash('alert', 'Order not found');
             return res.redirect('/orders');
         }
+
+        if(order.paymentMethod === 'razorpay' || order.paymentMethod === 'Wallet') {
+            const userWallet = await walletSchema.findOne({userID:order.customer_id});
+            if(userWallet){
+                userWallet.balance = (userWallet.balance || 0) + order.totalPrice;
+                userWallet.transaction.push({
+                    wallet_amount:order.totalPrice,
+                    order_id:orderId,
+                    transactionType: 'Credited',
+                    transaction_date:new Date()
+                });
+                await userWallet.save();
+            }else{
+                const newWallet= new walletSchema({
+                    userID:order.customer_id,
+                    balance:order.totalPrice,
+                    transaction:[{
+                        wallet_amount:order.totalPrice,
+                        order_id:orderId,
+                        transactionType:'Credited',
+                        transaction_date:new Date()
+                    }]
+                })
+
+                await newWallet.save();
+            }
+        }
+
+
         for (let product of order.products) {
             if (product.product_id && product.product_quantity !== undefined) {
                 await productSchema.findByIdAndUpdate(product.product_id, { $inc: { productQuantity: product.product_quantity } });
@@ -78,9 +109,41 @@ const orderDetail = async (req,res) =>{
 }
 
 
+// ---------Wallet page render-----------
+
+const walletPage = async(req,res)=>{
+    try {
+        const user = req.session.user
+        console.log(user)
+        let wallet = await walletSchema.findOne({userID:user}).populate();
+        console.log(wallet)
+        if(!user){
+            req.flash('alert','User not found. Try to login again')
+            return res.redirect('/login')
+        }
+        if(!wallet){
+            wallet = { balance:0, transaction:[] };
+        }
+
+        res.render('user/wallet',
+            {title:"Wallet",
+             alertMessage:req.flash('alert'),
+             wallet,
+             user,
+             orderDetail,   
+            });
+        
+    } catch (error) {
+        console.log(`Error while rendering wallet ${error}`);
+        res.redirect('/profile')
+    }
+}
+
+
 module.exports = {
                    orderPage,
                    cancelOrder,
-                   orderDetail
+                   orderDetail,
+                   walletPage
 
                  }
