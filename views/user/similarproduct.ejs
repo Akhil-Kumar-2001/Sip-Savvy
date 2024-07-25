@@ -26,6 +26,10 @@
     height: 250px; /* Set the desired height */
     object-fit: cover; /* Ensures the image covers the container without distortion */
 }
+.product-icon{
+        font-size: 1.8rem;
+        color: black;
+    }
     
  </style>
  <!-------------- Line -------------->
@@ -51,7 +55,7 @@
                 </a>
             </div>
 
-            <p class="home-product-name">
+            <p class="home-product-name text-truncate">
                 <%= similarProduct[i].productName %>
             </p>
             <p class="home-product-price">
@@ -59,8 +63,10 @@
                 <%= similarProduct[i].productPrice.toLocaleString() %>
             </p>
             <div class="home-cart-icon">
-                <i class="bi bi-heart product-icon"></i>
-                <i class="bi bi-cart-fill product-icon ms-3"></i>
+                <a onclick="addwishlist('<%= product.id %>', '<%= product.productPrice %>', '<%= user %>')" class="wishlist-icon">
+                    <i class="bi bi-heart mt-3 product-icon"></i></a>
+                    <a onclick="addToCart('<%= product.id %>','<%= product.productPrice %>','<%=user %>')"
+                        class="cart-icon"><i class="bi bi-cart-fill product-icon ms-3 text-black"></i></a>
             
             </div>
             

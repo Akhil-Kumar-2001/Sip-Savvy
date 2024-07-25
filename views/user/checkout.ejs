@@ -548,7 +548,7 @@ a {
                                             <h5 class="font-size-16 text-truncate"><a href="#" class="text-dark"><%= product.productCount %> </a></h5>
                                            
                                         </td>
-                                        <td>$  <%= product.productPrice - product.productPrice *
+                                        <td>₹  <%= product.productPrice - product.productPrice *
                                             (product.productId.productDiscount / 100) %></td>
                                     </tr>
                                 
@@ -559,7 +559,7 @@ a {
                                             <h5 class="font-size-14 m-0">Sub Total :</h5>
                                         </td>
                                         <td>
-                                            $   <%= Math.round(cartDetails.payableAmount - cartDetails.payableAmount * (12 /
+                                            ₹   <%= Math.round(cartDetails.payableAmount - cartDetails.payableAmount * (12 /
                                             100)) %>
                                         </td>
                                     </tr>
@@ -568,7 +568,7 @@ a {
                                             <h5 class="font-size-14 m-0">Gst :</h5>
                                         </td>
                                         <td>
-                                             $<%= Math.round(cartDetails.payableAmount * (12 / 100)) %>
+                                            ₹<%= Math.round(cartDetails.payableAmount * (12 / 100)) %>
                                         </td>
                                     </tr>
     
@@ -577,7 +577,7 @@ a {
                                             <h5 class="font-size-14 m-0">Total :</h5>
                                         </td>
                                         <td>
-                                            $  <%= cartDetails.payableAmount %>
+                                            ₹  <%= cartDetails.payableAmount %>
                                         </td>
                                     </tr>
                                                                 

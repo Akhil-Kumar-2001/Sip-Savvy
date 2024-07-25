@@ -30,6 +30,11 @@
 
 const nodemailer = require('nodemailer');
 require('dotenv').config();
+const path=require("path")
+const fs=require("fs")
+
+const templatepath=path.join(__dirname,"emailotp.html")
+const htmltemplate=fs.readFileSync(templatepath,"utf-8")
 
 const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
@@ -43,12 +48,15 @@ const transporter = nodemailer.createTransport({
 
 async function mailSender(OTP, userMail) {
     try {
+        const htmlotp=htmltemplate.replace("123456",OTP)
         // Send mail with defined transport object
         const info = await transporter.sendMail({
+            
             from: `"Sip Savvy" <${process.env.SMTP_USERNAME}>`,
             to: userMail,
             subject: "Your One-Time Password for Sip Savvy Account Verification", // Subject line
-            html: `<h2>Sip Savvy</h2><br/> <b>${OTP}</b>`, // HTML body
+            // html: `<h2>Sip Savvy</h2><br/> <b>${OTP}</b>`, // HTML body
+            html:htmlotp
         });
 
         console.log("Message sent: %s", info.messageId);

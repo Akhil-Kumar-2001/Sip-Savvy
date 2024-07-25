@@ -14,6 +14,13 @@
   .main-image {
     overflow: hidden;
   }
+    .product-icons{
+        font-size: 1.8rem;
+        color: black;
+       margin-left: 2rem;
+     
+        
+    }
   </style>
   
   <%- include('navbar') %>
@@ -73,6 +80,8 @@
                 class="btn btn-primary shadow-0"><i class="me-1 fa fa-shopping-basket"></i>Add to cart</a> -->
                 <a onclick="addToCart('<%= product.id %>','<%= product.productPrice %>','<%= user %>')" 
                   class="btn btn-primary shadow-0"><i class="me-1 fa fa-shopping-basket"></i>Add to cart</a>
+                  <a onclick="addwishlist('<%= product.id %>', '<%= product.productPrice %>', '<%= user %>')" class="wishlist-icon">
+                    <i class="bi bi-heart mt-3 product-icons"></i></a>
                
             </div>
           </main>

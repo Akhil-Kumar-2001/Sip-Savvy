@@ -10,6 +10,7 @@ const profileController = require('../controller/userController/profileControlle
 const cartController = require('../controller/userController/cartController')
 const checkoutController = require('../controller/userController/checkoutController')
 const orderController = require('../controller/userController/orderController')
+const wishlistController = require('../controller/userController/wishlistController')
 
 //------------------------------- main -------------------------------
 
@@ -68,6 +69,13 @@ user.post('/cart/increment',activeUser,cartController.increment)
 user.post('/cart/decrement',activeUser,cartController.decrement)
 
 
+
+//------------------------------- Wishlist ---------------------------
+
+user.get('/wishlist', activeUser , wishlistController.wishlistView )
+// user.post('/add-wishlist/:productId', activeUser, wishlistController.addToWishlist)
+user.get('/add-wishlist/:id', activeUser, wishlistController.addWishlist )
+user.delete('/delete-wishlist-item/:id', activeUser, wishlistController.deleteFromWishlist)
 
 //-------------------- Checout route --------------------
 

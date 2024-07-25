@@ -1,0 +1,179 @@
+ <!-- shop section -->
+
+
+ <style>
+    .product-sort{
+        display: flex;
+        justify-content: end;
+        margin-right: 10rem;
+        height: 2.5rem;
+    }
+    .product-sort select{
+        width: 20%;
+        background: white;
+        /* color: #fefeeb; */
+        border-radius: 5px;
+    }
+    .product-icon{
+        font-size: 1.5rem;
+
+     
+        
+    }
+    .product-product img{
+        width: 10rem;
+    }
+ 
+    .product-new-arrival{ 
+    top: 0;
+    left: 0;
+    background-color: rgb(248, 180, 7);
+    background-color: rgb(252, 171, 58);
+    color: white;
+    width: 6rem;
+
+    }
+    .product-image-size {
+    width: 200px; /* Set the desired width */
+    height: 250px; /* Set the desired height */
+    object-fit: cover; /* Ensures the image covers the container without distortion */
+}
+.empty-category{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 5rem;
+        gap: 2rem;
+    }
+
+    .product-icon{
+        font-size: 1.8rem;
+        color: black;
+    }
+    
+ </style>
+
+<%- include('navbar') %>
+
+<div class="home-container">
+    <% if(products.length!=0) { %>    
+    <h1 class="home-title"> 
+        <%= title %> 
+            (<%= totalItem %>)
+    </h1>
+       
+    <div class="home-products">
+
+            <% products.forEach((product) => { %>    
+
+                    <div class="home-product" data-aos="zoom-in-right">
+                 <% if(new Date(product.productId.createdAt).getTime() > (Date.now() - (10 * 24 * 60 * 60 * 1000))) { %>
+          
+                 <div class="product-new-arrival">
+                      <h6 class="ms-1">New Arrival</h6>
+                  </div>
+             
+                 <% } else if (product.productId.productDiscount != 0) { %>
+                <div class="product-new-arrival">
+                    <h6 class="ms-1">
+                 <%= product.productId.productDiscount %> &percnt; OFF
+                    </h6>
+                </div>
+                 <% } %>
+                 <div class="col-md-1 col-lg-1 col-xl-1 text-end" style="width: 90%;">
+                    <a href="#" class="text-danger delete-link"
+                        data-id="<%= product.productId._id %>">
+                        <i class="bi bi-trash3 fa-lg"></i>
+                    </a>
+                </div>
+
+             <div class="product-image">
+                 <a href="/productDetail/<%= product.productId.id %>" class="product-name-link">
+                     <img src="/<%= product.productId.productImage[0] %>" alt="" class="product-image-size">
+                 </a>
+             </div>
+            <p class="text-truncate home-product-name">
+                <%= product.productId.productName %>
+            </p>
+            <p class="home-product-price">
+                <i class="bi bi-currency-rupee"></i>
+                <%= product.productId.productPrice.toLocaleString() %>
+            </p>
+            <div class="home-cart-icon">
+               
+               
+                <!-- <i class="bi bi-cart-fill product-icon ms-3"></i> -->
+                <a onclick="addToCart('<%= product.productId.id %>','<%= product.productId.productPrice %>','<%=user %>')"
+                    class="cart-icon"><i class="bi bi-cart-fill product-icon ms-3 text-black"></i></a>
+            
+            </div>
+            
+        </div>  
+        <% } ) %>
+    </div>
+    <% } else { %>
+        <h1 class="home-title">
+            <%= title %> 
+        </h1>
+        <div class="empty-category">
+            <h1 class="text-danger ">
+                Fill your desires. Wishlist awaits.
+            </h1>
+            <a href="/allproduct" class="btn btn-dark  checkout">
+                <i class="bi bi-arrow-left-circle" style="margin-right: 2rem;"></i>Shop Now
+            </a>
+            <h3>
+            </h3>
+        </div>
+        <% } %>
+</div>
+
+<%- include('footer') %>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        document.querySelectorAll('.delete-link').forEach((element) => {
+            element.addEventListener('click', function (e) {
+                e.preventDefault();
+                const productId = this.getAttribute('data-id');
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "Do you want to remove this item from the Wishlist?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch(`/delete-wishlist-item/${productId}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ productId }),
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    Swal.fire(
+                                        'Deleted!',
+                                        data.message,
+                                        'success'
+                                    ).then(() => {
+                                        window.location.reload();
+                                    });
+                                } else {
+                                    Swal.fire('Error', data.message, 'error');
+                                }
+                            })
+                            .catch(error => {
+                                Swal.fire('Error', 'There was a problem deleting the item.', 'error');
+                            });
+                    }
+                });
+            });
+        });
+    });
+</script>
