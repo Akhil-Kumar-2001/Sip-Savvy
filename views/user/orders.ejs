@@ -434,11 +434,11 @@
                     .then(response => {
                         if (response.ok) {
                             window.location.href = '/orders';
-                            Swal.fire({
-                                icon: "success",
-                                title: "Order Cancelled Successfully",
-                                text: "Shop more"
-                            });
+                            // Swal.fire({
+                            //     icon: "success",
+                            //     title: "Order Cancelled Successfully",
+                            //     text: "Shop more"
+                            // });
                         } else {
                             Swal.fire({
                                 icon: "warning",
@@ -453,37 +453,37 @@
             //----------------------------------- return order ---------------------------------
 
             document.addEventListener('DOMContentLoaded', () => {
-                const returnOrderModal = document.getElementById('modalreturnOrder');
-                returnOrderModal.addEventListener('show.bs.modal', (event) => {
-                    const button = event.relatedTarget;
-                    const orderId = button.getAttribute('data-id');
-                    document.getElementById('orderId').value = orderId;
-                });
-                document.getElementById('returnOrderForm').addEventListener('submit', async (event) => {
-                    event.preventDefault();
-                    const orderId = document.getElementById('orderId').value;
-                    const returnReason = document.getElementById('returnReason').value;
-                    try {
-                        const response = await fetch('/returnOrder', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({ orderId, returnReason }),
-                        });
-                        const result = await response.json();
-                        if (result.status === 'success') {
-                            Swal.fire('Success', 'Order return request submitted successfully', 'success').then(() => {
-                                returnOrderModal.querySelector('.btn-close').click();
-                                window.location.reload();
-                            });
-                        } else {
-                            Swal.fire('Error', result.message, 'error');
-                        }
-                    } catch (error) {
-                        Swal.fire('Error', 'An error occurred while submitting the return request', 'error');
-                    }
-                });
+    const returnOrderModal = document.getElementById('modalreturnOrder');
+    returnOrderModal.addEventListener('show.bs.modal', (event) => {
+        const button = event.relatedTarget;
+        const orderId = button.getAttribute('data-id');
+        document.getElementById('orderId').value = orderId;
+    });
+    document.getElementById('returnOrderForm').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const orderId = document.getElementById('orderId').value;
+        const returnReason = document.getElementById('returnReason').value;
+        try {
+            const response = await fetch('/returnOrder', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ orderId, returnReason }),
             });
+            const result = await response.json();
+            if (result.status === 'success') {
+                Swal.fire('Success', 'Order return request submitted successfully', 'success').then(() => {
+                    returnOrderModal.querySelector('.btn-close').click();
+                    window.location.reload();
+                });
+            } else {
+                Swal.fire('Error', result.message, 'error');
+            }
+        } catch (error) {
+            Swal.fire('Error', 'An error occurred while submitting the return request', 'error');
+        }
+    });
+});
 
         </script>

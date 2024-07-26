@@ -30,66 +30,75 @@ const orderPage = async(req,res)=>{
 // --------------User cancel order-----------------
 
 
+
+
+
+
+
+
+
+
 const cancelOrder = async (req, res) => {
     try {
-        const user = req.session.user;
         const orderId = req.params.id;
-
-        if (!orderId) {
-            req.flash('alert', 'Invalid order ID');
-            return res.redirect('/orders');
-        }
-        const order = await orderSchema.findByIdAndUpdate(orderId, { orderStatus: "Cancelled", isCancelled: true });
-        if (!order) {
-            req.flash('alert', 'Order not found');
-            return res.redirect('/orders');
+        const orderDetails = await orderSchema.findById(orderId).populate('products.product_id');
+        if (!orderDetails) {
+            req.flash('alert', 'Order id couldn\'t be found');
+            return res.redirect('/checkout');
         }
 
-        if(order.paymentMethod === 'razorpay' || order.paymentMethod === 'Wallet') {
-            const userWallet = await walletSchema.findOne({userID:order.customer_id});
-            if(userWallet){
-                userWallet.balance = (userWallet.balance || 0) + order.totalPrice;
-                userWallet.transaction.push({
-                    wallet_amount:order.totalPrice,
-                    order_id:orderId,
-                    transactionType: 'Credited',
-                    transaction_date:new Date()
-                });
-                await userWallet.save();
-            }else{
-                const newWallet= new walletSchema({
-                    userID:order.customer_id,
-                    balance:order.totalPrice,
-                    transaction:[{
-                        wallet_amount:order.totalPrice,
-                        order_id:orderId,
-                        transactionType:'Credited',
-                        transaction_date:new Date()
-                    }]
-                })
+        // When the product is being canceled, return the quantity back to stock of admin
+        for (let product of orderDetails.products) {
+            if (product.product_id && typeof product.product_id.productQuantity === 'number' && typeof product.product_quantity === 'number') {
+                console.log(`Current product quantity: ${product.product_id.productQuantity}`);
+                console.log(`Product quantity to return: ${product.product_quantity}`);
 
-                await newWallet.save();
-            }
-        }
-
-
-        for (let product of order.products) {
-            if (product.product_id && product.product_quantity !== undefined) {
-                await productSchema.findByIdAndUpdate(product.product_id, { $inc: { productQuantity: product.product_quantity } });
+                product.product_id.productQuantity += product.product_quantity;
+                await product.product_id.save();
             } else {
-                console.error(`Invalid product data: ${JSON.stringify(product)}`);
-                req.flash('alert', 'Error updating product quantity');
-                return res.redirect('/orders');
+                console.error(`Invalid product quantities for product ID ${product.product_id}: productQuantity = ${product.product_id.productQuantity}, product_quantity = ${product.product_quantity}`);
             }
         }
-        req.flash('alert', 'Order cancelled successfully');
-        res.redirect('/orders');
-    } catch (error) {
-        console.error(`Error while cancelling the order: ${error}`);
-        req.flash('alert', 'Cannot cancel this order right now, please try again');
-        res.redirect('/orders');
+
+        // Saving the new status in the db
+        orderDetails.orderStatus = 'Cancelled';
+        orderDetails.isCancelled = true;
+        orderDetails.reasonForCancel = req.body.cancelledReason;
+        await orderDetails.save();
+
+        // Wallet finding
+        const wallet = await walletSchema.findOne({ userID: req.session.user });
+
+        if (orderDetails.paymentMethod === 'razorpay' || orderDetails.paymentMethod === 'Wallet') {
+            const finalAmount = orderDetails.totalPrice 
+            if (typeof finalAmount === 'number' && !isNaN(finalAmount)) {
+                if (wallet) {
+                    if (typeof wallet.balance === 'number') {
+                        wallet.balance += finalAmount;
+                        await wallet.save();
+                    } else {
+                        console.error(`Invalid wallet balance: ${wallet.balance}`);
+                    }
+                } else {
+                    const newWallet = new walletSchema({
+                        userID: req.session.user,
+                        balance: finalAmount,
+                    });
+                    await newWallet.save();
+                }
+            } else {
+                console.error(`Invalid finalAmount: ${finalAmount}`);
+            }
+        }
+
+        req.flash('errorMessage', 'Product canceled successfully');
+        res.redirect('/cancelled-orders');
+
+    } catch (err) {
+        console.log(`Error on cancel order post: ${err}`);
     }
 };
+
 
 
 // ----------------User order details-----------------
@@ -109,41 +118,94 @@ const orderDetail = async (req,res) =>{
 }
 
 
-// ---------Wallet page render-----------
+// ------------Return order-------------
 
-const walletPage = async(req,res)=>{
+const returnOrder = async (req, res) => {
     try {
-        const user = req.session.user
-        console.log(user)
-        let wallet = await walletSchema.findOne({userID:user}).populate();
-        console.log(wallet)
-        if(!user){
-            req.flash('alert','User not found. Try to login again')
-            return res.redirect('/login')
-        }
-        if(!wallet){
-            wallet = { balance:0, transaction:[] };
+        const { orderId, returnReason } = req.body; // Fixed typo here
+        
+        if (!orderId || !returnReason) {
+            return res.status(400).json({ status: 'error', message: 'OrderId and return reason are required' });
         }
 
-        res.render('user/wallet',
-            {title:"Wallet",
-             alertMessage:req.flash('alert'),
-             wallet,
-             user,
-             orderDetail,   
-            });
+        const order = await orderSchema.findById(orderId);
+
+        if (!order) {
+            return res.status(404).json({ status: 'error', message: 'Order not found' });
+        }
+
+        if (order.orderStatus === 'Returned' || order.orderStatus === 'Cancelled') {
+            return res.status(400).json({ status: 'error', message: 'Order is already returned or cancelled' });
+        }
+
+
+        order.orderStatus = 'Returned';
+        order.returnReason = returnReason;
+        await order.save();
+
         
+
+        if (order.paymentMethod === 'razorpay' || order.paymentMethod === 'Wallet' || order.paymentMethod === 'Cash on delivery') {
+            const userWallet = await walletSchema.findOne({ userID: req.session.user });
+           console.log(userWallet)
+            if (userWallet) {
+                userWallet.balance = (userWallet.balance || 0) + order.totalPrice;
+              
+                await userWallet.save();
+            } else { 
+                const newWallet = new walletSchema({
+                    userID: order.customer_id,
+                    balance: order.totalPrice, // Fixed variable reference here
+                });
+                await newWallet.save();
+            }
+        }
+
+        res.status(200).json({ status: 'success', message: 'Order return processed successfully' });
+
     } catch (error) {
-        console.log(`Error while rendering wallet ${error}`);
-        res.redirect('/profile')
+        console.error(error);
+        res.status(500).json({ status: 'error', message: 'An error occurred while processing the return order' });
     }
-}
+};
+
+
+//--------- Wallet page render -----------//
+
+// const walletPage = async(req,res)=>{
+//     try {
+//         const user = req.session.user
+        
+//         let wallet = await walletSchema.findOne({userID:user}).populate();
+       
+//         if(!user){
+//             req.flash('alert','User not found. Try to login again')
+//             return res.redirect('/login')
+//         }
+//         if(!wallet){
+//             wallet = { balance:0, transaction:[] };
+//         }
+
+//         res.render('user/wallet',
+//             {title:"Wallet",
+//              alertMessage:req.flash('alert'),
+//              wallet,
+//              user,
+//              orderDetail,   
+//             });
+        
+//     } catch (error) {
+//         console.log(`Error while rendering wallet ${error}`);
+//         res.redirect('/profile')
+//     }
+// }
 
 
 module.exports = {
                    orderPage,
                    cancelOrder,
                    orderDetail,
-                   walletPage
-
+                   returnOrder,
+                //    walletPage,
+                   
                  }

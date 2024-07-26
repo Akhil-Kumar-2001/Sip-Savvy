@@ -11,6 +11,7 @@ const cartController = require('../controller/userController/cartController')
 const checkoutController = require('../controller/userController/checkoutController')
 const orderController = require('../controller/userController/orderController')
 const wishlistController = require('../controller/userController/wishlistController')
+const walletController = require('../controller/userController/walletController')
 
 //------------------------------- main -------------------------------
 
@@ -94,8 +95,14 @@ user.post('/updateaddress/:index',activeUser,checkoutController.updateAddress)
 // ------------- Order route ------------------
 user.get('/orders',activeUser,orderController.orderPage)
 user.post('/cancelOrder/:id', activeUser , orderController.cancelOrder)
+user.post('/returnOrder',activeUser,orderController.returnOrder)
 user.get("/orderDetail/:id", activeUser , orderController.orderDetail)
-user.get('/wallet',activeUser,orderController.walletPage)
+
+
+//--------Wallet route---------
+
+
+user.get('/wallet',activeUser,walletController.walletPage)
 
 
 

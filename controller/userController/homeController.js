@@ -154,7 +154,7 @@ const allProducts = async (req, res) => {
 
 const category = async (req, res) => {
   const productCategory = req.params.category || ""
-  console.log(productCategory)
+  
   const sortby = req.query.sortby || ""
   try {
 

@@ -373,11 +373,7 @@
                             <div class="col">TOTAL PRICE</div>
                             <div class="col text-right d-flex justify-content-end">
                                 <i class="fa-solid fa-indian-rupee-sign product-text-row"></i>
-                                <% if ( cart.totalPrice> 1000 ) { %>
                                     <%= (cart.payableAmount).toFixed(2) %>
-                                        <% } else { %>
-                                            <%= (cart.payableAmount + 50).toFixed(2) %>
-                                                <% } %>
                             </div>
                         </div>
                         <div class="cart-checkout">

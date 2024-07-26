@@ -3,6 +3,7 @@ const cartSchema = require('../../model/ cartSchema')
 const userSchema = require('../../model/userSchema')
 const orderSchema = require('../../model/orderSchema')
 const addressSchema = require('../../model/addressSchema')
+const walletSchema = require('../../model/walletSchema')
 const mongoose = require('mongoose')
 const Razorpay = require('razorpay')
 const { ObjectId } = require('mongodb');
@@ -34,14 +35,18 @@ const checkout = async (req, res) => {
         if (items.length === 0) {
             res.redirect('/cart')
         }
-
+        let wallet = await walletSchema.findOne( {userID:userId})
+        if (!wallet) {
+            wallet = { balance: 0};
+        }
         res.render('user/checkout',
             {
                 title: 'Checkout',
                 alertMessage: req.flash('alert'),
                 cartDetails,
                 user,
-                userDetails: user
+                userDetails: user,
+                wallet
             });
     } catch (error) {
         console.log(`Error while rendering Checkout page ${error}`)
@@ -90,6 +95,20 @@ const placeOrder = async (req, res) => {
         const userDetails = await userSchema.findById(req.session.user);
         if (!userDetails || !userDetails.address || !userDetails.address[addressIndex]) {
             return res.status(400).json({ success: false, message: 'Selected address is not valid.' });
+        }
+
+        if(paymentDetails[paymentMode] === 'Wallet'){
+            const wallet = await walletSchema.findOne({userID:userId});
+            if(!wallet || wallet.balance < cartItems.payableAmount){
+                    return res.status(404).json({success:false,message:'Insufficient wallet balance'})
+                }
+                wallet.balance -= cartItems.payableAmount;
+                
+                await wallet.save()
+                
+
+                
+
         }
 
         const newOrder = new orderSchema({

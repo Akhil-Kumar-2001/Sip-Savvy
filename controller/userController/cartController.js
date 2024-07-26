@@ -39,6 +39,11 @@ const cart = async (req, res) => {
                 cart.payableAmount = Math.round(totalPrice)
                 cart.totalPrice = Math.round(totalPriceWithOutDiscount)
             }
+
+            if(cart.payableAmount < 1000){
+                cart.payableAmount = cart.payableAmount + 50
+            }
+            
             await cart.save();
         }
 
@@ -54,19 +59,19 @@ const cart = async (req, res) => {
 const addToCartPost = async (req, res) => {
     try {
         const productId = req.params.id;
-        // console.log(productId)
+       
         const userId = req.session.user;
         const productPrice = parseInt(req.query.price);
         const productQuantity = 1;
 
         const ProductDetails = await productSchema.findById(productId)
-        // console.log(ProductDetails)
+      
         if (!ProductDetails || ProductDetails.productQuantity <= 0) {
             return res.status(404).json({ error: "Product is out of stock" });
         }
 
         const checkCart = await cartSchema.findOne({ userId: req.session.user }).populate('items.productId');
-        console.log(checkCart)
+      
         if (checkCart) {
             let productExist = false;
 
@@ -83,7 +88,7 @@ const addToCartPost = async (req, res) => {
                 checkCart.items.push({ productId: ProductDetails._id, productCount: 1, productPrice: productPrice });
                 await checkCart.save();
             }
-            console.log(checkCart)
+           
         } else {
             const newCart = new cartSchema({
                 userId: userId,

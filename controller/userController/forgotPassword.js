@@ -56,7 +56,7 @@ const forgotPasswordPost = async (req, res) => {
         // Store OTP and related details in the session
         req.session.email = email;
         req.session.otp = otp;
-        // console.log(req.session.otp)
+       
         req.session.otpExpireTime = Date.now() 
 
         res.redirect('/forgotPasswordOtp');
