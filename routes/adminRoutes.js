@@ -7,6 +7,7 @@ const userController = require('../controller/adminController/userController')
 const isAdmin = require('../middleware/adminSession')
 const orderController = require('../controller/adminController/orderController')
 const couponController = require('../controller/adminController/couponController')
+const offerController = require('../controller/adminController/offerController')
 
 //------------------------------- main -------------------------------
 
@@ -72,6 +73,17 @@ admin.get('/statuscoupon',isAdmin,couponController.toggleCouponStatus)
 admin.delete('/deletecoupon/:id',isAdmin,couponController.deleteCoupon)
 
 
+// ------- offer --------
+
+admin.get('/offer', isAdmin, offerController.getOffer)
+
+admin.post('/addOffer',isAdmin,offerController.addOffer)
+
+admin.post('/editOffer',isAdmin,offerController.editOffer)
+
+admin.get('/deleteOffer/:id',isAdmin,offerController.deleteOffer)
+
+admin.get('/offerStatus',isAdmin,offerController.offerStatus)
 
 
 //--------------------Logout------------------------
