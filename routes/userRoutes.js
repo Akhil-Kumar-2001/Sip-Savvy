@@ -88,6 +88,8 @@ user.post('/payment-render/:amount', activeUser , checkoutController.paymentRend
 user.get('/removeaddress/:index',activeUser,checkoutController.removeAddress)
 user.get('/editaddress/:index',activeUser,checkoutController.editAddress)
 user.post('/updateaddress/:index',activeUser,checkoutController.updateAddress)
+user.post('/applycoupon', activeUser , checkoutController.coupon)
+
 
 
 

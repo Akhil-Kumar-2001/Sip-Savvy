@@ -134,7 +134,6 @@ const addOffer = async (req, res) => {
 const editOffer = async (req, res) => {
     try {
         const { offerId, offerType, referenceId, discountPercent } = req.body;
-        console.log(`Received data - offerId: ${offerId}, referenceId: ${referenceId}, discountPercent: ${discountPercent}`);
 
         if (!offerId || !referenceId || !discountPercent) {
             req.flash('alert', 'All fields are required');

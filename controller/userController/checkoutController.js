@@ -4,6 +4,7 @@ const userSchema = require('../../model/userSchema')
 const orderSchema = require('../../model/orderSchema')
 const addressSchema = require('../../model/addressSchema')
 const walletSchema = require('../../model/walletSchema')
+const couponSchema = require('../../model/couponSchema')
 const mongoose = require('mongoose')
 const Razorpay = require('razorpay')
 const { ObjectId } = require('mongodb');
@@ -328,6 +329,65 @@ const updateAddress = async (req, res) => {
 
 
 
+//---------------------------------- coupon -----------------------------------
+
+const coupon = async (req, res) => {
+    try {
+        const couponName = req.body.couponCode;
+        const userId = req.session.user;
+        if (!userId) {
+            req.flash('alert', "User is not found, please login again");
+            return res.redirect('/login');
+        }
+
+        console.log(`Applying coupon: ${couponName} for user: ${userId}`);
+
+        const coupon = await couponSchema.findOne({ code: couponName });
+        if (!coupon) {
+            console.log("Coupon not found");
+            return res.status(404).json({ error: "Coupon not found" });
+        }
+
+        if (!coupon.isActive || coupon.expiryDate < new Date()) {
+            console.log("Coupon expired or inactive");
+            return res.status(400).json({ error: "Coupon expired" });
+        }
+
+        const cart = await cartSchema.findOne({ userId });
+        if (!cart) {
+            console.log("Cart not found");
+            return res.status(400).json({ error: "Cart not found" });
+        }
+
+        const total = cart.payableAmount;
+        let discountedTotal = total;
+
+        if (total < coupon.minimumOrderAmount) {
+            console.log("Minimum purchase limit not reached");
+            return res.status(400).json({ error: "Minimum purchase limit not reached. Please add more items to your cart." });
+        }
+
+        const couponDiscount = coupon.discountValue;
+        if (coupon.discountType === "Fixed") {
+            discountedTotal = total - couponDiscount;
+        } else if (coupon.discountType === "Percentage") {
+            const discountAmount = (couponDiscount / 100) * total;
+            discountedTotal = total - discountAmount;
+        }
+
+        cart.payableAmount = discountedTotal;
+        await cart.save();
+
+        console.log(`Coupon applied successfully: ${couponName}`);
+        res.status(200).json({ total: discountedTotal, couponDiscount });
+    } catch (err) {
+        console.log(`Error in apply coupon: ${err}`);
+        res.status(500).json({ error: "An error occurred while applying the coupon." });
+    }
+};
+
+
+
 module.exports = {
     checkout,
     placeOrder,
@@ -336,5 +396,6 @@ module.exports = {
     editAddress,
     removeAddress,
     updateAddress,
-    paymentRender
+    paymentRender,
+    coupon
 }
