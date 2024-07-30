@@ -83,6 +83,7 @@ user.delete('/delete-wishlist-item/:id', activeUser, wishlistController.deleteFr
 user.get('/checkout',activeUser,checkoutController.checkout)
 user.post('/checkout-address',activeUser,checkoutController.addAddress)
 user.get('/conform-order',activeUser,checkoutController.orderPage)
+user.get('/failed-order', activeUser , checkoutController.failedOrder);
 user.post('/place-order/:address/:payment',activeUser,checkoutController.placeOrder)
 user.post('/payment-render/:amount', activeUser , checkoutController.paymentRender)
 user.get('/removeaddress/:index',activeUser,checkoutController.removeAddress)
@@ -99,6 +100,8 @@ user.get('/orders',activeUser,orderController.orderPage)
 user.post('/cancelOrder/:id', activeUser , orderController.cancelOrder)
 user.post('/returnOrder',activeUser,orderController.returnOrder)
 user.get("/orderDetail/:id", activeUser , orderController.orderDetail)
+user.post("/retryRazorPay",activeUser,orderController.retryRazorPay)
+user.post('/retryPayment',activeUser,orderController.retryPayment)
 
 
 //--------Wallet route---------

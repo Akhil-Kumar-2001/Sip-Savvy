@@ -1,7 +1,8 @@
 <style>
-    body{
+    body {
         background: #000;
     }
+
     .my-order {
         display: flex;
         justify-content: center;
@@ -166,13 +167,13 @@
                     All Orders
                 </a>
             </li>
-            <!-- <li class="nav-item" role="presentation">
+            <li class="nav-item" role="presentation">
                 <a class="nav-link" id="returned-orders-tab" data-bs-toggle="pill" href="#returned-orders" role="tab"
                     aria-controls="returned-orders" aria-selected="false" onclick="filterOrders('Returned')">
                     <i class="bi bi-arrow-counterclockwise"></i>
                     Returned Orders
                 </a>
-            </li> -->
+            </li>
             <li class="nav-item" role="presentation">
                 <a class="nav-link" id="canceled-orders-tab" data-bs-toggle="pill" href="#canceled-orders" role="tab"
                     aria-controls="canceled-orders" aria-selected="false" onclick="filterOrders('Cancelled')">
@@ -286,18 +287,23 @@
                                         </div>
                                     </div>
                                     <div class="order-actions-top">
-                                        <% if(item.orderStatus==='Delivered' ) { %>
-                                            <a class="btn btn-dark" id="returnOrder" data-bs-toggle="modal"
-                                                data-bs-target="#modalreturnOrder" data-id="<%= item._id %>">Return
-                                                Order</a>
-                                                <a href="#" class="btn btn-secondary"
-                                                        onclick="downloadInvoice('<%= item._id %>')"><i class="bi bi-cloud-arrow-down mx-1"></i>Invoice</a>
-                                            <% } else if(item.orderStatus==='Confirmed' || item.orderStatus==='Shipped'
-                                                ) { %>
-                                                <a class="btn btn-dark" id="cancelOrder" data-bs-toggle="modal"
-                                                    data-bs-target="#cancelOrderModal" data-id="<%= item._id %>">Cancel
+                                        <%if(item.orderStatus==="Pending" ) {%>
+                                            <a onclick="retryPayment(`<%= item.id %>`)" class="btn submit-btn ">Retry
+                                                Payment</a>
+                                            <%} else if(item.orderStatus==='Delivered' ) { %>
+                                                <a class="btn btn-dark" id="returnOrder" data-bs-toggle="modal"
+                                                    data-bs-target="#modalreturnOrder" data-id="<%= item._id %>">Return
                                                     Order</a>
-                                                <% } %>
+                                                <a href="#" class="btn btn-secondary"
+                                                    onclick="downloadInvoice('<%= item._id %>')"><i
+                                                        class="bi bi-cloud-arrow-down mx-1"></i>Invoice</a>
+                                                <% } else if(item.orderStatus==='Confirmed' ||
+                                                    item.orderStatus==='Shipped' ) { %>
+                                                    <a class="btn btn-dark" id="cancelOrder" data-bs-toggle="modal"
+                                                        data-bs-target="#cancelOrderModal"
+                                                        data-id="<%= item._id %>">Cancel
+                                                        Order</a>
+                                                    <% } %>
                                     </div>
                         </div>
                     </div>
@@ -367,6 +373,8 @@
             </div>
         </div>
 
+        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
         <script>
             async function downloadInvoice(orderId) {
                 const downloadUrl = `/download-invoice/${orderId}`;
@@ -434,11 +442,6 @@
                     .then(response => {
                         if (response.ok) {
                             window.location.href = '/orders';
-                            // Swal.fire({
-                            //     icon: "success",
-                            //     title: "Order Cancelled Successfully",
-                            //     text: "Shop more"
-                            // });
                         } else {
                             Swal.fire({
                                 icon: "warning",
@@ -453,37 +456,123 @@
             //----------------------------------- return order ---------------------------------
 
             document.addEventListener('DOMContentLoaded', () => {
-    const returnOrderModal = document.getElementById('modalreturnOrder');
-    returnOrderModal.addEventListener('show.bs.modal', (event) => {
-        const button = event.relatedTarget;
-        const orderId = button.getAttribute('data-id');
-        document.getElementById('orderId').value = orderId;
-    });
-    document.getElementById('returnOrderForm').addEventListener('submit', async (event) => {
-        event.preventDefault();
-        const orderId = document.getElementById('orderId').value;
-        const returnReason = document.getElementById('returnReason').value;
-        try {
-            const response = await fetch('/returnOrder', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ orderId, returnReason }),
-            });
-            const result = await response.json();
-            if (result.status === 'success') {
-                Swal.fire('Success', 'Order return request submitted successfully', 'success').then(() => {
-                    returnOrderModal.querySelector('.btn-close').click();
-                    window.location.reload();
+                const returnOrderModal = document.getElementById('modalreturnOrder');
+                returnOrderModal.addEventListener('show.bs.modal', (event) => {
+                    const button = event.relatedTarget;
+                    const orderId = button.getAttribute('data-id');
+                    document.getElementById('orderId').value = orderId;
                 });
-            } else {
-                Swal.fire('Error', result.message, 'error');
+                document.getElementById('returnOrderForm').addEventListener('submit', async (event) => {
+                    event.preventDefault();
+                    const orderId = document.getElementById('orderId').value;
+                    const returnReason = document.getElementById('returnReason').value;
+                    try {
+                        const response = await fetch('/returnOrder', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ orderId, returnReason }),
+                        });
+                        const result = await response.json();
+                        if (result.status === 'success') {
+                            Swal.fire('Success', 'Order return request submitted successfully', 'success').then(() => {
+                                returnOrderModal.querySelector('.btn-close').click();
+                                window.location.reload();
+                            });
+                        } else {
+                            Swal.fire('Error', result.message, 'error');
+                        }
+                    } catch (error) {
+                        Swal.fire('Error', 'An error occurred while submitting the return request', 'error');
+                    }
+                });
+            });
+
+
+
+
+            //----------------------- retry payment ------------------------------
+            async function retryPayment(orderId) {
+                try {
+                    const res = await fetch('/retryRazorPay', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ orderId })
+                    });
+
+                    if (res.ok) {
+                        const retryPaymentData = await res.json();
+                        const options = {
+                            key: 'rzp_test_GBUWvZQkO6TOrv',
+                            amount: retryPaymentData.amount,
+                            currency: "INR",
+                            name: "Sip Savvy",
+                            order_id: retryPaymentData.razorpayOrderId.id,
+                            handler: async function (response) {
+                                try {
+                                    const resData = {
+                                        orderId,
+                                        razorpayOrderId: response.razorpay_order_id,
+                                        paymentId: response.razorpay_payment_id,
+                                    };
+                                    const payment = await fetch('/retryPayment', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json'
+                                        },
+                                        body: JSON.stringify(resData)
+                                    });
+
+                                    if (payment.ok) {
+                                        const paymentData = await payment.json();
+                                        window.location.href = "/conform-order";
+                                    } else {
+                                        const error = await payment.text();
+                                        showError(error);
+                                    }
+                                } catch (error) {
+                                    console.error(`Handler error: ${error}`);
+                                }
+                            },
+                            prefill: {
+                                name: retryPaymentData.address.customer_name,
+                                email: retryPaymentData.address.customer_email,
+                                contact: retryPaymentData.address.phonenumber
+                            },
+                            notes: {
+                                address: retryPaymentData.address
+                            },
+                            theme: {
+                                color: "#3399cc"
+                            },
+                            "modal": {
+                                "ondismiss": function () {
+                                    window.location.href = '/orders';
+                                }
+                            }
+                        };
+                        const rzp1 = new Razorpay(options);
+                        rzp1.on('payment.failed', function (response) {
+                            window.location.href = "/failed-order";
+                        });
+                        rzp1.open();
+                    } else {
+                        const error = await res.text();
+                        showError(error);
+                    }
+                } catch (error) {
+                    console.error(`Error from retry payment fetch: ${error}`);
+                }
             }
-        } catch (error) {
-            Swal.fire('Error', 'An error occurred while submitting the return request', 'error');
-        }
-    });
-});
+            function showError(message){
+                Swal.fire({
+                   icon: "error",
+                    title: 'Oops....',
+                    text: message
+                });
+            }
 
         </script>

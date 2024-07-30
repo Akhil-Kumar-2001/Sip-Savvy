@@ -176,6 +176,23 @@ const orderPage = async (req, res) => {
 }
 
 
+//------------------ failed order page --------------------
+
+const failedOrder = async (req, res) => {
+    try {
+        const userId = req.session.user;
+        if (!userId) {
+            req.flash('alert', 'USER is not found. Login again.');
+            return res.redirect('/login');
+        }
+        res.render('user/Failed-order', { title: "Order Failed" });
+    } catch (error) {
+        console.log(`Error while rendering the failed order page`, error);
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+};
+
+
 // Razor pay
 
 const paymentRender = async (req, res) => {
@@ -205,7 +222,7 @@ const paymentRender = async (req, res) => {
         })
     } catch (error) {
         console.log(`Error while ordering in checkout ${error}`)
-        return res.status(500).json({error:`Internal Server error`})
+        return res.status(500).json({error:`Internal Server in razorpay error`})
     }
 }
 
@@ -392,6 +409,7 @@ module.exports = {
     checkout,
     placeOrder,
     orderPage,
+    failedOrder,
     addAddress,
     editAddress,
     removeAddress,
