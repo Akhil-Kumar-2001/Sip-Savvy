@@ -1,9 +1,11 @@
 const bcrypt = require('bcrypt')
 const userSchema = require('../../model/userSchema')
+const walletSchema = require('../../model/walletSchema')
 const passport = require('passport')
 const auth = require('../../service/googleAuth')
 const generateOTP = require('../../service/genearateOTP')
 const mailSender = require('../../service/emailSender')
+const { v4: uuidv4 } = require('uuid')
 
 
 //-------------first home route--------------
@@ -118,12 +120,42 @@ const signup = (req, res) => {
 
 const signupPost = async (req, res) => {
   try {
+
+    const {name,email,password,phone,confirmPassword,referralCodeInput} = req.body;
+
+     // Server-side validation to ensure all fields are filled
+     if (!name || !email || !phone || !password || !confirmPassword) {
+      req.flash('alert', 'All fields are required');
+      return res.redirect('/signup');
+  }
+
+  
+
+    // Function to generate a referral code
+    function createReferralCode() {
+      return uuidv4().slice(0, 8); // Generate a short referral code
+  }
+     const referralCode = createReferralCode();
+     console.log(referralCode);
+
+     
+   // Look up if the provided referral code belongs to any existing user
+   let referredBy = null;
+   console.log(referralCodeInput)
+   if (referralCodeInput) {
+       const referringUser = await userSchema.findOne({ referralCode: referralCodeInput });
+       if (referringUser) {
+           referredBy = referringUser._id; // Use the referring user's ID
+       }
+   }
+
     const details = {
       name: req.body.name,
       email: req.body.email,
       password: await bcrypt.hash(req.body.password, 10),
-      // password:req.body.password,
-      phone: req.body.phone
+      phone: req.body.phone,
+      referralCode: referralCode,
+      referredBy: referredBy
     }
 
     const checkUser = await userSchema.find({ email: req.body.email })
@@ -135,7 +167,9 @@ const signupPost = async (req, res) => {
       req.session.name = req.body.name
       req.session.email = req.body.email
       req.session.password = await bcrypt.hash(req.body.password, 10)
-      req.session.phone = req.body.phone
+      req.session.phone = req.body.phone,
+      req.session.referralCode = referralCode,
+      req.session.referredBy = referredBy
 
       res.redirect('/OTP')
 
@@ -254,10 +288,30 @@ const otpPost = async (req, res) => {
         name: req.session.name,
         email: req.session.email,
         password: req.session.password,
-        phone: req.session.phone
+        phone: req.session.phone,
+        referralCode: req.session.referralCode,
+        referredBy: req.session.referredBy
       })
 
       await newUser.save()
+
+      // Add the Reward to the the referal code owner
+
+      if (newUser.referredBy) {
+        const referringUserWallet = await walletSchema.findOne({ userID: newUser.referredBy });
+        if (referringUserWallet) {
+            referringUserWallet.balance += 100;
+            
+            await referringUserWallet.save();
+        }else{
+            const newWallet =new walletSchema({
+                userID:newUser.referredBy,
+                balance:100
+            })
+            await newWallet.save()
+        }
+    }
+
       req.session.user = newUser.id
         req.flash('alert', 'registration successful')
       res.redirect('/home')

@@ -1,140 +1,147 @@
 
     <style>
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
+   
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #1a1a1a;
+        margin: 0;
+        font-family: 'Arial', sans-serif;
+        overflow: hidden;
+    }
 
-        @keyframes bounceIn {
-            0% {
-                transform: scale(0.3);
-                opacity: 0;
-            }
-            50% {
-                transform: scale(1.05);
-                opacity: 1;
-            }
-            70% {
-                transform: scale(0.9);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
+    .success-container {
+        text-align: center;
+        background-color: #2c2c2c;
+        padding: 3em;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        transform: scale(0);
+        animation: scale-in 0.5s forwards ease-out;
+    }
 
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
-            100% {
-                transform: scale(1);
-            }
+    @keyframes scale-in {
+        to {
+            transform: scale(1);
         }
+    }
 
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
+    .checkmark-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 1em;
+    }
 
-        .container {
-            text-align: center;
-            background-color: white;
-            padding: 30px;
-            border-radius: 8px;
-            animation: fadeIn 1s ease-out;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            border: 1px solid #dee2e6;
-            background: linear-gradient(to bottom right, #ffffff, #f2f5f8);
-            position: relative;
-            overflow: hidden;
-        }
+    .checkmark {
+        width: 100px;
+        height: 100px;
+        display: block;
+    }
 
-        .container h1 {
-            color: #28a745;
-            animation: bounceIn 0.6s ease-out;
-            margin-bottom: 20px;
-        }
+    .checkmark__circle {
+        stroke: #28a745;
+        stroke-width: 4;
+        stroke-dasharray: 166;
+        stroke-dashoffset: 166;
+        stroke-linecap: round;
+        animation: draw-circle 1s ease-out forwards;
+    }
 
-        .container p {
-            color: #6c757d;
-            animation: fadeIn 1.2s ease-out;
-        }
+    .checkmark__check {
+        stroke: #28a745;
+        stroke-width: 4;
+        stroke-dasharray: 48;
+        stroke-dashoffset: 48;
+        stroke-linecap: round;
+        animation: draw-check 1s 0.5s ease-out forwards;
+    }
 
-        .container .order-details {
-            margin-top: 20px;
-            font-size: 1.1em;
-            animation: fadeIn 1.4s ease-out;
+    @keyframes draw-circle {
+        to {
+            stroke-dashoffset: 0;
         }
+    }
 
-        .container .order-details p {
-            margin-bottom: 10px;
+    @keyframes draw-check {
+        to {
+            stroke-dashoffset: 0;
         }
+    }
 
-        .container .order-details span {
-            font-weight: bold;
-        }
+    .main-heading {
+        color: #fefeeb;
+        font-size: 2em;
+        margin-bottom: 0.5em;
+    }
 
-        .container .button {
-            margin-top: 30px;
-            animation: fadeIn 1.6s ease-out;
-        }
+    .success-message {
+        color: #28a745;
+        margin-bottom: 0.5em;
+        opacity: 0;
+        animation: fade-in 1s 0.5s forwards;
+    }
 
-        .container .button a {
-            text-decoration: none;
-            color: white;
-            background-color: #007bff;
-            padding: 10px 20px;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-            animation: pulse 2s infinite alternate;
-        }
+    .order-details {
+        color: #dcdcdc;
+        margin-bottom: 1em;
+        opacity: 0;
+        animation: fade-in 1s 1s forwards;
+    }
 
-        .container .button a:hover {
-            background-color: #0056b3;
-        }
+    .additional-info {
+        color: #dcdcdc;
+        margin-bottom: 1.5em;
+        opacity: 0;
+        animation: fade-in 1s 1.5s forwards;
+    }
 
-        .container::before,
-        .container::after {
-            content: '';
-            position: absolute;
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            background: rgba(0, 123, 255, 0.1);
-            top: -50px;
-            left: -50px;
-            animation: fadeIn 1.8s ease-out;
+    @keyframes fade-in {
+        to {
+            opacity: 1;
         }
+    }
 
-        .container::after {
-            background: rgba(40, 167, 69, 0.1);
-            bottom: -50px;
-            right: -50px;
-        }
-    </style>
+    .button-container {
+        display: flex;
+        justify-content: center;
+        gap: 1em;
+        margin-top: 1.5em;
+    }
+
+    .btn {
+        background-color: #dc3545;
+        color: white;
+        padding: 0.75em 1.5em;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+
+    .btn:hover {
+        background-color: #c82333;
+    }
+</style>
+
+
+    
 
 <body>
-    <div class="container">
-        <h1>Order Confirmed!</h1>
-        <p>Thank you for your purchase. Your order has been successfully placed.</p>
-        <div class="order-details">
-            <p><span>Order Number:</span> #123456789</p>
-            <p><span>Date:</span> July 15, 2024</p>
-            <p><span>Total:</span> $99.99</p>
+    <div class="success-container">
+        <div class="checkmark-container">
+            <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                <circle class="checkmark__circle" cx="26" cy="26" r="22" fill="none" />
+                <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+            </svg>
         </div>
-        <div class="button">
-            <a href="/allproduct">Continue Shopping</a>
-        </div>
-        <div class="button">
-            <a href="/orders">Orders</a>
+        <h1 class="main-heading">Thank you!</h1>
+        <h2 class="success-message">Your order has been placed successfully.</h2>
+        <p class="order-details">We appreciate your purchase. Your order number is <%= orders.order_id %>. You will receive an email confirmation shortly.</p>
+        <p class="additional-info">Delivery is expected within 2 - 5 business days.</p>
+        <div class="button-container">
+            <a href="/orders" class="btn">View My Orders</a>
+            <a href="/home" class="btn">Continue Shopping</a>
         </div>
     </div>
 </body>

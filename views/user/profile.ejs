@@ -169,6 +169,17 @@
         display: flex;
         gap: 1rem;
     }
+    .invite{
+        display: flex;
+        text-align: center;
+        margin-top: 3rem;
+        color: white;
+    }
+    #copyButton {
+    cursor: pointer;
+}
+
+    
 </style>
 
 <%- include('navbar')%>
@@ -209,6 +220,9 @@
                             <i class="bi bi-person-square" style="font-size: 10rem;"></i>
                             <h2>Your Profile</h2>
                         </div>
+
+                       
+
                         <form method="post" action="/update-profile" style="width: 40%;">
                             <div class="form-group mb-3">
                                 <label class="profile-text">Name</label>
@@ -231,8 +245,25 @@
 
         </div>
         <!-------- Address Column ------->
-        <div class="main-profile-address">
-
+       
+            
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="card user-side-div">
+                        <div class="card-sidebar">
+                            <% if(userDetail.referralCode){ %>
+                                <p class="invite">Invite a friend and earn <b class="text-danger">&#8377;100</b></p>
+                                <span id="referralCodeContainer" class="btn btn-dark">
+                                    <span id="referralCode"><%= userDetail.referralCode %></span>
+                                    <i class="bi-regular bi-copy" id="copyButton"></i>
+                                </span>
+                                <p class="invite text-success">Share this code with your<br> friends to earn rewards!</p>
+                            <% } %>
+                            
+                        </div>
+                    </div>
+                </div>
+          <!-- <div class=" main-profile-address"> -->
             <div class="col-lg-9">
                 <div class="card user-profile-div">
                     <div class="card-address">
@@ -294,7 +325,8 @@
                     </div>
                 </div>
             </div>
-        </div>
+        
+    </div>
     </div>
 
     <%- include('footer')%>
@@ -504,6 +536,23 @@
                 });
             });
 
+            document.getElementById("referralCodeContainer").addEventListener("click", async function (event) {
+    console.log("Clicked element:", event.target.id); // Debugging statement
+    if (event.target.id === "copyButton") {
+        try {
+            // Get the referral code text
+            const referralCodeText = document.getElementById("referralCode").innerText;
+            console.log("Referral code text:", referralCodeText); // Debugging statement
 
+            // Use the Clipboard API to copy the text
+            await navigator.clipboard.writeText(referralCodeText);
+
+            // Notify the user that the text has been copied
+            alert("Referral code copied to clipboard!");
+        } catch (err) {
+            console.error("Failed to copy: ", err);
+        }
+    }
+});
 
         </script>
