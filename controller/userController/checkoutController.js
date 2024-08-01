@@ -66,7 +66,6 @@ const placeOrder = async (req, res) => {
         let couponDiscount = 0;
         let paymentId = "";
         const { razorpay_payment_id, razorpay_order_id, razorpay_signature, payment_status , couponCode} = req.body;
-        console.log(couponCode)
 
         if (paymentMode === 2) {
             paymentId = razorpay_payment_id;
@@ -78,8 +77,6 @@ const placeOrder = async (req, res) => {
                 couponDiscount = coupon.discountValue;
             }
         }
-
-
 
         const cartItems = await cartSchema.findOne({ userId }).populate("items.productId");
         if (!cartItems || !cartItems.items || cartItems.items.length === 0) {
@@ -116,10 +113,11 @@ const placeOrder = async (req, res) => {
                 wallet.balance -= cartItems.payableAmount;
                 
                 await wallet.save()
-                
-
-                
-
+        }
+        if(paymentDetails[paymentMode] === 'Cash on delivery'){
+            if(cartItems.payableAmount > 1000){
+                return res.status(400).json({ success: false, message: 'COD below 1000 only.' });
+            }
         }
 
         const newOrder = new orderSchema({
