@@ -798,6 +798,7 @@
         const username = orderPlacementBtn.getAttribute('data-username');
         const email = orderPlacementBtn.getAttribute('data-email');
         const phone = orderPlacementBtn.getAttribute('data-phone');
+        
 
         function selectAddress(element, index) {
             const cards = document.querySelectorAll('.address-card');
@@ -832,7 +833,7 @@
             if (selectedPaymentMethod === 2) {
                 openRazorpayPayment();
             } else {
-                placeOrder(selectedAddressIndex, selectedPaymentMethod);
+                placeOrder(selectedAddressIndex, selectedPaymentMethod );
             }
         });
 
@@ -859,6 +860,7 @@
                             name: "Sip Savvy",
                             order_id: data.orderID,
                             handler: function (response) {
+                                const couponCode = document.getElementById('couponCode').value.trim();
                                 const URL = `/place-order/${selectedAddressIndex}/${selectedPaymentMethod}`;
                                 fetch(URL, {
                                     method: "POST",
@@ -868,7 +870,8 @@
                                     body: JSON.stringify({
                                         razorpay_payment_id: response.razorpay_payment_id,
                                         razorpay_order_id: response.razorpay_order_id,
-                                        razorpay_signature: response.razorpay_signature
+                                        razorpay_signature: response.razorpay_signature,
+                                        couponCode: couponCode
                                     })
                                 })
                                     .then((res) => {
@@ -913,6 +916,7 @@
                         const rzp1 = new Razorpay(options);
                         
                         rzp1.on('payment.failed', function (response) {
+                            const couponCode = document.getElementById('couponCode').value.trim();
                             const URL = `/place-order/${selectedAddressIndex}/${selectedPaymentMethod}`;
                             fetch(URL, {
                                 method: "POST",
@@ -923,7 +927,8 @@
                                     razorpay_payment_id: response.error.metadata.payment_id,
                                     razorpay_order_id: response.error.metadata.order_id,
                                     razorpay_signature: response.error.metadata.signature,
-                                    payment_status: "Pending"
+                                    payment_status: "Pending",
+                                    couponCode: couponCode
                                 })
                             })
                                 .then((res) => {
@@ -971,6 +976,7 @@
                 });
         }
         function placeOrder(addressIndex, paymentMethod) {
+            const couponCode = document.getElementById('couponCode').value.trim();
             const URL = `/place-order/${addressIndex}/${paymentMethod}`;
             fetch(URL, {
                 method: 'POST',
@@ -979,7 +985,8 @@
                 },
                 body: JSON.stringify({
                     addressIndex: addressIndex,
-                    paymentMode: paymentMethod
+                    paymentMode: paymentMethod,
+                    couponCode: couponCode
                 })
             })
                 .then(response => response.json())

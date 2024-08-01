@@ -61,6 +61,13 @@ const schema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    couponCode:{
+        type: String,
+    },
+    couponDiscount:{
+        type: Number,
+        default: 0
+    },
     paymentId: {
         type: String,
         required: false

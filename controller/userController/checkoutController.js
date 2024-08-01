@@ -63,12 +63,22 @@ const placeOrder = async (req, res) => {
         const userId = req.session.user
         const addressIndex = parseInt(req.params.address);
         const paymentMode = parseInt(req.params.payment)
+        let couponDiscount = 0;
         let paymentId = "";
-        const { razorpay_payment_id, razorpay_order_id, razorpay_signature, payment_status } = req.body;
+        const { razorpay_payment_id, razorpay_order_id, razorpay_signature, payment_status , couponCode} = req.body;
+        console.log(couponCode)
 
         if (paymentMode === 2) {
             paymentId = razorpay_payment_id;
         }
+
+        if (couponCode) {
+            const coupon = await couponSchema.findOne({ code: couponCode });
+            if (coupon && coupon.isActive) {
+                couponDiscount = coupon.discountValue;
+            }
+        }
+
 
 
         const cartItems = await cartSchema.findOne({ userId }).populate("items.productId");
@@ -131,6 +141,8 @@ const placeOrder = async (req, res) => {
             },
             paymentMethod: paymentDetails[paymentMode],
             orderStatus: payment_status === "Pending" ? "Pending" : "Confirmed",
+            couponCode: couponCode,
+            couponDiscount : couponDiscount ,
             paymentId: paymentId,
             paymentStatus: payment_status,
             isCancelled: false
@@ -357,8 +369,6 @@ const coupon = async (req, res) => {
             return res.redirect('/login');
         }
 
-        console.log(`Applying coupon: ${couponName} for user: ${userId}`);
-
         const coupon = await couponSchema.findOne({ code: couponName });
         if (!coupon) {
             console.log("Coupon not found");
@@ -368,6 +378,14 @@ const coupon = async (req, res) => {
         if (!coupon.isActive || coupon.expiryDate < new Date()) {
             console.log("Coupon expired or inactive");
             return res.status(400).json({ error: "Coupon expired" });
+        }
+
+        // check if coupon already used
+        const Used  = await orderSchema.findOne({customer_id:userId,couponCode:couponName,orderStatus: { $in: ['Delivered', 'Shipped'] }})
+
+        // if already used return an error
+        if(Used){
+            return res.status(404).json({ error: "Coupon Already Used" });
         }
 
         const cart = await cartSchema.findOne({ userId });
@@ -395,7 +413,7 @@ const coupon = async (req, res) => {
         cart.payableAmount = discountedTotal;
         await cart.save();
 
-        console.log(`Coupon applied successfully: ${couponName}`);
+
         res.status(200).json({ total: discountedTotal, couponDiscount });
     } catch (err) {
         console.log(`Error in apply coupon: ${err}`);
