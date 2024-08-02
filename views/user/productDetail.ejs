@@ -21,6 +21,10 @@
      
         
     }
+    .detail-price{
+      display: flex;
+      gap: 1rem;
+    }
   </style>
   
   <%- include('navbar') %>
@@ -50,7 +54,7 @@
               <h4 class="title text-dark">
                 <%= product.productName %>
               </h4>
-              <div class="d-flex flex-row my-3">
+              <!-- <div class="d-flex flex-row my-3">
                 <div class="text-warning mb-1 me-2">
                   <i class="bi bi-star-fill"></i>
                   <i class="bi bi-star-fill"></i>
@@ -59,13 +63,27 @@
                   <i class="bi bi-star-half"></i>
                   <span class="ms-1">4.5</span>
                 </div>
-              </div>
-              <div class="mb-3">
-                <span class="h5">
-                  <i class="bi bi-currency-rupee"></i>
-                  <%= product.productPrice %>
-                </span>
-              </div>
+              </div> -->
+              <% if (product.productDiscount){ %>
+                <div class="detail-price">
+                    <h4>
+                        <del><i class="bi bi-currency-rupee"></i>
+                            <%= product.productPrice %>
+                        </del>
+                    </h4>
+                    <h4 class="text-warning">
+                        <%= product.productDiscount %>% Off
+                    </h4>
+                </div>
+                <h3><i class="bi bi-currency-rupee"></i>
+                    <%= product.productPrice - product.productPrice * (product.productDiscount/100) %>
+                </h3>
+                <% } else { %>
+                    <h3><i class="bi bi-currency-rupee"></i>
+                        <%= product.productPrice %>
+                    </h3>
+                    <% } %>
+              
               <p class="text-danger fs-4">
                 <% if (product.productQuantity <= 20 && product.productQuantity > 0) { %>
                   Only <%= product.productQuantity %> left
