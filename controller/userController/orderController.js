@@ -2,10 +2,11 @@ const orderSchema = require('../../model/orderSchema')
 const userSchema = require('../../model/userSchema')
 const productSchema = require('../../model/productSchema')
 const walletSchema = require('../../model/walletSchema')
-const Razorpay = require('razorpay')
 const mongoose = require('mongoose')
 const path = require('path')
 
+const Razorpay = require('razorpay')
+const PDFDocument = require('pdfkit-table')
 
 // ------------- user order page render ---------------- 
 
@@ -201,6 +202,128 @@ const returnOrder = async (req, res) => {
 // }
 
 
+const Invoice = async (req, res) => {
+    try {
+        const user = req.session.user;
+        if (!user) {
+            req.flash('alert', "User not found. Please login again.");
+            return res.redirect("/login");
+        }
+        const orderId = req.params.orderId;
+        const orderDetails = await orderSchema.findById(orderId).populate('products.product_id')
+        const doc = new PDFDocument();
+        const filename = Invoice.pdf;
+
+        res.setHeader("Content-Disposition", `attachment; filename=${filename}`);
+        res.setHeader("Content-Type", "application/pdf");
+
+        doc.pipe(res);
+
+        // Add header aligned to center
+        doc
+            .font("Helvetica-Bold")
+            .fontSize(36)
+            .text("Sip Savvy", { align: "center", margin: 10 });
+        doc
+            .font("Helvetica-Bold")
+            .fillColor("grey")
+            .fontSize(8)
+            .text("Where imagination meets fun, and every toy has a story.", {
+                align: "center",
+                margin: 10,
+            });
+        doc.moveDown();
+
+        doc.fontSize(10).fillColor("blue").text(`Invoice #${orderDetails.order_id}`);
+        doc.moveDown();
+        doc.moveDown();
+
+        doc
+            .fillColor("black")
+            .text(`Total products: ${orderDetails.totalQuantity}`);
+
+        doc
+            .fillColor("black")
+            .text(`Shipping Charge: ${orderDetails.totalPrice < 1500 ? "RS 50" : "Free"}`);
+        doc
+            .fontSize(10)
+            .fillColor("red")
+            .text(`Total Amount: Rs ${orderDetails.totalPrice.toLocaleString()}`);
+        doc.moveDown();
+
+        doc
+            .fontSize(10)
+            .fillColor("black")
+            .text(`Payment method: ${orderDetails.paymentMethod}`);
+        doc.text(`Order Date: ${orderDetails.createdAt.toDateString()}`);
+        doc.moveDown();
+        doc.moveDown();
+
+        doc
+            .fontSize(10)
+            .fillColor("black")
+            .text(`Order Status: ${orderDetails.orderStatus}`);
+        doc.moveDown();
+
+        doc
+            .fontSize(10)
+            .fillColor("black")
+            .text( `Address: Sulthan Bathery,Wayanad`);
+        doc.text(`Pincode: 673590`);
+        doc.text(`Phone: 859 075 4230`);
+        doc.moveDown();
+        doc.moveDown();
+
+        doc.fontSize(12).text("Invoice.", { align: "center", margin: 10 });
+        doc.moveDown();
+
+        const tableData = {
+            headers: ["Product Name", "Quantity", "Price", "Product Discount", "Coupon Discount", "Total"],
+            rows: orderDetails.products.map((product) => {
+                const productName = product.product_name || "N/A";
+                const quantity = product.product_quantity || 0;
+                const price = product.product_price || 0;
+                const discount = product.productDiscount || 0;
+                const coupondiscount = orderDetails.couponDiscount || 0
+
+                const total = Math.round((price * (1 - discount / 100) * quantity) - (coupondiscount).toFixed(2));
+
+                return [
+                    productName,
+                    quantity,
+                    `Rs ${price}`,
+                    `${discount} %`,
+                    `Rs${coupondiscount} `,
+                    `Rs ${total}`,
+                ];
+            }),
+        };
+
+        await doc.table(tableData, {
+            prepareHeader: () => doc.font("Helvetica-Bold").fontSize(10),
+            prepareRow: (row, i) => doc.font("Helvetica").fontSize(8),
+            hLineColor: "#b2b2b2",
+            vLineColor: "#b2b2b2",
+            textMargin: 2,
+        });
+
+        doc.moveDown();
+        doc.moveDown();
+        doc.moveDown();
+        doc.moveDown();
+        doc.fontSize(12).text("Thank You.", { align: "center", margin: 10 });
+        doc.moveDown();
+
+        doc.end();
+    } catch (err) {
+        console.log(`Error on downloading the invoice pdf ${err}`);
+        res.status(500).send("Error generating invoice");
+
+    }
+};
+
+
+
 const razorpay = new Razorpay({
     key_id: 'rzp_test_GBUWvZQkO6TOrv',
     key_secret: '87CR4w5jFGfAHTVtW2Se6W2q'
@@ -276,6 +399,7 @@ module.exports = {
                    cancelOrder,
                    orderDetail,
                    returnOrder,
+                   Invoice,
                    retryRazorPay,
                    retryPayment
                  }
