@@ -22,7 +22,8 @@ admin.post('/login',loginController.loginPost)
 
 //------------------------ admin home page --------------------------
 
-admin.get('/dashboard',loginController.dashboard)
+admin.get('/dashboard',isAdmin,loginController.dashboard)
+admin.get('/charts', isAdmin , loginController.salesChart);
 
 
 
