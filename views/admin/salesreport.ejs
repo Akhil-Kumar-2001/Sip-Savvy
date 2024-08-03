@@ -1,0 +1,459 @@
+<style>
+   
+    .table-container {
+        width: 95%;
+        background: #000;
+        padding: 10px;
+        box-shadow: 0 0 10px rgba(100, 98, 98, 0.5);
+        border-radius: 10px;
+        margin-left: 1.5rem;
+    }
+
+    .sale-table {
+        width: 80%;
+        margin-bottom: 2rem;
+    }
+
+    .main-content {
+        flex-grow: 1;
+        padding: 20px;
+        /* background-color: #000; */
+        /* margin-top: 1.5rem; */
+    }
+
+    .stats {
+        display: flex;
+        justify-content: space-between;
+        margin-top: -10px;
+        flex-wrap: wrap;
+    }
+
+    .stat-item {
+        background-color: #000;
+        color: #fefeeb;
+        padding: 20px;
+        flex: 1;
+        margin: 10px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        border: 1px solid white; 
+    }
+
+    .input-sale {
+        display: flex;
+        justify-content: end;
+        gap: 2rem;
+    }
+
+    .input-report input {
+        background: #000;
+        color: #fefeeb;
+        border-radius: 5px;
+    }
+
+    .select-report {
+        background: #000;
+        color: #fefeeb;
+        border-radius: 5px;
+    }
+</style>
+
+<%- include('navbar') %>
+
+    <!------------------------------------------ Admin Menu ----------------------------------------------------->
+
+    <div class="admin-home">
+        <div class="sidebar">
+            <div class="menu-item">
+                <a href="/admin/dashboard">
+                    <div class="admin-menu"><i class="bi bi-grid"></i>Dashboard</div>
+                </a>
+            </div>
+            <div class="menu-item">
+                <a href="/admin/salesReport">
+                    <div class="admin-menu"><i class="bi bi-bar-chart"></i>Sales Report</div>
+                </a>
+            </div>
+            <div class="menu-item">
+                <a href="/admin/category">
+                    <div class="admin-menu"><i class="bi bi-collection-fill"></i>Category</div>
+                </a>
+            </div>
+            <div class="menu-item">
+                <a href="/admin/products">
+                    <div class="admin-menu"><i class="bi bi-box"></i>Products</div>
+                </a>
+            </div>
+            <div class="menu-item">
+                <a href="/admin/users">
+                    <div class="admin-menu"><i class="bi bi-people"></i>Customers</div>
+                </a>
+            </div>
+            <div class="menu-item">
+                <a href="/admin/order">
+                    <div class="admin-menu"><i class="bi bi-cart"></i>Orders</div>
+                </a>
+            </div>
+            <div class="menu-item">
+                <a href="/admin/coupons">
+                    <div class="admin-menu"><i class="bi bi-ticket-perforated"></i>Coupons</div>
+                </a>
+            </div>
+            <div class="menu-item">
+                <a href="/admin/offer">
+                    <div class="admin-menu"><i class="bi bi-gift"></i>Offer</div>
+                </a>
+            </div>
+            <!-- <div class="menu-item">
+                <a href="/admin/popups">
+                    <div class="admin-menu"><i class="bi bi-exclamation-triangle"></i>Popups</div>
+                </a>
+            </div> -->
+            <!-- <div class="menu-item">
+                <a href="#">
+                    <div class="admin-menu"><i class="bi bi-image"></i>Banner</div>
+                </a>
+            </div> -->
+            <div class="menu-item admin-menu-loyout">
+                <a href="/admin/logout">
+                    <div class="admin-menu "><i class="bi bi-box-arrow-right"></i>Logout</div>
+                </a>
+            </div>
+        </div>
+        <div class="sale-table">
+            <div class="main-content">
+                <div class="stats">
+                    <div class="stat-item">
+                        <p>Revenue</p>
+                        <h2>
+                            <i class="fa-solid fa-indian-rupee-sign "></i>
+                            <%= Revenue %>
+                        </h2>
+                    </div>
+                    <div class="stat-item">
+                        <p>Orders</p>
+                        <h2>
+                            <%= orderCount %>
+                        </h2>
+                    </div>
+                    <div class="stat-item">
+                        <p>Products Sold</p>
+                        <h2>
+                            <%= productCount %>
+                        </h2>
+                    </div>
+                </div>
+            </div>
+            <div class="w-full overflow-hidden rounded-lg shadow-xs">
+                <form class=" text-end  m-4 input-sale">
+                    <div id="sales customRange" class="input-report">
+                        <input type="date" id="startDate" name="startDate" placeholder="Start Date" class="border p-1"
+                            onchange="getOrderData()">
+                        <input type="date" id="endDate" name="endDate" placeholder="End Date" class="border p-1"
+                            onchange="getOrderData()">
+                    </div>
+                    <select name="salesreportType" id="salesreportType" onchange="getOrderData()" class="select-report">
+                        <option value="">Full Report</option>
+                        <option value="monthly">Monthly</option>
+                        <option value="yearly">Yearly</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="custom">Custom Range</option>
+                    </select>
+                    <select name="reportType" id="reportType" class="select-report">
+                        <option value="PDF">PDF</option>
+                        <option value="EXCEL">EXCEL</option>
+                    </select>
+                    <button type="button" onclick="downloadReport()" id="download-btn" class="btn btn-danger">Download
+                        Report</button>
+                </form>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr scope="row" class="product-table-head">
+                                <th scope="col" class="product-table-first">Order Id</th>
+                                <th scope="col"> Customer</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Amount</th>
+                                <th scope="col">Payment</th>
+                                <th scope="col">Coupon</th>
+                                <th scope="col">Time</th>
+                                <th scope="col" class="product-table-last">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800" id="salesContent">
+                        </tbody>
+                    </table>
+                    <div class="pagination-controls d-flex mt-3">
+                        <ul class="pagination">
+                            <!-- Pagination will be dynamically inserted here-->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('footer') %>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+        <script>
+            async function fetchData() {
+                try {
+                    const response = await fetch('/admin/getreport', { method: 'GET' });
+                    const data = await response.json();
+                    const labels = data.map(item => item._id);
+                    const revenue = data.map(item => item.totalRevenue);
+                    renderPieChart(labels, revenue);
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                }
+            }
+
+            function renderPieChart(labels, data) {
+                const ctx = document.getElementById('piee').getContext('2d');
+                new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: data,
+                            backgroundColor: ['#1E3A8A', '#14B8A6', '#7C3AED', '#5fcd6d', 'red']
+                        }]
+                    }
+                });
+
+                const legendContainer = document.getElementById('legend');
+                legendContainer.innerHTML = '';
+                labels.forEach((label, index) => {
+                    const color = ['#0e9f6e', '#1E3A8A', '#14B8A6', '#7C3AED'][index % 4];
+                    const legendItem = document.createElement('div');
+                    legendItem.classList.add('flex', 'items-center');
+                    legendItem.innerHTML = `<span class="inline-block w-3 h-3 mr-1" style="background-color: ${color}"></span><span>${label}</span>`;
+                    legendContainer.appendChild(legendItem);
+                });
+            }
+
+            async function fetchSalesData() {
+                try {
+                    const response = await fetch('/admin/getsalesbymonth', { method: 'GET' });
+                    const data = await response.json();
+                    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                    const salesData = Array(12).fill(0);
+                    const countData = Array(12).fill(0);
+                    data.forEach(item => {
+                        salesData[item._id.month - 1] = item.totalSales;
+                        countData[item._id.month - 1] = item.count;
+                    });
+                    renderBarChart(months, salesData, countData);
+                } catch (error) {
+                    console.error('Error fetching sales data:', error);
+                }
+            }
+
+            function renderBarChart(labels, salesData, countData) {
+                const ctx = document.getElementById('bars').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Sales Amount',
+                                data: salesData,
+                                backgroundColor: '#1E3A8A'
+                            },
+                            {
+                                label: 'Count of Purchases',
+                                data: countData,
+                                backgroundColor: '#14B8A6'
+                            }
+                        ]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+
+            document.getElementById('reportType').addEventListener('change', (e) => {
+                const customRange = document.getElementById('customRange');
+                const reportValue = document.getElementById('reportType').value;
+                customRange.style.display = reportValue === 'custom' ? 'inline-block' : 'none';
+
+                switch (reportValue) {
+                    case 'custom':
+                        fetchSalesData();
+                        break;
+                    case 'Monthly':
+                        fetchMonthlySalesData();
+                        break;
+                    case 'yearly':
+                        fetchYearlySalesData();
+                        break;
+                    case 'weekly':
+                        fetchweeklySalesData();
+                        break;
+                }
+            });
+
+            async function getOrderData(page = 1) {
+                const startDate = document.getElementById('startDate').value;
+                const endDate = document.getElementById('endDate').value;
+                const salesreportType = document.getElementById('salesreportType').value;
+                const limit = 5;
+
+                try {
+                    const response = await fetch('/admin/fetch-sales-data', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ salesreportType, startDate, endDate, page, limit })
+                    });
+
+                    if (response.redirected) {
+                        window.location.href = response.url;
+                        return;
+                    }
+
+                    if (!response.ok) {
+                        console.error('Server responded with:', response.status, response.statusText);
+                        throw new Error('Failed to fetch order data');
+                    }
+
+                    const { orderDetails, totalPages, currentPage } = await response.json();
+                    let content = '';
+
+                    if (orderDetails.length === 0) {
+                        content += `
+                <tr>
+                    <td colspan="8">
+                        <h1 class="text-center">No data found</h1>
+                    </td>
+                </tr>`;
+                    } else {
+                        orderDetails.forEach(data => {
+                            const formattedDate = new Date(data.createdAt).toLocaleDateString();
+                            content += `
+                    <tr class="text-gray-700 dark:text-gray-400">
+                        <td class="px-4 py-3">
+                            <div class="flex items-center text-sm">
+                                <div>
+                                    <p class="font-semibold">#${data.order_id}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-4 py-3 text-sm">${data.address.customer_name}</td>
+                        <td class="px-4 py-3 text-sm">${data.totalQuantity}</td>
+                        <td class="px-4 py-3 text-sm">${data.totalPrice}</td>
+                        <td class="px-4 py-3 text-sm">${data.paymentMethod}</td>
+                        <td class="px-4 py-3 text-sm">
+                            ${data.coupen_data.length > 0 ? data.coupen_data[0].coupen_name : 'No Coupon'}
+                        </td>
+                        <td class="px-4 py-3 text-sm">${formattedDate}</td>
+                        <td class="px-4 py-3 text-sm">${getStatusBadge(data.orderStatus)}</td>
+                    </tr>`;
+                        });
+                    }
+
+                    document.getElementById('salesContent').innerHTML = content;
+
+                    let paginationContent = '';
+                    if (currentPage > 1) {
+                        paginationContent += `<li class="page-item"><a class="page-link" href="javascript:getOrderData(${currentPage - 1})">Previous</a></li>`;
+                    }
+                    for (let i = 1; i <= totalPages; i++) {
+                        paginationContent += `<li class="page-item ${currentPage == i ? 'active' : ''}"><a class="page-link" href="javascript:getOrderData(${i})">${i}</a></li>`;
+                    }
+                    if (currentPage < totalPages) {
+                        paginationContent += `<li class="page-item"><a class="page-link" href="javascript:getOrderData(${currentPage + 1})">Next</a></li>`;
+                    }
+                    document.querySelector('.pagination').innerHTML = paginationContent;
+                } catch (error) {
+                    console.error('Error fetching order data:', error);
+                    document.getElementById('salesContent').innerHTML = `<tr>
+            <td colspan="8">
+                <h1 class="text-center text-danger">Failed to fetch order data. Please try again later.</h1>
+            </td>
+        </tr>`;
+                }
+            }
+
+            function getStatusBadge(status) {
+                switch (status) {
+                    case 'Pending':
+                        return `<h6 class="text-warning">${status}</h6>`;
+                    case 'Confirmed':
+                    case 'Delivered':
+                        return `<h6 class="text-success">${status}</h6>`;
+                    case 'Returned':
+                        return `<h6 class="text-danger">${status}</h6>`;
+                    case 'Cancelled':
+                        return `<h6 class="text-wanning">${status}</h6>`;
+                    case 'Shipped':
+                        return `<h6 class="text-info">${status}</h6>`;
+                    default:
+                        return status;
+                }
+            }
+            async function downloadReport() {
+                let startDate, endDate;
+                const salesreportType = document.getElementById('salesreportType').value;
+                const reportType = document.getElementById('reportType').value;
+
+                const currentDate = new Date();
+                if (salesreportType === 'custom') {
+                    startDate = new Date(document.getElementById('startDate').value);
+                    endDate = new Date(document.getElementById('endDate').value);
+                } else {
+                    switch (salesreportType) {
+                        case 'monthly':
+                            startDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+                            break;
+                        case 'weekly':
+                            startDate = new Date(currentDate);
+                            startDate.setDate(currentDate.getDate() - currentDate.getDay());
+                            break;
+                        case 'yearly':
+                            startDate = new Date(currentDate.getFullYear(), 0, 1);
+                            break;
+                    }
+                    endDate = currentDate;
+                }
+
+                startDate.setHours(0, 0, 0, 0);
+                endDate.setHours(23, 59, 59, 999);
+
+                try {
+                    const response = await fetch('/admin/downloadPDF', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ salesreportType, startDate, endDate, reportType })
+                    });
+
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    a.download = reportType === 'PDF' ? 'sales_report.pdf' : 'sales_report.csv';
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                } catch (error) {
+                    console.error('Error downloading report:', error);
+                }
+            }
+            fetchData();
+            fetchSalesData();
+            getOrderData();
+
+        </script>

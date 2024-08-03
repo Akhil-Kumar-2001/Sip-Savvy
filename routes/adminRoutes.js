@@ -8,6 +8,7 @@ const isAdmin = require('../middleware/adminSession')
 const orderController = require('../controller/adminController/orderController')
 const couponController = require('../controller/adminController/couponController')
 const offerController = require('../controller/adminController/offerController')
+const saleController = require('../controller/adminController/saleController')
 
 //------------------------------- main -------------------------------
 
@@ -73,6 +74,12 @@ admin.get('/statuscoupon',isAdmin,couponController.toggleCouponStatus)
 admin.delete('/deletecoupon/:id',isAdmin,couponController.deleteCoupon)
 
 
+// -------------------------------- Sales Report --------------------------------
+
+admin.get('/salesReport',isAdmin , saleController.salePage);
+admin.get('/getsalesbymonth', isAdmin, saleController.getSalesByMonth);
+admin.post('/fetch-sales-data',isAdmin, saleController.getOrderDetails);
+admin.post('/downloadPDF',isAdmin,saleController.downloadPDF);
 // ------- offer --------
 
 admin.get('/offer', isAdmin, offerController.getOffer)
