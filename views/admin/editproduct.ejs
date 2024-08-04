@@ -51,9 +51,11 @@
         -webkit-text-fill-color: #fff;
         transition: background-color 5000s ease-in-out 0s;
     }
-    .edit-product-disable{
+
+    .edit-product-disable {
         background: #232323;
     }
+
     /*--------- images add ---------*/
 
     .image-preview {
@@ -100,16 +102,54 @@
         width: 100%;
         height: auto;
     }
-    .product-image-box{
+
+    .product-image-box {
         width: 100%;
         height: 100%;
     }
+
+    #cropper-modal {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1050;
+        max-width: 500px;
+        width: 100%;
+        max-height: 600px;
+        background: white;
+        box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
+        padding: 20px;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    #cropper-container {
+        background: white;
+        padding: 1rem;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #cropper-image {
+        max-width: 100%;
+        max-height: 70vh;
+    }
+
+    #cropper-buttons {
+        margin-top: 1rem;
+        display: flex;
+        gap: 1rem;
+ }
 </style>
 
 
 <%- include('navbar') %>
 
-<!-------------------------------------------- Edit product ------------------------------------------------->
+    <!-------------------------------------------- Edit product ------------------------------------------------->
 
     <div class="container container-add-products">
         <div class="add-products">
@@ -119,15 +159,19 @@
                     <div class="col-6">
 
                         <label class="form-label " for="productName">Product Name</label>
-                        <input class="form-control form-input edit-product-disable" type="text" name="productName" id="productName" style="background: transparent;" value="<%= product.productName %>" disabled required>
+                        <input class="form-control form-input edit-product-disable" type="text" name="productName"
+                            id="productName" style="background: transparent;" value="<%= product.productName %>"
+                            disabled required>
 
                         <label class="form-label " for="productPrice">Price</label>
-                        <input class="form-control form-input" type="text" name="productPrice" id="productPrice" value="<%= product.productPrice %>" required>
+                        <input class="form-control form-input" type="text" name="productPrice" id="productPrice"
+                            value="<%= product.productPrice %>" required>
 
                         <div>
 
                             <label class="form-label " for="productCollection">Category</label>
-                            <select name="productCollection" id="productCollection" style="background: transparent;" class="form-control form-input edit-product-disable" disabled required>
+                            <select name="productCollection" id="productCollection" style="background: transparent;"
+                                class="form-control form-input edit-product-disable" disabled required>
                                 <option value="" selected disabled>
                                     <%= product.productCategory %>
                                 </option>
@@ -135,16 +179,19 @@
                         </div>
 
                         <label class="form-label " for="productQuantity">Stock</label>
-                        <input class="form-control form-input" type="text" name="productQuantity" id="productQuantity" value="<%= product.productQuantity %>" required>
+                        <input class="form-control form-input" type="text" name="productQuantity" id="productQuantity"
+                            value="<%= product.productQuantity %>" required>
                     </div>
 
                     <div class="col-6">
 
                         <label for="productDiscount">Product Discount in percentage</label>
-                        <input class="form-control form-input" type="number" name="productDiscount"  min="0" max="100" value="<%= product.productDiscount %>" required>
+                        <input class="form-control form-input" type="number" name="productDiscount" min="0" max="100"
+                            value="<%= product.productDiscount %>" required>
 
                         <label for="productDescription" class="form-label">Description</label>
-                        <textarea class="form-control form-input" name="productDescription" id="productDescription" required><%= product.productDescription %></textarea>
+                        <textarea class="form-control form-input" name="productDescription" id="productDescription"
+                            required><%= product.productDescription %></textarea>
                     </div>
 
                     <!-- <div class="d-flex justify-content-center mt-3  ">
@@ -154,13 +201,32 @@
                         
                     </div> -->
 
-                    <div class="image-upload-preview " id="image-upload-preview">
-                        <% product.productImage.forEach((img)=>{ %>
-                            <div class="product-image-box mt-5" style="width: 25%;">
-                                <img src="../../<%=img %>" alt="" class="preview-img ">
+
+
+
+                    <div class="d-flex justify-content-center mt-3">
+                        <a onclick="addImage()">
+                            <label for="product-image-upload" class="btn btn-danger">Choose Image</label>
+                        </a>
+                        <div id="add-input"></div>
+                    </div>
+                    <div class="image-upload-preview" id="image-upload-preview">
+                        <% product.productImage.forEach((img)=> { %>
+                            <div class="product-image-box mt-5" style="width: 25%;"
+                                data-image-path="<%= img.replace(/\\/g, '/') %>">
+                                <img src="../../<%= img %>" alt="" class="preview-img">
+                                <a class="btn btn-danger delete-btn"
+                                    onclick="deleteImage(`<%= img.replace(/\\/g, '\\\\') %>`)">
+                                    <i class="bi bi-trash3-fill"></i>
+                                </a>
                             </div>
                             <% }) %>
                     </div>
+                    <input type="hidden" id="deletedImages" name="deletedImages" value='[]'>
+                    <input type="hidden" id="croppedImages" name="croppedImages" value='[]'>
+
+
+
                 </div>
 
             </form>
@@ -168,54 +234,153 @@
 
         <div class="text-center mt-3">
             <a href="/admin/products" class="btn submit-btn-light">Cancel</a>
-            <button type="submit" class="btn submit-btn " name="" form="edit-product-form" id="submit-form">Update Product</button>
+            <button type="submit" class="btn submit-btn " name="" form="edit-product-form" id="submit-form">Update
+                Product</button>
         </div>
 
     </div>
+
+    <!-- Modal for Cropper -->
+    <div id="cropper-modal" style="display: none;">
+        <div id="cropper-container">
+            <img id="cropper-image">
+            <div id="cropper-buttons">
+                <button id="crop-cancel" class="btn btn-secondary">Cancel</button>
+                <button id="crop-confirm" class="btn btn-primary">Crop</button>
+            </div>
+        </div>
+    </div>
+
 
 
     <%- include('footer') %>
 
 
-    <!-------------------------------------------- Input Validation ------------------------------------------------->
+        <!-------------------------------------------- Input Validation ------------------------------------------------->
 
-    <script>
-        const addProductForm = document.getElementById('add-product-form')
-        const productPrice = document.getElementsByName('productPrice')[0];
-        const productQuantity = document.getElementsByName('productQuantity')[0];
-        const productDiscount = document.getElementsByName('productDiscount')[0];
-        const productDescription = document.getElementsByName('productDescription')[0];
+        <script>
 
-        addProductForm.addEventListener('submit', (e) => {
-            e.preventDefault()
+            let deletedImages = []; // Declare deletedImages array at the beginning
 
-            let isValid = true
-            let errorMessage = ""
+            function deleteImage(imagePath) {
+                deletedImages.push(imagePath);
+                document.getElementById('deletedImages').value = JSON.stringify(deletedImages);
 
-            if (isNaN(productPrice.value) || parseFloat(productPrice.value) <= 0) {
-                errorMessage = 'Product Price must be greater than zero and it should not contain any alphabets'
-                isValid = false;
+                const normalizedPath = imagePath.replace(/\\/g, '/');
+                const imageBox = document.querySelector(`div[data-image-path="${normalizedPath}"]`);
+                if (imageBox) {
+                    imageBox.remove();
+                } else {
+                    console.log(`Image box not found for path: ${normalizedPath}`);
+                }
             }
-            if (isNaN(productQuantity.value) || parseInt(productQuantity.value) <= 0) {
-                errorMessage = 'Product quality should be a number and it must be greater than zero'
-                isValid = false;
+
+            function addImage() {
+                const inputDiv = document.getElementById('add-input');
+                const newInput = document.createElement('input');
+                newInput.type = 'file';
+                newInput.name = 'images';
+                newInput.style.display = 'none';
+                newInput.addEventListener('change', (event) => {
+                    if (event.target.files && event.target.files[0]) {
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            const cropperImage = document.getElementById('cropper-image');
+                            cropperImage.src = e.target.result;
+                            openCropperModal(cropperImage, newInput);
+                        };
+                        reader.readAsDataURL(event.target.files[0]);
+                    }
+                });
+                inputDiv.appendChild(newInput);
+                newInput.click();
             }
-            if (isNaN(productDiscount.value) || parseInt(productDiscount.value) < 0 || parseInt(productDiscount.value) > 100) {
-                errorMessage = 'Product Discount should be a number and it must be zero or Greater'
-                isValid = false;
+
+            function openCropperModal(imageElement, inputElement) {
+                const cropperModal = document.getElementById('cropper-modal');
+                cropperModal.style.display = 'block';
+                const cropper = new Cropper(imageElement, {
+                    aspectRatio: 1,
+                    viewMode: 1,
+                    autoCropArea: 1
+                });
+
+                document.getElementById('crop-cancel').addEventListener('click', () => {
+                    cropper.destroy();
+                    cropperModal.style.display = 'none';
+                    inputElement.value = '';
+                });
+
+                document.getElementById('crop-confirm').addEventListener('click', () => {
+                    const canvas = cropper.getCroppedCanvas();
+                    const croppedImageUrl = canvas.toDataURL('image/jpeg');
+                    imageElement.src = croppedImageUrl;
+                    cropper.destroy();
+                    cropperModal.style.display = 'none';
+
+                    const previewDiv = document.getElementById('image-upload-preview');
+                    const imageBox = document.createElement('div');
+                    imageBox.className = 'product-image-box mt-5';
+                    imageBox.style.width = '25%';
+
+                    const img = document.createElement('img');
+                    img.classList.add('preview-img');
+                    img.src = croppedImageUrl;
+
+                    let deleteImageBtn = document.createElement('a');
+                    deleteImageBtn.innerHTML = '<i class="bi bi-trash3-fill"></i>';
+                    deleteImageBtn.classList.add('btn', 'btn-danger', 'delete-btn');
+                    deleteImageBtn.onclick = () => {
+                        imageBox.remove();
+                        inputElement.remove();
+                    };
+
+                    imageBox.appendChild(img);
+                    imageBox.appendChild(deleteImageBtn);
+                    previewDiv.appendChild(imageBox);
+
+                    const croppedImages = JSON.parse(document.getElementById('croppedImages').value || '[]');
+                    croppedImages.push(croppedImageUrl);
+                    document.getElementById('croppedImages').value = JSON.stringify(croppedImages);
+                });
             }
-            if (productDescription.value.length <= 10 || productDescription.value.length > 100 || productDescription.value.trim === "") {
-                errorMessage = 'Product description must be between 10 to 100 word '
-                isValid = false
-            }
-            if (isValid === false) {
-                Swal.fire({
-                    title: "Invalid Inputs",
-                    text: errorMessage,
-                    icon: "error"
-                })
-            } else {
-                addProductForm.submit()
-            }
-        });
+
+            const addProductForm = document.getElementById('add-product-form')
+            const productPrice = document.getElementsByName('productPrice')[0];
+            const productQuantity = document.getElementsByName('productQuantity')[0];
+            const productDiscount = document.getElementsByName('productDiscount')[0];
+            const productDescription = document.getElementsByName('productDescription')[0];
+
+            addProductForm.addEventListener('submit', (e) => {
+                e.preventDefault()
+
+                let isValid = true
+                let errorMessage = ""
+
+                if (isNaN(productPrice.value) || parseFloat(productPrice.value) <= 0) {
+                    errorMessage = 'Product Price must be greater than zero and it should not contain any alphabets'
+                    isValid = false;
+                }
+                if (isNaN(productQuantity.value) || parseInt(productQuantity.value) <= 0) {
+                    errorMessage = 'Product quality should be a number and it must be greater than zero'
+                    isValid = false;
+                }
+                if (isNaN(productDiscount.value) || parseInt(productDiscount.value) < 0 || parseInt(productDiscount.value) > 100) {
+                    errorMessage = 'Product Discount should be a number and it must be zero or Greater'
+                    isValid = false;
+                }
+                if (productDescription.value.length <= 10 || productDescription.value.length > 100 || productDescription.value.trim === "") {
+                    errorMessage = 'Product description must be between 10 to 100 word '
+                    isValid = false
+                }
+                if (isValid === false) {
+                    Swal.fire({
+                        title: "Invalid Inputs",
+                        text: errorMessage,
+                        icon: "error"
+                    })
+                } else {
+                    addProductForm.submit()
+                }
+            });
         </script>

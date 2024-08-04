@@ -128,18 +128,50 @@ const editProductPost = async(req,res)=>{
     try {
         
         const id = req.params.id;
-        productSchema.findByIdAndUpdate(id,{
+        const imageToDelete = JSON.parse(req.body.deletedImages || '[]');
+        const croppedImages = JSON.parse(req.body.croppedImages || '[]');
+
+         // Delete images from filesystem
+         imageToDelete.forEach(imagePath => {
+            try {
+                fs.unlinkSync(imagePath);
+            } catch (error) {
+                console.error(`Error deleting image: ${imagePath}`, error);
+            }
+        });
+
+         // Remove images from database
+         if (imageToDelete.length > 0) {
+            await productSchema.findByIdAndUpdate(id, {
+                $pull: { productImage: { $in: imageToDelete } }
+            });
+        }
+
+        // Save cropped images to filesystem and update paths
+        const savedCroppedImages = [];
+        croppedImages.forEach((imageData, index) => {
+            const base64Data = imageData.replace(/^data:image\/jpeg;base64,/, "");
+            const imagePath = `uploads/cropped_image_${id}_${Date.now()}_${index}.jpg`;
+            fs.writeFileSync(imagePath, base64Data, 'base64');
+            savedCroppedImages.push(imagePath);
+        });
+
+        const product = await productSchema.findById(id);
+        // Update product with new images
+        const newImages = [...product.productImage, ...savedCroppedImages];
+
+        // const id = req.params.id;
+        await productSchema.findByIdAndUpdate(id,{
                 productPrice: req.body.productPrice,
                 productQuantity: req.body.productQuantity,
                 productDiscount: req.body.productDiscount,
-                productDescription: req.body.productDescription })
-            .then(()=>{
+                productDescription: req.body.productDescription,
+                productImage: newImages,
+            })
+            
                 req.flash('alert','Product Successfully Updated')
                 res.redirect('/admin/products')
-            }).catch((err)=>{
-                req.flash('alert','Error Occured while Editing the Product')
-                res.redirect('/admin/products')
-            })
+           
 
 
     } catch (error) {
