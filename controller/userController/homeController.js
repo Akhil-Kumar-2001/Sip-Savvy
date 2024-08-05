@@ -1,8 +1,8 @@
 
-// --------------------------------- user Home page Render ------------------------------
 
 const productSchema = require("../../model/productSchema")
 const categorySchema = require('../../model/categorySchema')
+const mongoose = require('mongoose');
 
 
 // --------------------------------- Home page render ------------------------------
@@ -64,32 +64,42 @@ const home = async (req, res) => {
 //   }
 // }  
 
+
+//------------------- All product ------------------
+
+
+
 const allProducts = async (req, res) => {
   try {
     // Find all active categories
     const categories = await categorySchema.find({ isActive: true });
 
     // Extract query parameters with default values
-
     const selectedCategories = req.query.productCategory
-      ? (Array.isArray(req.query.productCategory) ? req.query.productCategory : [req.query.productCategory])
-      : categories.map(cat => cat._id);
+      ? (Array.isArray(req.query.productCategory) ? req.query.productCategory : req.query.productCategory.split(','))
+      : categories.map(cat => cat._id.toString());
 
     const minPrice = parseInt(req.query.minPrice) || 0;
     const maxPrice = parseInt(req.query.maxPrice) || Number.MAX_SAFE_INTEGER;
     const sortBy = req.query.sortBy || 'newArrivals';
     const userSearch = req.query.search || "";
 
+    // Pagination parameters
+    const productsPerPage = 8;
+    const currentPage = parseInt(req.query.page) || 1;
+
+    // Convert selectedCategories to ObjectIds
+    const selectedCategoryIds = selectedCategories.map(cat => new mongoose.Types.ObjectId(cat));
+
     // Query for products with filters
     const productQuery = {
       productName: { $regex: userSearch, $options: "i" },
-      productCategory: { $in: selectedCategories },
+      productCategory: { $in: selectedCategoryIds },
       isActive: true,
       productPrice: { $gte: minPrice, $lte: maxPrice }
-    }
+    };
 
-    // console.log(productQuery)
-
+    // Fetching products with applied filters and sorting
     let sortOption = {};
     switch (sortBy) {
       case 'priceLowToHigh':
@@ -108,30 +118,32 @@ const allProducts = async (req, res) => {
         sortOption = { createdAt: -1 };
     }
 
-    // Fetching products with applied filters and sorting
-
-    const product = await productSchema.find(productQuery).populate('productCategory')
+    // Fetch products with applied filters and sorting, and apply pagination
+    const allProducts = await productSchema.find(productQuery).populate('productCategory')
       .sort(sortOption)
+      .skip((currentPage - 1) * productsPerPage)
+      .limit(productsPerPage);
 
-    // console.log(products)
-
-    // const productsCount = await productSchema.countDocuments(productQuery)
+    // Count the total number of products matching the query
+    const productsCount = await productSchema.countDocuments(productQuery);
 
     res.render('user/allProducts', {
       title: 'All Product',
       alertMessage: req.flash('errorMessage'),
       user: req.session.user,
-      product,
+      product: allProducts,
       categories,
+      currentPage,
+      pageNumber: Math.ceil(productsCount / productsPerPage),
+      totalPages: Math.ceil(productsCount / productsPerPage),
       query: req.query
     });
-
 
   } catch (error) {
     console.log(`error in All Product rendering ${error}`);
     res.status(500).send('An error occurred');
   }
-}
+};
 
 
 

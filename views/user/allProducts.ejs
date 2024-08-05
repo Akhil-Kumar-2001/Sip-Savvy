@@ -45,6 +45,19 @@
         margin: 5rem;
         gap: 2rem;
     }
+    .paginationn {
+    display: flex;
+    list-style: none;
+    padding: 18px;
+    width: 77%;
+    justify-content: center;
+    background: transparent;
+    /* border: solid 1px black; */
+    border-radius: 10px;
+    margin-left: 10rem;
+
+    }
+   
     
  </style>
 
@@ -122,6 +135,40 @@
             </h3>
         </div>
         <% } %>
+</div>
+
+
+  <!-- pagination -->
+  <nav aria-label="Page navigation">
+    <ul class="paginationn justify-content-center">
+      <% if (currentPage > 1) { %>
+        <li class="page-item">
+          <a class="page-link" href="?<%= new URLSearchParams({ ...query, page: currentPage - 1 }).toString() %>" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+      <% } %>
+      
+      <% for (let i = 1; i <= totalPages; i++) { %>
+        <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+          <a class="page-link" href="?<%= new URLSearchParams({ ...query, page: i }).toString() %>"><%= i %></a>
+        </li>
+      <% } %>
+      
+      <% if (currentPage < totalPages) { %>
+        <li class="page-item">
+          <a class="page-link" href="?<%= new URLSearchParams({ ...query, page: currentPage + 1 }).toString() %>" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      <% } %>
+    </ul>
+  </nav>
+  
+  
+  
+  
+
 </div>
 
 <%- include('footer') %>
