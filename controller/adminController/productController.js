@@ -110,10 +110,16 @@ const editProduct= async(req,res)=>{
     try {
         
         const id = req.params.id;
-        const product = await productSchema.findById(id)
+        const product = await productSchema.findById(id).populate('productCategory')
         console.log(product)
         if(product){
-            res.render('admin/editproduct',{title:"Edit Product",product,alertMessage:req.flash('alert')})
+            res.render('admin/editproduct',
+                {
+                    title:"Edit Product",
+                    product,
+                    alertMessage:req.flash('alert'),
+                    categoryName: product.productCategory.categoryName
+                })
         }else{
             req.flash('alert','Unable to Edit the product')
             res.redirect('/admin/products')
