@@ -665,6 +665,15 @@
                                                             </td>
                                                         </tr>
                                                         <% }) %>
+                                                        <% if(cartDetails.payableAmount< 1000){ %>
+                                                            <tr>
+                                                                <td colspan="2">
+                                                                    <h5 class="font-size-14 m-0">Shipping Charge :</h5>
+                                                                </td>
+                                                                <td>₹50
+                                                                </td>
+                                                            </tr>
+                                                            <% } %>
                                                             <tr>
                                                                 <td colspan="2">
                                                                     <h5 class="font-size-14 m-0">Sub Total :</h5>
@@ -673,6 +682,7 @@
                                                                         cartDetails.payableAmount * (12 / 100)) %>
                                                                 </td>
                                                             </tr>
+                                                            
                                                             <tr>
                                                                 <td colspan="2">
                                                                     <h5 class="font-size-14 m-0">Gst :</h5>

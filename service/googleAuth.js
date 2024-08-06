@@ -2,6 +2,7 @@ const passport = require('passport');
 const userSchema = require('../model/userSchema');
 const GoogleStrategy = require('passport-google-oauth2').Strategy;
 const dotenv = require('dotenv').config();
+const { v4: uuidv4 } = require('uuid')
 
 // Configure the Google strategy for use by Passport.
 passport.use(new GoogleStrategy({
@@ -13,13 +14,19 @@ passport.use(new GoogleStrategy({
   try {
     // Check if the user exists in the database
     let user = await userSchema.findOne({ email: profile.email });
+
+   // Function to generate a referral code
+   function createReferralCode() {
+    return uuidv4().slice(0, 8); // Generate a short referral code
+}
     
     if (!user) {
       // If user doesn't exist, create a new user
       user = new userSchema({
         name: profile.displayName,
         email: profile.email,
-        googleID: profile.id
+        googleID: profile.id,
+        referralCode:createReferralCode()
       });
       // Save the new user
       await user.save();

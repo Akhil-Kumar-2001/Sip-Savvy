@@ -3,18 +3,21 @@
 const productSchema = require("../../model/productSchema")
 const categorySchema = require('../../model/categorySchema')
 const mongoose = require('mongoose');
+const { query } = require("express");
 
 
 // --------------------------------- Home page render ------------------------------
 
 const home = async (req, res) => {
   try {
+
     const products = await productSchema.find({ isActive: true }).sort({ createdAt: -1 })
     res.render('user/home',
       {
         title: "home",
         alertMessage: req.flash('alert'),
         user: req.session.user,
+        query,
         products
       })
 
@@ -71,6 +74,10 @@ const home = async (req, res) => {
 
 const allProducts = async (req, res) => {
   try {
+
+        // const search = req.query.search || ''
+
+    // const product = await productSchema.findOne({ productName:{$regex:search, $options:'i'}})
     // Find all active categories
     const categories = await categorySchema.find({ isActive: true });
 
@@ -134,6 +141,8 @@ const allProducts = async (req, res) => {
       product: allProducts,
       categories,
       currentPage,
+      // search,
+      // product,
       pageNumber: Math.ceil(productsCount / productsPerPage),
       totalPages: Math.ceil(productsCount / productsPerPage),
       query: req.query

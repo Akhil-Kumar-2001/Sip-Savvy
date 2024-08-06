@@ -114,12 +114,11 @@
             </a>
         </div>
         <div class="home-search">
-            <input type="text" placeholder="search a product">
-            <!-- <img src="/public/user/img/search.webp" class="im" alt=""> -->
-            <h3 class="bi bi-search im"></h3>
-            <!-- <h2 class="im">0</h2> -->
-
-        </div>
+            <form action="/allproduct" method="GET">
+              <input type="text" placeholder="search a product" name="search" value="<%= typeof query !== 'undefined' ? query.search || '' : '' %>">
+              <h3 type="submit" class="bi bi-search im"></h3>
+            </form>
+          </div>
         <div class="home-nav">
             <ul>
                 <li><a href="/home">Home</a></li>
@@ -136,7 +135,7 @@
                         <a href="/allproduct" class="dropdown-item">All Product</a>
                     </div>
                 </div>
-                <li><a href="#">About</a></li>
+                <li><a href="/allproduct">Shop</a></li>
                 <li><a href="#">Contact</a></li>
                 <!-- <li><a href="#">Bear&Mixture</a></li>
                 <li><a href="#">Champagne</a></li> -->

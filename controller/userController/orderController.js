@@ -202,6 +202,9 @@ const returnOrder = async (req, res) => {
 // }
 
 
+//----------------Invoice------------------
+
+
 const Invoice = async (req, res) => {
     try {
         const user = req.session.user;
@@ -228,7 +231,7 @@ const Invoice = async (req, res) => {
             .font("Helvetica-Bold")
             .fillColor("grey")
             .fontSize(8)
-            .text("Where imagination meets fun, and every toy has a story.", {
+            .text("Where every bottle tells a tale, and every sip is a celebration.", {
                 align: "center",
                 margin: 10,
             });
