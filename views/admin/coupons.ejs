@@ -231,7 +231,7 @@
                         <div class="mb-3">
                             <label for="discountType" class="form-label">Discount Type</label>
                             <select class="form-control" id="discountType" name="discountType" required>
-                                <option value="Percentage">Percentage</option>
+                                <!-- <option value="Percentage">Percentage</option> -->
                                 <option value="Fixed">Fixed</option>
                             </select>
                         </div>
@@ -314,6 +314,14 @@
                 e.preventDefault();
                 const formData = new FormData(this);
                 const data = Object.fromEntries(formData.entries());
+                if (parseFloat(data.discountValue) >= parseFloat(data.minimumOrderAmount)) {
+                   Swal.fire({
+                        icon: 'error',
+                        title: 'Validation Error',
+                        text: 'Discount value should be less than the minimum order amount.',
+                    });
+                    return; // Stop form submission
+                }
                 try {
                     const response = await fetch('/admin/addcoupon', {
                         method: 'POST',
@@ -356,6 +364,14 @@
                     const formData = new FormData(event.target);
                     const data = Object.fromEntries(formData.entries());
                     data.id = document.getElementById('editCouponId').value;
+                    if (parseFloat(data.discountValue) >= parseFloat(data.minimumOrderAmount)) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Validation Error',
+                            text: 'Discount value should be less than the minimum order amount.',
+                        });
+                        return; // Stop form submission
+                    }
                     try {
                         const response = await fetch(`/admin/editcoupon/${data.id}`, {
                             method: 'POST',

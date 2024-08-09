@@ -13,6 +13,7 @@ const orderController = require('../controller/userController/orderController')
 const wishlistController = require('../controller/userController/wishlistController')
 const walletController = require('../controller/userController/walletController')
 
+
 //------------------------------- main -------------------------------
 
 user.get('/',userController.user)
@@ -89,7 +90,12 @@ user.post('/payment-render/:amount', activeUser , checkoutController.paymentRend
 user.get('/removeaddress/:index',activeUser,checkoutController.removeAddress)
 user.get('/editaddress/:index',activeUser,checkoutController.editAddress)
 user.post('/updateaddress/:index',activeUser,checkoutController.updateAddress)
-user.post('/applycoupon', activeUser , checkoutController.coupon)
+// user.post('/applycoupon', activeUser , checkoutController.coupon)
+
+
+user.post('/get-coupon',activeUser,checkoutController.getCoupon)
+user.post('/apply-coupon',activeUser,checkoutController.applyCoupon)
+user.put('/remove-coupon',activeUser,checkoutController.removeCoupon)
 
 
 

@@ -49,7 +49,7 @@ const addCoupon = async(req,res)=>{
     if (!code || !discountType || !discountValue || !startDate || !endDate || !minimumOrderAmount) {
         return res.status(400).json({ message: 'All fields are required' });
     }
-    
+
         try {
             const existingCoupon = await Coupon.findOne({ code });
             if (existingCoupon) {

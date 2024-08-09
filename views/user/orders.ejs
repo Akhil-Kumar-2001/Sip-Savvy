@@ -258,6 +258,10 @@
                                                                             <p class="text-warning">
                                                                                 <%= item.orderStatus %>
                                                                             </p>
+                                                                        <% } else if(item.orderStatus==='Return Request' ) {%>
+                                                                            <p class="text-danger">
+                                                                                <%= item.orderStatus %>
+                                                                            </p>
                                                                             <% } else if(item.orderStatus==='Shipped' )
                                                                                 { %>
                                                                                 <p class="text-secondary">

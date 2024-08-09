@@ -74,7 +74,7 @@ const schema = new mongoose.Schema({
     },
     orderStatus: {
         type: String,
-        enum:['Pending', 'Shipped', 'Confirmed', 'Delivered', 'Cancelled', 'Returned']
+        enum:['Pending', 'Shipped', 'Confirmed', 'Delivered', 'Cancelled', 'Returned', 'Return Request' ]
         
     }
 },{timestamps:true})

@@ -66,7 +66,7 @@ const orderStatus=async (req, res) => {
         const { orderId } = req.params;
         const { status } = req.body;
 
-        const validStatuses = ['Pending', 'Shipped', 'Confirmed', 'Delivered', 'Cancelled', 'Returned'];
+        const validStatuses = ['Pending', 'Shipped', 'Confirmed', 'Delivered', 'Cancelled', 'Returned','Return Request'];
         const currentOrder = await orderSchema.findOne({_id:orderId});
 
         if (!currentOrder) {

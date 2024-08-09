@@ -355,9 +355,8 @@
                             <hr class="cart-line mt-0">
                             <h6>Delivery</h6>
                             <div class="cart-shipping">
-                                <% cart.items.forEach((item, index)=> { %>
-                                <% if ((item.productId.productPrice*(1-item.productId.productDiscount/100)*(item.productCount)).toLocaleString()> 1000 ) { %>
-                                    <p class="mt-2">Shipping Charge</p>
+                                <% if(cart.payableAmount > 1000) { %>    
+                                <p class="mt-2">Shipping Charge</p>
                                     <p>
                                         <i class="fa-solid fa-indian-rupee-sign product-text-row"></i> Free Shipping
                                     </p>
@@ -367,7 +366,6 @@
                                             <i class="fa-solid fa-indian-rupee-sign product-text-row"></i> 50
                                         </p>
                                         <% } %>
-                                        <% }) %>
                             </div>
                         </div>
                         <div class="row" style="border-top: 1px solid rgba(0,0,0,.1); padding: 2vh 0;">

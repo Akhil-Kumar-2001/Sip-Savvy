@@ -617,21 +617,38 @@
                                             <i class="bi bi-gift"></i>
                                             <h3>Apply Coupon</h3>
                                         </div>
-                                        <div class="d-flex gap-2 m-2 align-items-center">
+                                        <!-- <div class="d-flex gap-2 m-2 align-items-center">
                                             <input type="text" id="couponCode" class="input-coupon" name="couponCode"
                                                 placeholder="Enter coupon code">
                                             <button type="button" id="applyCouponBtn" onclick="applyCoupon()"
                                                 class="btn submit-btn">Apply</button>
+                                        </div> -->
+                                        <h4 id="couponDiscount"><span id="coupon-value">Coupon</span> OFF</h4>
+                                        <!-- <h5 class="d-block">Minimum Purchase: <span id="minAmount"></span></h5> -->
+                                        <select class="form-select" id="couponSelect">
+                                            <option value="" selected disabled>Select a coupon</option>
+                                            <% coupons.forEach((coupon)=> { %>
+                                                <option value="<%= coupon._id %>">
+                                                    <%= coupon.code %>
+                                                </option>
+                                                <% }) %>
+                                        </select>
+                                        <div class="pt-3">
+                                            <button type="button" class="btn btn-primary" onclick="applyCoupon()">Apply</button>
+                                            <button type="button" class="btn btn-danger"
+                                                onclick="removeCoupon()">Remove</button>
                                         </div>
+                                            
                                     </form>
 
-                                    <!-- Applied Coupon Badge -->
+
+                                    <!-- Applied Coupon Badge
                                     <div id="couponBadge" class="mb-3" style="display: none;">
                                         <span class="badge bg-success">Coupon Applied: <span
                                                 id="appliedCouponCode"></span></span>
                                         <button type="button" class="btn btn-danger btn-sm ms-2"
                                             onclick="removeCoupon()">Remove</button>
-                                    </div>
+                                    </div> -->
 
                                     <div class="table-responsive">
                                         <table class="table table-centered mb-0 table-nowrap"
@@ -691,17 +708,18 @@
                                                                         100)) %>
                                                                 </td>
                                                             </tr>
-                                                            <tr class="coupon-row" style="display: none;">
+                                                            <tr class="coupon-row" id="coupon-discount-box" style="display: none;">
                                                                 <th>Coupon</th>
                                                                 <th></th>
                                                                 <th class="coupon-discount"></th>
                                                             </tr>
                                                             <tr>
                                                                 <td colspan="2">
-                                                                    <h5 class="font-size-14 m-0">Total :</h5>
+                                                                    <h5 id="data-payableAmount " class="font-size-14 m-0">Total :</h5>
                                                                 </td>
-                                                                <td id="total-payable-amount">₹ <%=
-                                                                        cartDetails.payableAmount %>
+                                                                <td id="total-payable-amount ">₹ <span id="total-box"><%=
+                                                                    cartDetails.payableAmount %></span>
+                                                                    
                                                                 </td>
                                                             </tr>
                                                             <% } %>
@@ -872,7 +890,7 @@ function openRazorpayPayment() {
                     name: "Sip Savvy",
                     order_id: data.orderID,
                     handler: function (response) {
-                        const couponCode = document.getElementById('couponCode').value.trim();
+                        // const couponCode = document.getElementById('couponCode').value.trim();
                         const URL = `/place-order/${selectedAddressIndex}/${selectedPaymentMethod}`;
                         fetch(URL, {
                             method: "POST",
@@ -883,7 +901,7 @@ function openRazorpayPayment() {
                                 razorpay_payment_id: response.razorpay_payment_id,
                                 razorpay_order_id: response.razorpay_order_id,
                                 razorpay_signature: response.razorpay_signature,
-                                couponCode: couponCode
+                                // couponCode: couponCode
                             })
                         })
                             .then((res) => {
@@ -928,7 +946,7 @@ function openRazorpayPayment() {
                 const rzp1 = new Razorpay(options);
 
                 rzp1.on('payment.failed', function (response) {
-                    const couponCode = document.getElementById('couponCode').value.trim();
+                    // const couponCode = document.getElementById('couponCode').value.trim();
                     const URL = `/place-order/${selectedAddressIndex}/${selectedPaymentMethod}`;
                     fetch(URL, {
                         method: "POST",
@@ -940,7 +958,7 @@ function openRazorpayPayment() {
                             razorpay_order_id: response.error.metadata.order_id,
                             razorpay_signature: response.error.metadata.signature,
                             payment_status: "Pending",
-                            couponCode: couponCode
+                            // couponCode: couponCode
                         })
                     })
                         .then((res) => {
@@ -989,7 +1007,7 @@ function openRazorpayPayment() {
 }
 
 function placeOrder(addressIndex, paymentMethod) {
-    const couponCode = document.getElementById('couponCode').value.trim();
+    // const couponCode = document.getElementById('couponCode').value.trim();
     const URL = `/place-order/${addressIndex}/${paymentMethod}`;
     fetch(URL, {
         method: 'POST',
@@ -999,7 +1017,7 @@ function placeOrder(addressIndex, paymentMethod) {
         body: JSON.stringify({
             addressIndex: addressIndex,
             paymentMode: paymentMethod,
-            couponCode: couponCode
+            // couponCode: couponCode
         })
     })
         .then(response => response.json())
@@ -1025,75 +1043,148 @@ function placeOrder(addressIndex, paymentMethod) {
 }
 
 //-------------------------- coupon management --------------------------------
-let originalTotalAmount = parseFloat(totalNum);  // Initialize original total amount
-let currentCouponDiscount = 0; 
 
-async function applyCoupon() {
-    totalAmount = originalTotalAmount;  // Reset totalAmount to the original total amount before applying a new coupon
-    const couponCode = document.getElementById('couponCode').value.trim();
-    if (!couponCode) {
-        showError("Please enter a coupon code.");
-        return;
-    }
-    try {
-        const res = await fetch('/applycoupon', {
-            method: 'POST',
+ //coupon
+
+ const couponSelect = document.getElementById('couponSelect')
+  couponSelect.addEventListener('change', (e) => {
+
+      const URL = "/get-coupon";
+      fetch(URL, {
+          method: "POST",
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ coupon: e.target.value })
+      }).then((res) => {
+          return res.json()
+      }).then((data) => {
+          document.getElementById('coupon-value').innerHTML = "&#8377;" + data.discount
+        //   console.log(data.discount)
+        //   document.getElementById('minAmount').innerHTML = data.minPurchase
+      }).catch((err) => {
+          console.log(err)
+      })
+  })
+
+
+
+function applyCoupon() {
+    if (!couponSelect.value) {
+        Swal.fire({
+            icon: "info",
+            title: "Select a coupon"
+        })
+        console.log(couponSelect.value)
+
+    } else {
+        const URL = "/apply-coupon";
+        fetch(URL, {
+            method: "POST",
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ couponCode })
-        });
+            body: JSON.stringify({ code: couponSelect.value })
+            
+        }).then((res) => {
+            return res.json()
+        }).then((data) => {
 
-        if (!res.ok) {
-            const error = await res.json();
-            showError(error.error || "An error occurred while applying the coupon.");
-            return;
-        }
+            if (data.minNotreached) {
+                Swal.fire({
+                    icon: "error",
+                    title: "min purchase not reached"
+                })
+            }
+            if (data.usedCoupon) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Already Coupon been used"
+                })
+            }
+            if (data.expiredCoupon) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "Oops! The coupon got expired"
+                })
+            }
 
-        const couponData = await res.json();
-        currentCouponDiscount = couponData.couponDiscount;
-        updateOrderSummary(couponData.total, currentCouponDiscount);
-        showCouponBadge(couponCode);
-    } catch (error) {
-        document.getElementById('couponCode').value = '';
-        showError("An error occurred while applying the coupon.");
-        console.log(`apply coupon error ${error}`);
+            if (data.success) {
+                Swal.fire({
+                    icon: "success",
+                    title: "coupon applied",
+                    showConfirmButton: false,
+                    timer: 700
+                }).then(() => {
+                    // totalAmountBox.setAttribute('data-payableAmount', data.payableAmount)
+                    document.getElementById('total-box').innerHTML = data.payableAmount.toLocaleString()
+                    document.getElementById('coupon-discount-box').innerHTML = data.discount.toLocaleString()
+                    totalAmount = data.payableAmount
+                    
+                })
+
+            }
+        }).catch((err) => {
+            console.log(err)
+        })
     }
 }
+
 
 function removeCoupon() {
-    // Reset the order summary to the original amount
-    updateOrderSummary(originalTotalAmount);
 
-    // Hide the coupon badge and clear the coupon code input
-    const couponBadge = document.getElementById('couponBadge');
-    couponBadge.style.display = 'none';
-    document.getElementById('couponCode').value = '';
-    currentCouponDiscount = 0;
-}
-
-function calculateNewTotalAmount(couponTotal) {
-    // Calculate new total based on the original amount minus current coupon discount
-    return originalTotalAmount - currentCouponDiscount + couponTotal;
-}
-
-function updateOrderSummary(newPayableAmount, couponDiscount) {
-    // Update the payable amount in the order summary
-    let payableAmountElement = document.getElementById('total-payable-amount');
-    payableAmountElement.innerText = newPayableAmount;
-
-    const couponRow = document.querySelector('.coupon-row');
-    if (couponDiscount > 0) {
-        couponRow.style.display = 'table-row';
-        const couponElement = document.querySelector('.coupon-discount');
-        if (couponElement) {
-            couponElement.innerText = couponDiscount.toFixed(2);
+    const URL = "/remove-coupon";
+    fetch(URL, {
+        method: "PUT",
+        headers: {
+            'Content-Type': 'application/json'
         }
-    } else {
-        couponRow.style.display = 'none';
-    }
-    totalAmount = newPayableAmount;  // Update totalAmount to reflect the new payable amount
+
+    }).then((res) => {
+        return res.json()
+    }).then((data) => {
+
+        if (data.success) {
+            Swal.fire({
+                icon: "success",
+                title: "coupon removed",
+                showConfirmButton: false,
+                timer: 700
+            }).then(() => {
+                // totalAmountBox.setAttribute('data-payableAmount', data.payableAmount)
+                document.getElementById('total-box').innerHTML = data.payableAmount.toLocaleString()
+                document.getElementById('coupon-discount-box').innerHTML = "00:00"
+                
+            })
+
+        }
+    }).catch((err) => {
+        console.log(err)
+    })
 }
+
+
+
+
+
+
+// function updateOrderSummary(newPayableAmount, couponDiscount) {
+//     // Update the payable amount in the order summary
+//     let payableAmountElement = document.getElementById('total-payable-amount');
+//     payableAmountElement.innerText = newPayableAmount;
+
+//     const couponRow = document.querySelector('.coupon-row');
+//     if (couponDiscount > 0) {
+//         couponRow.style.display = 'table-row';
+//         const couponElement = document.querySelector('.coupon-discount');
+//         if (couponElement) {
+//             couponElement.innerText = couponDiscount.toFixed(2);
+//         }
+//     } else {
+//         couponRow.style.display = 'none';
+//     }
+//     totalAmount = newPayableAmount;  // Update totalAmount to reflect the new payable amount
+// }
 
 function showCouponBadge(couponCode) {
     const couponBadge = document.getElementById('couponBadge');

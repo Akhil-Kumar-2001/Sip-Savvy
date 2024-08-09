@@ -32,6 +32,23 @@ const checkout = async (req, res) => {
             return res.status(404).send('Cart not found. Check and try again.')
         }
 
+        // remove if any coupon is there
+        if(cartDetails.couponId || cartDetails.couponDiscount){
+            const oldCoupon = await couponSchema.findById(cartDetails.couponId)
+            cartDetails.payableAmount += oldCoupon.discountValue
+            cartDetails.couponDiscount=0;
+            cartDetails.couponId=''
+
+            await cartDetails.save()
+        }
+
+
+        const currentDate = new Date()
+        //fetching coupons to show in the checkout page
+        const coupons = await couponSchema.find({ endDate: { $gte: currentDate }, isActive: true })
+        
+
+
         const items = cartDetails.items
         if (items.length === 0) {
             res.redirect('/cart')
@@ -46,6 +63,7 @@ const checkout = async (req, res) => {
                 alertMessage: req.flash('alert'),
                 cartDetails,
                 user,
+                coupons,
                 userDetails: user,
                 wallet
             });
@@ -385,7 +403,7 @@ const coupon = async (req, res) => {
         if(Used){
             return res.status(404).json({ error: "Coupon Already Used" });
         }
-
+        
         const cart = await cartSchema.findOne({ userId });
         if (!cart) {
             console.log("Cart not found");
@@ -399,6 +417,11 @@ const coupon = async (req, res) => {
             console.log("Minimum purchase limit not reached");
             return res.status(400).json({ error: "Minimum purchase limit not reached. Please add more items to your cart." });
         }
+
+        // if(total < 100 ){
+        //     console.log("Order Amount Cant be Less than 100");
+        //     return res.status(400).json({ error: "Order Amount Cant be Less than 100" });
+        // }
 
         const couponDiscount = coupon.discountValue;
         if (coupon.discountType === "Fixed") {
@@ -420,6 +443,151 @@ const coupon = async (req, res) => {
 };
 
 
+//getting coupon
+
+const getCoupon = async (req, res) => {
+    try {
+        const { coupon } = req.body
+        
+
+        if (!coupon) {
+            return res.status(404).json({ error: "Invalid coupon id" })
+        }
+
+        const couponDeatils = await couponSchema.findById(coupon);
+
+        return res.status(200).json({ success: "Coupon finded", discount: couponDeatils.discountValue, minPurchase: couponDeatils.minimumOrderAmount })
+
+    } catch (err) {
+        console.log("error on getting coupon details fetch ", err);
+    }
+}
+
+const applyCoupon = async(req,res) =>{
+    try {
+        
+        const couponId = req.body.code;
+        
+
+        //if there is no coupon then send error message
+        if (!couponId) {
+            return res.status(404).json({ error: "Haven't chosen any coupons yet!" })
+        }
+
+         //checking of already coupon used or not 
+         const checkUsedCoupon = await orderSchema.findOne({ customer_id: req.session.user, couponCode: couponId })
+         //then send error message to the user that the coupon is already used by them
+         if (checkUsedCoupon) {
+             return res.status(400).json({ usedCoupon: 'Selected coupon has already been used by you' })
+            }
+            
+            //checking whether the coupon got expired 
+            
+            const checkExpiredCoupon = await orderSchema.findOne({
+                customer_id: req.session.user,
+                couponCode: couponId,
+                expiryDate: { $gt: new Date() },
+            isActive: true
+        })
+        
+        
+
+        //if it is expired or invalid then sending an error message to user
+        if (checkExpiredCoupon) {
+            return res.status(400).json({ expiredCoupon: 'Coupon is invalid, or expired' })
+        }
+
+        const couponDeatils = await couponSchema.findById(couponId);
+        
+        const cart = await cartSchema.findOne({ userId: req.session.user })
+        
+        // check same coupon
+        if(couponId===cart.couponId){
+            return res.status(400).json({ usedCoupon: 'Selected coupon has already been used by you' })
+            
+        }
+
+        // const total = cart.payableAmount;
+        // let discountedTotal = total;
+
+        if(couponDeatils.minimumOrderAmount > cart.payableAmount){
+            return res.status(404).json({ minNotreached: "minimum amount not reached" })
+        }
+
+
+        // if (couponDeatils.discountType === "Fixed") {
+        //     discountedTotal = total - couponDiscount;
+        //     cart.payableAmount=discountedTotal
+        // }
+        // } else if (couponDeatils.discountType === "Percentage") {
+        //     const discountAmount = (couponDiscount / 100) * total;
+        //     discountedTotal = total - discountAmount;
+        //     cart.payableAmount=discountedTotal
+        // }
+
+
+
+        //checking whether is there any coupon have been applied in the cart
+        if (cart.couponId) {
+            console.log(cart.couponId);
+            const oldCoupon = await couponSchema.findById(cart.couponId)
+            console.log(cart.payableAmount)
+            console.log("old",oldCoupon)
+            //then counting the paybale money according to it
+            cart.payableAmount += oldCoupon.discountValue
+
+        }
+
+
+        
+        
+        
+        // add the coupon discount
+         // lessing the money from payable amount of the coupon from the cart
+         cart.payableAmount -= couponDeatils.discountValue;
+         //replaced the coupon Id of old one with the new one which got applied in the checkout
+         cart.couponId = couponId;
+         //adding new coupon's discount to the payable amount, now saving the cart
+         cart.couponDiscount = couponDeatils.discountValue;
+         await cart.save()
+         //sending response to the user
+         return res.status(200).json({ success: "coupon applied", payableAmount: cart.payableAmount, discount: couponDeatils.discountValue })
+ 
+     } catch (err) {
+         console.log("error on applying coupon fetch", err)
+     }
+
+
+}
+
+//remove coupon 
+const removeCoupon = async (req, res) => {
+    try {
+
+        //finding cart of the user
+        const cart = await cartSchema.findOne({ userId: req.session.user })
+        //checkig whether there is coupon already applied or not, if it is,
+        if (cart.couponId) {
+            const oldCoupon = await couponSchema.findById(cart.couponId)
+            cart.payableAmount += oldCoupon.discountValue
+            cart.couponId = ''
+            cart.couponDiscount = 0
+            await cart.save()
+        }
+
+
+        return res.status(200).json({ success: "coupon applied", payableAmount: cart.payableAmount })
+
+
+
+    } catch (err) {
+        console.log("error on applying coupon fetch", err)
+    }
+}
+
+
+
+
 
 module.exports = {
     checkout,
@@ -431,5 +599,9 @@ module.exports = {
     removeAddress,
     updateAddress,
     paymentRender,
-    coupon
+    coupon,
+    getCoupon,
+    applyCoupon,
+    removeCoupon,
+    
 }

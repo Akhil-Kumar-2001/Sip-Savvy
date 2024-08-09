@@ -140,11 +140,9 @@ const returnOrder = async (req, res) => {
         }
 
 
-        order.orderStatus = 'Returned';
+        order.orderStatus = 'Return Request';
         order.returnReason = returnReason;
         await order.save();
-
-        
 
         if (order.paymentMethod === 'razorpay' || order.paymentMethod === 'Wallet' || order.paymentMethod === 'Cash on delivery') {
             const userWallet = await walletSchema.findOne({ userID: req.session.user });
@@ -170,36 +168,6 @@ const returnOrder = async (req, res) => {
     }
 };
 
-
-//--------- Wallet page render -----------//
-
-// const walletPage = async(req,res)=>{
-//     try {
-//         const user = req.session.user
-        
-//         let wallet = await walletSchema.findOne({userID:user}).populate();
-       
-//         if(!user){
-//             req.flash('alert','User not found. Try to login again')
-//             return res.redirect('/login')
-//         }
-//         if(!wallet){
-//             wallet = { balance:0, transaction:[] };
-//         }
-
-//         res.render('user/wallet',
-//             {title:"Wallet",
-//              alertMessage:req.flash('alert'),
-//              wallet,
-//              user,
-//              orderDetail,   
-//             });
-        
-//     } catch (error) {
-//         console.log(`Error while rendering wallet ${error}`);
-//         res.redirect('/profile')
-//     }
-// }
 
 
 //----------------Invoice------------------
