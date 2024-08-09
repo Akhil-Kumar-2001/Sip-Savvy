@@ -594,7 +594,7 @@
 
   -->
                 <div class="col-xl-4">
-                    <div class="card checkout-order-summary " style="width: 430px;">
+                    <div class="card checkout-order-summary " style="width: 450px;">
                         <div class="card-body">
                             <div class="p-3 bg-light mb-3">
                                 <h5 class="font-size-16 mb-0">Order Summary <span class="float-end ms-2"></span></h5>
@@ -691,28 +691,31 @@
                                                                 </td>
                                                             </tr>
                                                             <% } %>
-                                                            <tr>
-                                                                <td colspan="2">
-                                                                    <h5 class="font-size-14 m-0">Sub Total :</h5>
-                                                                </td>
-                                                                <td>₹ <%= Math.round(cartDetails.payableAmount -
-                                                                        cartDetails.payableAmount * (12 / 100)) %>
-                                                                </td>
-                                                            </tr>
-                                                            
+                                                           
                                                             <tr>
                                                                 <td colspan="2">
                                                                     <h5 class="font-size-14 m-0">Gst :</h5>
                                                                 </td>
-                                                                <td>₹<%= Math.round(cartDetails.payableAmount * (12 /
+                                                                <td id="gst-change-box">₹ <%= Math.round(cartDetails.payableAmount * (12 /
                                                                         100)) %>
                                                                 </td>
                                                             </tr>
-                                                            <tr class="coupon-row" id="coupon-discount-box" style="display: none;">
-                                                                <th>Coupon</th>
-                                                                <th></th>
-                                                                <th class="coupon-discount"></th>
+                                                            <tr>
+                                                                <td colspan="2">
+                                                                    <h5 class="font-size-14 m-0">Sub Total :</h5>
+                                                                </td>
+                                                                <td>₹ <%= Math.round(cartDetails.payableAmount) %>
+                                                                </td>
                                                             </tr>
+                                                                
+                                                            <tr class="coupon-row"  ">
+                                                                <td colspan="2">
+                                                                    <h5 class="font-size-14 m-0">Coupon</h5>
+                                                                </td>
+                                                                <td id="coupon-discount-box"> &#8377;0</td>
+                                                            </tr>
+                                                           
+                                                          
                                                             <tr>
                                                                 <td colspan="2">
                                                                     <h5 id="data-payableAmount " class="font-size-14 m-0">Total :</h5>
@@ -1118,7 +1121,9 @@ function applyCoupon() {
                 }).then(() => {
                     // totalAmountBox.setAttribute('data-payableAmount', data.payableAmount)
                     document.getElementById('total-box').innerHTML = data.payableAmount.toLocaleString()
-                    document.getElementById('coupon-discount-box').innerHTML = data.discount.toLocaleString()
+                    document.getElementById('coupon-discount-box').innerHTML = -data.discount.toLocaleString()
+                    // document.getElementById('gst-change-box').innerHTML = data.payableAmount*(12/100)
+                    
                     totalAmount = data.payableAmount
                     
                 })
@@ -1153,7 +1158,7 @@ function removeCoupon() {
             }).then(() => {
                 // totalAmountBox.setAttribute('data-payableAmount', data.payableAmount)
                 document.getElementById('total-box').innerHTML = data.payableAmount.toLocaleString()
-                document.getElementById('coupon-discount-box').innerHTML = "00:00"
+                document.getElementById('coupon-discount-box').innerHTML = "₹ 0"
                 
             })
 
