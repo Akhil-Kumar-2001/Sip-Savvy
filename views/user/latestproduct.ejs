@@ -15,8 +15,7 @@
     .product-new-arrival{ 
     top: 0;
     left: 0;
-    background-color: rgb(248, 180, 7);
-    background-color: rgb(252, 171, 58);
+    
     color: white;
     width: 6rem;
 
@@ -67,9 +66,9 @@
             <div class="home-cart-icon">
 
                 <a onclick="addwishlist('<%= product.id %>', '<%= product.productPrice %>', '<%= user %>')" class="wishlist-icon">
-                    <i class="bi bi-heart product-icon"></i></a>
+                    <i class="bi bi-heart product-icon text-white"></i></a>
                 <a onclick="addToCart('<%= product.id %>','<%= product.productPrice %>','<%=user %>')"
-                    class="cart-icon"><i class="bi bi-cart-fill product-icon ms-3 text-black"></i></a>
+                    class="cart-icon"><i class="bi bi-cart-fill product-icon ms-3 text-white"></i></a>
                 
             
             </div>

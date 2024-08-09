@@ -16,7 +16,7 @@
   }
     .product-icons{
         font-size: 1.8rem;
-        color: black;
+        color: white;
        margin-left: 2rem;
      
         
@@ -24,6 +24,10 @@
     .detail-price{
       display: flex;
       gap: 1rem;
+    }
+
+    .original-price{
+      color: rgb(0, 255, 17);
     }
   </style>
   
@@ -38,7 +42,6 @@
                 <img id="image-view" style="max-width: 100%; max-height: 60vh; margin: auto; cursor: pointer;" class="rounded-4 fit" src="../../<%= product.productImage[0]%>" />
             </div>
             <div class="d-flex justify-content-center mb-3 gap-2">
-              <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image" href="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big1.webp" class="item-thumb">
                 <% product.productImage.forEach((img, index) => { %>
                 <a>
                   <div class="product-image-min " width="60" height="60" onclick="changeImage('<%= img.replace(/\\/g, '\\\\')%>')">
@@ -51,7 +54,7 @@
           </aside>
           <main class="col-lg-6">
             <div class="ps-lg-3">
-              <h2 class="title text-dark">
+              <h2 class="title text-white">
                 <%= product.productName %>
               </h2>
               <!-- <div class="d-flex flex-row my-3">
@@ -66,8 +69,8 @@
               </div> -->
               <% if (product.productDiscount){ %>
                 <div class="detail-price">
-                    <h4>
-                        <del><i class="bi bi-currency-rupee"></i>
+                    <h4 class="text-danger">
+                        <del><i class="bi bi-currency-rupee text-danger"></i>
                             <%= product.productPrice %>
                         </del>
                     </h4>
@@ -75,13 +78,17 @@
                         <%= product.productDiscount %>% Off
                     </h4>
                 </div>
-                <h3><i class="bi bi-currency-rupee"></i>
+                <h3 class="original-price"><i class="bi bi-currency-rupee"></i>
                     <%= product.productPrice - product.productPrice * (product.productDiscount/100) %>
                 </h3>
                 <% } else { %>
-                    <h3><i class="bi bi-currency-rupee"></i>
+
+                    <h3 class="original-price">
+                      <i class="bi bi-currency-rupee "></i>
                         <%= product.productPrice %>
                     </h3>
+
+                    
                     <% } %>
               
               <p class="text-danger fs-4">
@@ -91,7 +98,7 @@
                   Out of stock
                 <% } %>
               </p>
-              <h4 class="mb-5"><%= product.productDescription %></h4>
+              <h4 class="mb-5 text-white"><%= product.productDescription %></h4>
               <!-- <a href="#" class="btn btn-warning shadow-0">Buy now</a> -->
 
               <!-- <a onclick="addToCart('<%= product.id %>','<%= product.productPrice %>','<%=user %>')" 

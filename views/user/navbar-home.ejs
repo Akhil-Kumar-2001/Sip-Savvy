@@ -1,0 +1,188 @@
+
+<body>
+    
+    <style>
+
+
+/* Header */
+
+.home-headerr {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    width: 100%;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    padding: 3px ;
+    background-color: #000,0.5;
+    color: #fff;
+    height: 100px;
+}
+
+
+
+        .dropdown a {
+        color: #fefeeb;
+        background:none;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: .5rem;
+    }
+
+    .dropdown-menu {
+        background: #232323;
+        border-radius: 10px;
+    }
+    .home-icon{
+        width: 2rem;
+        height: 2.2rem;
+        font-size: 1.7rem;
+    }
+
+    /* Media query for small screens */
+@media (max-width: 768px) {
+    /* Hide all elements except the logo and the hamburger menu */
+    .home-search,
+    .home-nav,
+    .home-icons > :not(.menu-icon) {
+        display: none;
+    }
+
+    /* Show the hamburger menu icon */
+    .home-icons .menu-icon {
+        display: block;
+    }
+
+    /* Optional: Adjust header alignment */
+    .home-headerr {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 10px;
+    }  
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 993px) {
+
+    .home-search {
+        margin-left: 1rem;
+       
+    }
+    .home-search input{
+        max-width: 60%; /* Allow the search bar to take the full width of the smaller screen */
+        height: 2.2rem;
+    }
+
+     .home-search input[type="text"] {
+        padding: 8px;
+        font-size: 0.9rem;
+    } 
+ 
+    .im {
+        font-size: 1.2rem;
+        translate: 800% -83%;
+    } 
+    .home-nav{
+        display: none;
+    }
+    .home-icons{
+   padding-left: 135px;
+}
+}
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+
+.home-search {
+    margin-left: 1rem;
+   
+}
+.home-search input{
+    max-width: 285px; /* Allow the search bar to take the full width of the smaller screen */
+    height: 2.2rem;
+}
+
+ .home-search input[type="text"] {
+    padding: 8px;
+    font-size: 0.9rem;
+} 
+
+.im {
+    font-size: 1.2rem;
+    translate: 800% -83%;
+} 
+
+}
+/* .home-icon:hover{
+    color: red;
+} */
+
+
+    </style>
+          <!-- //---------header---------// -->
+
+    <header class="home-headerr">
+        <div class="home-logo">
+            <!-- <h1>Sip Savvy</h1> -->
+            <a href="/home">
+                <img src="/public/user/img/log.webp" alt="">
+            </a>
+        </div>
+        <div class="home-search">
+            <form action="/allproduct" method="GET">
+              <input type="text" placeholder="search a product" name="search" value="<%= typeof query !== 'undefined' ? query.search || '' : '' %>">
+              <h3 type="submit" class="bi bi-search im"></h3>
+            </form>
+          </div>
+        <div class="home-nav">
+            <ul>
+                <li><a href="/home">Home</a></li>
+                <!-- <li><a href="#">Catergorie</a></li> -->
+                <div class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">Category</a>
+                    <div class="dropdown-menu">
+                        <a href="" class="dropdown-item">Whisky</a>
+                        <!-- <a href="#" class="dropdown-item">Wine</a> -->
+                        <a href="" class="dropdown-item">Vodka</a>
+                        <a href="" class="dropdown-item">Rum</a>
+                        <a href="" class="dropdown-item">Gin</a>
+                        <a href="" class="dropdown-item">Beer</a>
+                        <a href="/allproduct" class="dropdown-item">All Product</a>
+                    </div>
+                </div>
+                <li><a href="/allproduct">Shop</a></li>
+                <li><a href="#">Contact</a></li>
+                <!-- <li><a href="#">Bear&Mixture</a></li>
+                <li><a href="#">Champagne</a></li> -->
+            </ul>
+        </div>
+        <div class="home-icons">
+            <a href="/wishlist">
+                <i class="bi bi-heart-fill home-icon text-white"></i>
+            </a>
+            <a href="/cart">
+                <i class="bi bi-cart3 home-icon text-white"></i>
+            </a>
+
+            <% if(user){ %>
+
+                <a href="/profile" class="text-white">
+                    <!-- <i class="bi bi-box-arrow-right home-icon"></i> -->
+                    <i class="bi bi-person-circle home-icon"></i>
+                </a>
+            <% }else{ %>
+                <a href="/login" class="text-white">
+                    <i class="bi bi-box-arrow-in-left home-icon"></i>
+                </a>
+            <% } %>
+           
+           
+        </div>
+    </header>
+
+    <%- include('alert')  %>

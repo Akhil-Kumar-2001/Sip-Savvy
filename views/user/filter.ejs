@@ -2,12 +2,12 @@
 
 <div class="filter-container container mb-5">
     <div class="row">
-        <button class="btn col-md-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasFilter"
+        <button class="btn col-md-2 text-white" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasFilter"
             aria-controls="offcanvasFilter" style="border: none; outline: none;">
             Filter
         </button>
 
-        <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasFilter"
+        <div class="offcanvas offcanvas-start " tabindex="-1" id="offcanvasFilter"
             aria-labelledby="offcanvasFilterLabel">
             <div class="offcanvas-header">
                 <h5 class="offcanvas-title" id="offcanvasFilterLabel">Advanced Search</h5>
@@ -58,7 +58,7 @@
 
         <% categories.forEach((cat) => { %>
             <a href="/allproduct?productCategory=<%= cat._id %>" class="col-md-2 py-2"
-                style="text-decoration: none; color: black;">
+                style="text-decoration: none; color: white;">
                 <%= cat.categoryName %>
             </a>
         <% }) %>
