@@ -33,6 +33,9 @@ const schema = new mongoose.Schema({
             type: String,
             enum:['Confirmed', 'Pending', 'Delivered', 'Returned', 'Cancelled'],
             default:'Pending'
+        },
+        product_discount:{
+            type:Number
         }
     }],
     totalQuantity: {
