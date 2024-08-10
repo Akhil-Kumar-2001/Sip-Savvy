@@ -84,6 +84,9 @@ const placeOrder = async (req, res) => {
         let couponDiscount = 0;
         let paymentId = "";
         const { razorpay_payment_id, razorpay_order_id, razorpay_signature, payment_status , couponCode} = req.body;
+ 
+        console.log(couponCode)
+          
 
         if (paymentMode === 2) {
             paymentId = razorpay_payment_id;

@@ -76,8 +76,6 @@ const addToCartPost = async (req, res) => {
             let productExist = false;
 
             for (let item of checkCart.items) {
-                console.log(item.productId.id);
-                console.log(productId)
                 if (item.productId.id === productId) {
                     productExist = true;
                     return res.status(409).json({ error: "Product is already in the cart" });

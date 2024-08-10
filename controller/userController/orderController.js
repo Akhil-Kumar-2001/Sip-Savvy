@@ -51,8 +51,6 @@ const cancelOrder = async (req, res) => {
         // When the product is being canceled, return the quantity back to stock of admin
         for (let product of orderDetails.products) {
             if (product.product_id && typeof product.product_id.productQuantity === 'number' && typeof product.product_quantity === 'number') {
-                console.log(`Current product quantity: ${product.product_id.productQuantity}`);
-                console.log(`Product quantity to return: ${product.product_quantity}`);
 
                 product.product_id.productQuantity += product.product_quantity;
                 await product.product_id.save();
@@ -239,9 +237,9 @@ const Invoice = async (req, res) => {
         doc
             .fontSize(10)
             .fillColor("black")
-            .text( `Address: Sulthan Bathery,Wayanad`);
-        doc.text(`Pincode: 673590`);
-        doc.text(`Phone: 859 075 4230`);
+            .text( `Address: Perumon, Kollam`);
+        doc.text(`Pincode: 691601`);
+        doc.text(`Phone: 95670 30209`);
         doc.moveDown();
         doc.moveDown();
 
@@ -254,7 +252,7 @@ const Invoice = async (req, res) => {
                 const productName = product.product_name || "N/A";
                 const quantity = product.product_quantity || 0;
                 const price = product.product_price || 0;
-                const discount = product.productDiscount || 0;
+                const discount = product.product_discount || 0;
                 const coupondiscount = orderDetails.couponDiscount || 0
 
                 const total = Math.round((price * (1 - discount / 100) * quantity) - (coupondiscount).toFixed(2));
