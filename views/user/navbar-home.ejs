@@ -3,7 +3,6 @@
     
     <style>
 
-
 /* Header */
 
 .home-headerr {
@@ -15,7 +14,7 @@
     z-index: 1;
     top: 0;
     left: 0;
-    padding: 3px ;
+    padding: 3px;
     background-color: rgba(0, 0, 0, 0.5);
     color: #fff;
     height: 100px;
@@ -28,172 +27,300 @@ input:-webkit-autofill:focus {
     transition: background-color 5000s ease-in-out 0s;
 }
 
+.dropdown a {
+    color: #fefeeb;
+    background: none;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+}
 
+.dropdown-menu {
+    background: #232323;
+    border-radius: 10px;
+}
 
-        .dropdown a {
-        color: #fefeeb;
-        background:none;
-        text-decoration: none;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: .5rem;
+.home-icon {
+    width: 2rem;
+    height: 2.2rem;
+    font-size: 1.7rem;
+}
+
+.menu-icon {
+    display: none; /* Hide menu icon by default */
+}
+
+/* Media query for devices with width <= 425px */
+@media (max-width: 425px) {
+        /* Stack elements vertically */
+        .home-headerr {
+            flex-direction: row;
+            align-items: flex-start;
+            padding: 10px;
+            height: auto;
+        }
+
+        .home-logo img {
+            width: 150px; /* Adjust logo size */
+        }
+
+        .home-search {
+            width: 100%;
+            margin-top: 17px;
+        }
+        .home-icons{
+            margin-top: 16px;
+            
+            
+        }
+        .menu-icon{
+            padding-left: 0.6rem;
+        }
+
+        .home-search input {
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* Adjust dropdown menu width */
+        .dropdown-menu {
+            width: 100%;
+        }
     }
 
-    .dropdown-menu {
-        background: #232323;
-        border-radius: 10px;
-    }
-    .home-icon{
-        width: 2rem;
-        height: 2.2rem;
-        font-size: 1.7rem;
-    }
-
-    /* Media query for small screens */
+/* Media query for small screens */
 @media (max-width: 768px) {
-    /* Hide all elements except the logo and the hamburger menu */
-    .home-search,
+    /* Hide all elements except the search bar and the menu icon */
+    
     .home-nav,
     .home-icons > :not(.menu-icon) {
         display: none;
     }
 
-    /* Show the hamburger menu icon */
-    .home-icons .menu-icon {
+    /* Show the menu icon */
+    .menu-icon {
         display: block;
     }
 
-    /* Optional: Adjust header alignment */
-    .home-headerr {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0 10px;
-    }  
-}
+    /* Ensure the search bar is centered */
+    .home-search {
+        flex: 1;
+        justify-content: center;
+    }
 
+    .home-headerr {
+        padding: 0 10px;
+    }
+}
 
 /* Responsive adjustments */
 @media (max-width: 993px) {
-
     .home-search {
         margin-left: 1rem;
-       
     }
-    .home-search input{
-        max-width: 60%; /* Allow the search bar to take the full width of the smaller screen */
+
+    .home-search input {
+        max-width: 60%;
         height: 2.2rem;
     }
 
-     .home-search input[type="text"] {
+    .home-search input[type="text"] {
         padding: 8px;
         font-size: 0.9rem;
-    } 
- 
+    }
+
     .im {
         font-size: 1.2rem;
         translate: 800% -83%;
-    } 
-    .home-nav{
+    }
+
+    .home-nav {
         display: none;
     }
-    .home-icons{
-   padding-left: 135px;
+
+    /* .home-icons {
+        padding-left: 135px;
+    } */
 }
-}
-/* Responsive adjustments */
+
 @media (max-width: 1200px) {
+    .home-search {
+        margin-left: 1rem;
+    }
 
-.home-search {
-    margin-left: 1rem;
-   
+    .home-search input {
+        max-width: 285px;
+        height: 2.2rem;
+    }
+
+    .home-search input[type="text"] {
+        padding: 8px;
+        font-size: 0.9rem;
+    }
+
+    .im {
+        font-size: 1.2rem;
+        translate: 800% -83%;
+    }
 }
-.home-search input{
-    max-width: 285px; /* Allow the search bar to take the full width of the smaller screen */
-    height: 2.2rem;
-}
 
- .home-search input[type="text"] {
-    padding: 8px;
-    font-size: 0.9rem;
-} 
+ /* Your existing CSS */
+    
+    /* Slide-in page default hidden state */
+/* Slide-in page default hidden state */
+.slide-page {
+        position: fixed;
+        top: 0;
+        right: -100%; /* Hidden off the screen */
+        height: 100%;
+        width: 200px; /* Adjust width as needed */
+        background-color: #000000;
+        transition: right 0.3s ease-in-out;
+        z-index: 2; /* Ensure it's above other elements */
+        color: #fefeeb;
+        padding: 20px;
+    }
 
-.im {
-    font-size: 1.2rem;
-    translate: 800% -83%;
-} 
+    /* Slide-in page when visible */
+    .slide-page.active {
+        right: 0; /* Slide it in */
+    }
 
-}
-/* .home-icon:hover{
-    color: red;
-} */
+    /* Slide content styling */
+    .slide-content a {
+        display: block;
+        padding: 10px 0;
+        color: #fefeeb;
+        text-decoration: none;
+        font-size: 1.2rem;
+    }
+
+    .slide-content a:hover {
+        color: #fff;
+    }
+
+    .slide-content .dropdown-menu {
+        background-color: #000000;
+        border-radius: 5px;
+        padding: 10px;
+        margin-left: 10px;
+    }
+
+    .slide-content .dropdown-item {
+        padding: 5px 0;
+        color: #fefeeb;
+    }
+
+    .slide-content .dropdown-item:hover {
+        color: #fff;
+    }
+
 
 
     </style>
           <!-- //---------header---------// -->
 
-    <header class="home-headerr">
-        <div class="home-logo">
-            <!-- <h1>Sip Savvy</h1> -->
-            <a href="/home">
-                <img src="/public/user/img/log.webp" alt="">
-            </a>
-        </div>
-        <div class="home-search">
-            <form action="/allproduct" method="GET">
-              <input type="text" placeholder="search a product" name="search" value="<%= typeof query !== 'undefined' ? query.search || '' : '' %>">
-              
-              <h3 type="submit" class="bi bi-search im"></h3>
-              <!-- <button type="submit" class="search-button">
-                <i class="bi bi-search"></i>
-            </button> -->
-            </form>
-          </div>
-        <div class="home-nav">
-            <ul>
-                <li><a href="/home">Home</a></li>
-                <!-- <li><a href="#">Catergorie</a></li> -->
-                <div class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">Category</a>
+          <header class="home-headerr">
+            <div class="home-logo">
+                <a href="/home">
+                    <img src="/public/user/img/log.webp" alt="">
+                </a>
+            </div>
+            <div class="home-search">
+                <form action="/allproduct" method="GET">
+                    <input type="text" placeholder="search a product" name="search" value="<%= typeof query !== 'undefined' ? query.search || '' : '' %>">
+                    <h3 type="submit" class="bi bi-search im"></h3>
+                </form>
+            </div>
+            <div class="home-nav">
+                <ul>
+                    <li><a href="/home">Home</a></li>
+                    <div class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">Category</a>
+                        <div class="dropdown-menu">
+                            <a href="" class="dropdown-item">Whisky</a>
+                            <a href="" class="dropdown-item">Vodka</a>
+                            <a href="" class="dropdown-item">Rum</a>
+                            <a href="" class="dropdown-item">Gin</a>
+                            <a href="" class="dropdown-item">Beer</a>
+                            <a href="/allproduct" class="dropdown-item">All Product</a>
+                        </div>
+                    </div>
+                    <li><a href="/allproduct">Shop</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+            <div class="home-icons">
+                <a href="/wishlist">
+                    <i class="bi bi-heart-fill home-icon text-white"></i>
+                </a>
+                <a href="/cart">
+                    <i class="bi bi-cart3 home-icon text-white"></i>
+                </a>
+                <% if(user){ %>
+                <a href="/profile" class="text-white">
+                    <i class="bi bi-person-circle home-icon"></i>
+                </a>
+                <% }else{ %>
+                <a href="/login" class="text-white">
+                    <i class="bi bi-box-arrow-in-left home-icon"></i>
+                </a>
+                <% } %>
+                <!-- New menu icon -->
+                <a href="#" class="menu-icon">
+                    <i class="bi bi-list home-icon text-white"></i>
+                </a>
+            </div>
+
+            <!-- Slide-in Page HTML -->
+            <div class="slide-page">
+                <div class="slide-content">
+                    <a href="/home">
+                        <i class="bi bi-house"></i> Home
+                    </a>
+                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                        <i class="bi bi-list"></i> Category
+                    </a>
                     <div class="dropdown-menu">
                         <a href="" class="dropdown-item">Whisky</a>
-                        <!-- <a href="#" class="dropdown-item">Wine</a> -->
                         <a href="" class="dropdown-item">Vodka</a>
                         <a href="" class="dropdown-item">Rum</a>
                         <a href="" class="dropdown-item">Gin</a>
                         <a href="" class="dropdown-item">Beer</a>
                         <a href="/allproduct" class="dropdown-item">All Product</a>
                     </div>
+                    <a href="/allproduct">
+                        <i class="bi bi-shop"></i> Shop
+                    </a>
+                    <a href="#">
+                        <i class="bi bi-envelope"></i> Contact
+                    </a>
+                    <a href="/wishlist">
+                        <i class="bi bi-heart-fill"></i> Wishlist
+                    </a>
+                    <a href="/cart">
+                        <i class="bi bi-cart3"></i> Cart
+                    </a>
+                    <% if(user){ %>
+                    <a href="/profile">
+                        <i class="bi bi-person-circle"></i> Profile
+                    </a>
+                    <% }else{ %>
+                    <a href="/login">
+                        <i class="bi bi-box-arrow-in-left"></i> Login
+                    </a>
+                    <% } %>
                 </div>
-                <li><a href="/allproduct">Shop</a></li>
-                <li><a href="#">Contact</a></li>
-                <!-- <li><a href="#">Bear&Mixture</a></li>
-                <li><a href="#">Champagne</a></li> -->
-            </ul>
-        </div>
-        <div class="home-icons">
-            <a href="/wishlist">
-                <i class="bi bi-heart-fill home-icon text-white"></i>
-            </a>
-            <a href="/cart">
-                <i class="bi bi-cart3 home-icon text-white"></i>
-            </a>
+            </div>
+        </header>
 
-            <% if(user){ %>
+        <script>
+             document.querySelector('.menu-icon').addEventListener('click', function() {
+        document.querySelector('.slide-page').classList.toggle('active');
+    });
+        </script>
 
-                <a href="/profile" class="text-white">
-                    <!-- <i class="bi bi-box-arrow-right home-icon"></i> -->
-                    <i class="bi bi-person-circle home-icon"></i>
-                </a>
-            <% }else{ %>
-                <a href="/login" class="text-white">
-                    <i class="bi bi-box-arrow-in-left home-icon"></i>
-                </a>
-            <% } %>
-           
-           
-        </div>
-    </header>
 
     <%- include('alert')  %>
