@@ -60,6 +60,7 @@ input:-webkit-autofill:focus {
             align-items: flex-start;
             padding: 10px;
             height: auto;
+            position: relative;
         }
 
         .home-logo img {
@@ -175,7 +176,7 @@ input:-webkit-autofill:focus {
         top: 0;
         right: -100%; /* Hidden off the screen */
         height: 100%;
-        width: 200px; /* Adjust width as needed */
+        width: 300px; /* Adjust width as needed */
         background-color: #000000;
         transition: right 0.3s ease-in-out;
         z-index: 2; /* Ensure it's above other elements */
@@ -317,9 +318,20 @@ input:-webkit-autofill:focus {
         </header>
 
         <script>
-             document.querySelector('.menu-icon').addEventListener('click', function() {
-        document.querySelector('.slide-page').classList.toggle('active');
-    });
+            document.querySelector('.menu-icon').addEventListener('click', function() {
+                document.querySelector('.slide-page').classList.toggle('active');
+            });
+        
+            // Close the slide-in page when clicking outside of it
+            document.addEventListener('click', function(event) {
+                const slidePage = document.querySelector('.slide-page');
+                const menuIcon = document.querySelector('.menu-icon');
+        
+                // Check if the click is outside the slide-in page and not on the menu icon
+                if (!slidePage.contains(event.target) && !menuIcon.contains(event.target)) {
+                    slidePage.classList.remove('active');
+                }
+            });
         </script>
 
 
