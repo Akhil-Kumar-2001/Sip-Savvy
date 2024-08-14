@@ -18,6 +18,7 @@
     justify-content: center;
     align-items: center;
     border-radius: 10px;
+    box-shadow: 0 0 10px rgba(100, 98, 98, 0.5);
     }
     
     .menu-item {
