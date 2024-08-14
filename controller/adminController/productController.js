@@ -110,6 +110,7 @@ const editProduct= async(req,res)=>{
     try {
         
         const id = req.params.id;
+        const productCategory = await categorySchema.find()
         const product = await productSchema.findById(id).populate('productCategory')
         console.log(product)
         if(product){
@@ -118,6 +119,7 @@ const editProduct= async(req,res)=>{
                     title:"Edit Product",
                     product,
                     alertMessage:req.flash('alert'),
+                    productCategory,
                     categoryName: product.productCategory.categoryName
                 })
         }else{
@@ -168,8 +170,10 @@ const editProductPost = async(req,res)=>{
 
         // const id = req.params.id;
         await productSchema.findByIdAndUpdate(id,{
+                productName:req.body.productName,
                 productPrice: req.body.productPrice,
                 productQuantity: req.body.productQuantity,
+                productCategory: req.body.productCategory,
                 productDiscount: req.body.productDiscount,
                 productDescription: req.body.productDescription,
                 productImage: newImages,

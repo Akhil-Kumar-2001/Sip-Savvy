@@ -161,7 +161,7 @@
                         <label class="form-label " for="productName">Product Name</label>
                         <input class="form-control form-input edit-product-disable" type="text" name="productName"
                             id="productName" style="background: transparent;" value="<%= product.productName %>"
-                            disabled required>
+                             required>
 
                         <label class="form-label " for="productPrice">Price</label>
                         <input class="form-control form-input" type="text" name="productPrice" id="productPrice"
@@ -170,12 +170,22 @@
                         <div>
 
                             <label class="form-label " for="productCollection">Category</label>
-                            <select name="productCollection" id="productCollection" style="background: transparent;"
+                            <!-- <input class="form-control form-input" type="text" name="productPrice" id="productPrice"
+                            value="<%= product.productCategory.categoryName %>" required> -->
+                            <select name="productCategory" id="productCategory" class="form-control form-input" required>
+                                <option value="" selected disabled><%= categoryName %></option>
+                                <% productCategory.forEach((category) => { %>
+                                    <option value="<%= category._id %>">
+                                        <%= category.categoryName %>
+                                    </option>
+                                <% }) %>
+                            </select>
+                            <!-- <select name="productCollection" id="productCollection" style="background: transparent;"
                                 class="form-control form-input edit-product-disable" disabled required>
                                 <option value="" selected disabled>
                                     <%= categoryName %>
                                 </option>
-                            </select>
+                            </select> -->
                         </div>
 
                         <label class="form-label " for="productQuantity">Stock</label>
