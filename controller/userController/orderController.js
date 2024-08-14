@@ -180,6 +180,7 @@ const Invoice = async (req, res) => {
         }
         const orderId = req.params.orderId;
         const orderDetails = await orderSchema.findById(orderId).populate('products.product_id')
+    
         const doc = new PDFDocument();
         const filename = Invoice.pdf;
 
@@ -215,6 +216,9 @@ const Invoice = async (req, res) => {
             .fillColor("black")
             .text(`Shipping Charge: ${orderDetails.totalPrice < 1500 ? "RS 50" : "Free"}`);
         doc
+            .fillColor("black")
+            .text(`Coupon Amount: RS ${orderDetails.couponDiscount} `);
+        doc
             .fontSize(10)
             .fillColor("red")
             .text(`Total Amount: Rs ${orderDetails.totalPrice.toLocaleString()}`);
@@ -247,7 +251,7 @@ const Invoice = async (req, res) => {
         doc.moveDown();
 
         const tableData = {
-            headers: ["Product Name", "Quantity", "Price", "Product Discount", "Coupon Discount", "Total"],
+            headers: ["Product Name", "Quantity", "Price", "Product Discount",     "  Total"],
             rows: orderDetails.products.map((product) => {
                 const productName = product.product_name || "N/A";
                 const quantity = product.product_quantity || 0;
@@ -262,7 +266,7 @@ const Invoice = async (req, res) => {
                     quantity,
                     `Rs ${price}`,
                     `${discount} %`,
-                    `Rs${coupondiscount} `,
+                    // `Rs${coupondiscount} `,
                     `Rs ${total}`,
                 ];
             }),

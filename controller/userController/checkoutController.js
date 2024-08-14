@@ -8,6 +8,7 @@ const couponSchema = require('../../model/couponSchema')
 const mongoose = require('mongoose')
 const Razorpay = require('razorpay')
 const { ObjectId } = require('mongodb');
+const CartSchema = require('../../model/ cartSchema')
 
 
 
@@ -83,21 +84,27 @@ const placeOrder = async (req, res) => {
         const paymentMode = parseInt(req.params.payment)
         let couponDiscount = 0;
         let paymentId = "";
-        const { razorpay_payment_id, razorpay_order_id, razorpay_signature, payment_status , couponCode} = req.body;
+        let couponCode;
+        const { razorpay_payment_id, razorpay_order_id, razorpay_signature, payment_status } = req.body;
  
-        console.log(couponCode)
+        const cart=await CartSchema.findOne({userId:req.session.user});
+
+        if(cart){
+            couponCode=cart.couponId;
+            couponDiscount=cart.couponDiscount;
+        }
           
 
         if (paymentMode === 2) {
             paymentId = razorpay_payment_id;
         }
 
-        if (couponCode) {
-            const coupon = await couponSchema.findOne({ code: couponCode });
-            if (coupon && coupon.isActive) {
-                couponDiscount = coupon.discountValue;
-            }
-        }
+        // if (couponCode) {
+        //     const coupon = await couponSchema.findOne({ code: couponCode });
+        //     if (coupon && coupon.isActive) {
+        //         couponDiscount = coupon.discountValue;
+        //     }
+        // }
 
         const cartItems = await cartSchema.findOne({ userId }).populate("items.productId");
         if (!cartItems || !cartItems.items || cartItems.items.length === 0) {
