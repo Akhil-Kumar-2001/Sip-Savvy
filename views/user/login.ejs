@@ -97,15 +97,24 @@
     }
     
     .home-button-google {
-        width: 90%;
-        padding: 0.625rem;
-        margin-bottom: 0.625rem;
-        border: none;
-        border-radius: 0.3125rem;
-        background-color: #db4437;
-        color: #fff;
-        cursor: pointer;
-    }
+    width: 48px;  /* Adjust as needed */
+    height: 48px;  /* Adjust as needed */
+    padding: 0;
+    margin-bottom: 0.625rem;
+    border: none;
+    border-radius: 50%;  /* Makes it circular */
+    background-color: #ffffff;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;  /* Adjust icon size as needed */
+}
+
+.home-button-google:hover {
+    background-color: #ebebeb;  /* Darker shade for hover effect */
+}
     
     .home-continue {
         display: flex;
@@ -113,6 +122,11 @@
         align-items: center;
         margin-bottom: 1.25rem;
     }
+    .social-login-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;  /* Adds space between buttons if you add more */
+   }
     
     .home-continue span {
         margin-bottom: 0.625rem;
@@ -353,10 +367,23 @@
                                     <button type="submit" class="home-button">Log In</button>
                                 </div>
                             </form>
+                            <!-- <div class="home-continue">
+                                <span>Or Continue With</span> -->
+                                <!-- <button class="home-button-facebook">Facebook</button> -->
+                                <!-- <a href="/auth/google" class="home-button-google">Google</a> -->
+                                <!-- <a href="/auth/google" class="home-button-google">
+                                    <i class="bi bi-google"></i>
+                                </a>
+                            </div> -->
                             <div class="home-continue">
                                 <span>Or Continue With</span>
-                                <!-- <button class="home-button-facebook">Facebook</button> -->
-                                <a href="/auth/google" class="home-button-google">Google</a>
+                                <div class="social-login-buttons">
+                                    <a href="/auth/google" class="home-button-google">
+                                        <!-- <i class="bi bi-google"></i> -->
+                                         <img src="../../public/user/img/Googleicon.svg" alt="">
+                                    </a>
+                                    <!-- Add more social login buttons here if needed -->
+                                </div>
                             </div>
                             <div class="home-signup">
                                 <span >Don’t you have an account? <a href="/signup">Signup</a></span>
