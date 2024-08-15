@@ -345,7 +345,7 @@
                                     <input type="password" name="password" required class="home-input" id="password">
                                     <label for="password">Password</label>
                                     <span id="toggle-password" class="password-toggle position-absolute">
-                                        <i class="bi bi-eye"></i>
+                                        <i class="bi bi-eye-slash"></i>
                                     </span>
                                 </div>
                                 <a href="/forgotpassword" class="home-forgot-password">Forget Password?</a>
@@ -371,13 +371,14 @@
             <%- include('footer') %>
             <script>
                 document.getElementById('toggle-password').addEventListener('click', function() {
-                    togglePassword('password', this);
-                });
-            
-                function togglePassword(id, toggle) {
-                    const pass = document.getElementById(id);
-                    const type = pass.getAttribute('type') === 'password' ? 'text' : 'password';
-                    pass.setAttribute('type', type);
-                    toggle.innerHTML = type === 'password' ? '<i class="bi bi-eye"></i>' : '<i class="bi bi-eye-slash"></i>';
-                }
+    togglePassword('password', this);
+});
+
+function togglePassword(id, toggle) {
+    const pass = document.getElementById(id);
+    const type = pass.getAttribute('type') === 'password' ? 'text' : 'password';
+    pass.setAttribute('type', type);
+    // Change this line
+    toggle.innerHTML = type === 'password' ? '<i class="bi bi-eye-slash"></i>' : '<i class="bi bi-eye"></i>';
+}
             </script>
