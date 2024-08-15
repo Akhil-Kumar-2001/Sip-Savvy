@@ -1,228 +1,291 @@
+<style>
+    /* ------------main body------------- */
+
+    html {
+        font-size: 16px;
+        /* Base font size */
+    }
+
+    .home-main-container {
+        font-family: Arial, sans-serif;
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .home-container {
+        display: flex;
+        width: 80%;
+        max-width: 75rem;
+        /* 1200px */
+        background-color: #000;
+        border-radius: 0.625rem;
+        /* 10px */
+        overflow: hidden;
+        margin-top: 2rem;
+    }
+
+    .home-left {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #000;
+    }
+
+    .home-image {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .home-right {
+        flex: 1;
+        padding: 2.5rem;
+        /* 40px */
+        background-color: #000;
+    }
+
+    .home-title {
+        margin-bottom: 1.875rem;
+        /* 30px */
+        font-size: 1.5rem;
+        /* 24px */
+        font-weight: bold;
+    }
+
+    .home-form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .home-input {
+        margin-bottom: 0.9375rem;
+        /* 15px */
+        padding: 0.625rem;
+        /* 10px */
+        border: none;
+        border-radius: 0.3125rem;
+        /* 5px */
+        font-size: 1rem;
+        /* 16px */
+        color: #fff;
+        /* Text color inside the input */
+        background-color: #232323;
+        /* Background color of the input */
+    }
 
 
- <style>
-        /* ------------main body------------- */
+    .home-checkbox-container {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.25rem;
+        /* 20px */
+    }
 
-        html {
-            font-size: 16px; /* Base font size */
-        }
+    .home-checkbox {
+        margin-right: 0.625rem;
+        /* 10px */
+    }
 
-        .home-main-container {
-            font-family: Arial, sans-serif;
-            color: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+    .home-checkbox-label {
+        font-size: 0.875rem;
+        /* 14px */
+    }
 
+    .home-button {
+        padding: 0.9375rem;
+        /* 15px */
+        background-color: #ff6600;
+        color: #fff;
+        border: none;
+        border-radius: 0.3125rem;
+        /* 5px */
+        font-size: 1rem;
+        /* 16px */
+        cursor: pointer;
+    }
+
+    .home-button:hover {
+        background-color: #e65c00;
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 48rem) {
+
+        /* 768px */
         .home-container {
-            display: flex;
-            width: 80%;
-            max-width: 75rem; /* 1200px */
-            background-color: #000;
-            border-radius: 0.625rem; /* 10px */
-            overflow: hidden;
-            margin-top: 2rem;
-        }
-
-        .home-left {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #000;
-        }
-
-        .home-image {
-            max-width: 100%;
-            height: auto;
-        }
-
-        .home-right {
-            flex: 1;
-            padding: 2.5rem; /* 40px */
-            background-color: #000;
-        }
-
-        .home-title {
-            margin-bottom: 1.875rem; /* 30px */
-            font-size: 1.5rem; /* 24px */
-            font-weight: bold;
-        }
-
-        .home-form {
-            display: flex;
             flex-direction: column;
         }
 
-        .home-input {
-            margin-bottom: 0.9375rem; /* 15px */
-            padding: 0.625rem; /* 10px */
-            border: none;
-            border-radius: 0.3125rem; /* 5px */
-            font-size: 1rem; /* 16px */
-            color: black;
+        .home-left,
+        .home-right {
+            flex: none;
+            width: 100%;
         }
 
-        .home-checkbox-container {
-            display: flex;
-            align-items: center;
-            margin-bottom: 1.25rem; /* 20px */
+        .home-right {
+            padding: 1.25rem;
+            /* 20px */
         }
-
-        .home-checkbox {
-            margin-right: 0.625rem; /* 10px */
-        }
-
-        .home-checkbox-label {
-            font-size: 0.875rem; /* 14px */
-        }
-
-        .home-button {
-            padding: 0.9375rem; /* 15px */
-            background-color: #ff6600;
-            color: #fff;
-            border: none;
-            border-radius: 0.3125rem; /* 5px */
-            font-size: 1rem; /* 16px */
-            cursor: pointer;
-        }
-
-        .home-button:hover {
-            background-color: #e65c00;
-        }
-
-        /* Responsive Styles */
-        @media (max-width: 48rem) { /* 768px */
-            .home-container {
-                flex-direction: column;
-            }
-
-            .home-left, .home-right {
-                flex: none;
-                width: 100%;
-            }
-
-            .home-right {
-                padding: 1.25rem; /* 20px */
-            }
-        }
-    </style>
-        
-
-        <%- include('navbar') %>
-        <div class="home-main-container">
-             <div class="home-container">
-                 <div class="home-left">
-                     <img src="/public/user/img/logininage.webp" alt="Wine Bottle and Glass" class="home-image">
-                 </div>
-                 <div class="home-right">
-                     <h2 class="home-title">Create an account</h2>
-                     <form  action="/signup" method="post" class="home-form" id="register-form">
-                         <input type="text" name="name" placeholder="Name" class="home-input">
-                         <input type="text" name="phone" placeholder="Phone" class="home-input">
-                         <input type="email" name="email" placeholder="Email" class="home-input">
-                         <input type="password" name="password" placeholder="Password" class="home-input">
-                         <input type="password" name="confirmPassword" placeholder="Conform Password" class="home-input">
-                         <input type="text" name="referralCodeInput" placeholder="Add Referral code if an" class="home-input">
-                         <!-- <input type="text" id="form3Example6" class="form-control" name="referralCodeInput"
-                      placeholder="Add Referral code if any" /> -->
-                         <div class="home-checkbox-container">
-                             <input type="checkbox" id="terms" name="terms" class="home-checkbox" required>
-                             <label for="terms" class="home-checkbox-label">By Creating An Account You Are Agreeing To Our Terms And Conditions And Privacy Policy</label>
-                         </div>
-                         <button type="submit" class="home-button" id="register-btn">Create Account</button>
-                         <span class="home-login" >Already have an account ? <a class="text-danger" href="/login">Login</a> </span>
-                     </form>
-                 </div>
-             </div>
-         </div>  
-
-
-         <!----------------------------------- Validation ------------------------------------------>
-<script>
-
-    const registerForm = document.getElementById('register-form')
-    const name = document.getElementsByName('name')[0]
-    const phone = document.getElementsByName('phone')[0]
-    const email = document.getElementsByName('email')[0]
-    const password = document.getElementsByName('password')[0]
-    const confirmPassword = document.getElementsByName('confirmPassword')[0]
-    const signUpButton = document.getElementById('register-btn')
-
-    function checkEmail(email) {
-        // const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        // const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        // const re = /^(?!.\.\d)(?=[a-zA-Z0-9._%+-][a-zA-Z]{3,}\d*@)[a-zA-Z0-9._%+-]+@[a-z]{3,}\.[a-z]{2,}$/i;
-
-        const re = /\[a-z\d]+@\S+\.\s+/;
-        return re.test(email)
     }
-    function validatePassword(password){
-        if(password.length<8){
-            return false
-        }
-        
-        if(!/[A-Z]/.test(password)){
-            return false
-        }
-        
-        if(!/[a-z]/.test(password)){
-            return false
-        }
 
-        if(!/\d/.test(password)){
-            return false
-        }
-        if (!/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password)) {
-            return false;
-        }
-        return true
-       }
-       function validatePhone(phone) {
-        const phoneRe = /^\d{10}$/;
-        return phoneRe.test(phone);
-       }
+    .password-container {
+        position: relative;
+        width: 100%;
+    }
+
+    .password-input {
+        width: 100%;
+        padding-right: 2.5rem;
+        /* Space for the eye icon */
+        box-sizing: border-box;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 0.75rem;
+        top: 42%;
+        left: 92%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #888;
+    }
+</style>
 
 
-       registerForm.addEventListener('submit', (e) => {
-        e.preventDefault()
-        if (name.value.trim() === "" || name.value.length > 25 || name.value.length < 5 || !isNaN(name.value)) {
-            Swal.fire({
-                title: "Error",
-                text: "Name must not be empty ,Minimum 6 letters , must be within 30 charters long and should not contain numbers",
-                icon: "error"
-            });
-        } else if (!validatePhone(phone.value)) {
-            Swal.fire({
-                title: "Error",
-                text: "Phone number must be 10 digits",
-                icon: "error"
-            });
-        } else if (checkEmail(email.value)) {
-            Swal.fire({
-                title: "Error",
-                text: "Email must be valid",
-                icon: "error"
-            });
-        }else if(!validatePassword(password.value)){
-            Swal.fire({
-                title: "Error",
-                text: "Enter a strong password",
-                icon: "error"
-            });
-        }else if(password.value!=confirmPassword.value){
-            Swal.fire({
-                title: "Error",
-                text: "Password Must be same",
-                icon: "error"
-            });
-        }else{
-            registerForm.submit()
-        }
-    })
-</script>
+<%- include('navbar') %>
+    <div class="home-main-container">
+        <div class="home-container">
+            <div class="home-left">
+                <img src="/public/user/img/logininage.webp" alt="Wine Bottle and Glass" class="home-image">
+            </div>
+            <div class="home-right">
+                <h2 class="home-title">Create an account</h2>
+                <form action="/signup" method="post" class="home-form" id="register-form">
+                    <input type="text" name="name" placeholder="Name" class="home-input">
+                    <input type="text" name="phone" placeholder="Phone" class="home-input">
+                    <input type="email" name="email" placeholder="Email" class="home-input">
+                    <div class="password-container">
+                        <input type="password" name="password" placeholder="Password" class="home-input password-input">
+                        <i class="bi bi-eye toggle-password"></i>
+                    </div>
+                    <div class="password-container">
+                        <input type="password" name="confirmPassword" placeholder="Confirm Password"
+                            class="home-input password-input">
+                        <i class="bi bi-eye toggle-password"></i>
+                    </div>
 
-            
-    
+                    <input type="text" name="referralCodeInput" placeholder="Add Referral code if an"
+                        class="home-input">
+                    <!-- <input type="text" id="form3Example6" class="form-control" name="referralCodeInput"
+                      placeholder="Add Referral code if any" /> -->
+                    <div class="home-checkbox-container">
+                        <input type="checkbox" id="terms" name="terms" class="home-checkbox" required>
+                        <label for="terms" class="home-checkbox-label">By Creating An Account You Are Agreeing To Our
+                            Terms And Conditions And Privacy Policy</label>
+                    </div>
+                    <button type="submit" class="home-button" id="register-btn">Create Account</button>
+                    <span class="home-login">Already have an account ? <a class="text-danger" href="/login">Login</a>
+                    </span>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <!----------------------------------- Validation ------------------------------------------>
+    <script>
+
+
+        document.querySelectorAll('.toggle-password').forEach(item => {
+            item.addEventListener('click', function () {
+                const passwordInput = this.previousElementSibling;
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.classList.toggle('fa-eye-slash');
+            });
+        });
+
+
+        const registerForm = document.getElementById('register-form')
+        const name = document.getElementsByName('name')[0]
+        const phone = document.getElementsByName('phone')[0]
+        const email = document.getElementsByName('email')[0]
+        const password = document.getElementsByName('password')[0]
+        const confirmPassword = document.getElementsByName('confirmPassword')[0]
+        const signUpButton = document.getElementById('register-btn')
+
+        function checkEmail(email) {
+            // const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            // const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            // const re = /^(?!.\.\d)(?=[a-zA-Z0-9._%+-][a-zA-Z]{3,}\d*@)[a-zA-Z0-9._%+-]+@[a-z]{3,}\.[a-z]{2,}$/i;
+
+            const re = /\[a-z\d]+@\S+\.\s+/;
+            return re.test(email)
+        }
+        function validatePassword(password) {
+            if (password.length < 8) {
+                return false
+            }
+
+            if (!/[A-Z]/.test(password)) {
+                return false
+            }
+
+            if (!/[a-z]/.test(password)) {
+                return false
+            }
+
+            if (!/\d/.test(password)) {
+                return false
+            }
+            if (!/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password)) {
+                return false;
+            }
+            return true
+        }
+        function validatePhone(phone) {
+            const phoneRe = /^\d{10}$/;
+            return phoneRe.test(phone);
+        }
+
+
+        registerForm.addEventListener('submit', (e) => {
+            e.preventDefault()
+            if (name.value.trim() === "" || name.value.length > 25 || name.value.length < 5 || !isNaN(name.value)) {
+                Swal.fire({
+                    title: "Error",
+                    text: "Name must not be empty ,Minimum 6 letters , must be within 30 charters long and should not contain numbers",
+                    icon: "error"
+                });
+            } else if (!validatePhone(phone.value)) {
+                Swal.fire({
+                    title: "Error",
+                    text: "Phone number must be 10 digits",
+                    icon: "error"
+                });
+            } else if (checkEmail(email.value)) {
+                Swal.fire({
+                    title: "Error",
+                    text: "Email must be valid",
+                    icon: "error"
+                });
+            } else if (!validatePassword(password.value)) {
+                Swal.fire({
+                    title: "Error",
+                    text: "Enter a strong password",
+                    icon: "error"
+                });
+            } else if (password.value != confirmPassword.value) {
+                Swal.fire({
+                    title: "Error",
+                    text: "Password Must be same",
+                    icon: "error"
+                });
+            } else {
+                registerForm.submit()
+            }
+        })
+    </script>

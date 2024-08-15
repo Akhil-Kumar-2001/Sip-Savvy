@@ -32,13 +32,13 @@
      <h1 class="home-title">Latest products</h1>
      <!-- <p class="home-all-products">See all  ></p> -->
      
-    <div class="home-products" data-aos="zoom-in-right">
+    <div class="home-products" >
         <% let count = 0; %>
 
             <% products.forEach((product)=>{ const productAge =(Date.now() - new Date(product.createdAt).getTime()) / (24 * 60 * 60* 1000);
                 if(productAge <= 30 && count < 8){ %>
                     <% count++; %>
-             <div class="home-product">
+             <div class="home-product" data-aos="zoom-in-right">
             <% if(productAge <= 30){ %>
                  <div class="product-new-arrival">
                       <h6 class="ms-1">New Arrival</h6>

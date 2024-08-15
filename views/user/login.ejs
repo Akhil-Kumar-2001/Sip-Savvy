@@ -126,9 +126,14 @@
         color: #ff0000;
         text-decoration: none;
     }
-    
+    .password-toggle{
+        top: 22%;
+        left: 87%;
+    }
+
+
     /* Media Queries for Responsiveness */
-    @media (max-width: 768px) {
+    /* @media (max-width: 768px) {
         .home-login-box {
             flex-direction: column;
         }
@@ -136,7 +141,7 @@
         .home-image {
             width: 100%;
         }
-    }
+    } */
     
     @media (max-width: 480px) {
         .home-container {
@@ -170,6 +175,89 @@
     .eye-icon{
 
     }
+
+   /* Media Query for 768px Width */
+@media (max-width: 768px) {
+    .home-login-box {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .home-image {
+        width: 100%;
+    }
+
+    .home-login-content {
+        width: 100%;
+        padding: 0.625rem;
+    }
+
+    .home-button-main {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    /* Adjust button widths only */
+    .home-button, .home-button-google {
+        width: 80%;
+        display: flex;
+        justify-content: center;
+    }
+}
+
+/* Media Query for 430px Width */
+@media (max-width: 430px) {
+    .home-container {
+        padding: 0.625rem;
+    }
+
+    .home-login-box {
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    .home-login-content {
+        width: 100%;
+        padding: 0.625rem;
+    }
+
+    h2 {
+        font-size: 1.25rem;
+        text-align: center;
+    }
+
+    /* Adjust button widths only */
+    .home-button, .home-button-google {
+        padding: 0.5rem;
+        width: 90%;
+    }
+
+    .home-button-main {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    .home-continue span {
+        font-size: 0.875rem;
+    }
+
+    .home-signup {
+        font-size: 0.875rem;
+        text-align: center;
+    }
+}
+
+
+
+
+
+
+
+
+
     
         </style>
               <!-- //---------header---------// -->
