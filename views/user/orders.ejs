@@ -152,6 +152,66 @@
         background-color: #fff;
         color: black;
     }
+
+    .order-actions-top {
+    position: static;
+    margin-top: 1rem;
+    text-align: center;
+}
+
+@media (min-width: 768px) {
+    .order-actions-top {
+        position: absolute;
+        top: 34px;
+        right: 68px;
+        margin-top: 0;
+        text-align: right;
+    }
+}
+
+
+@media (max-width: 767px) {
+    .col-md-3, .col-md-2 {
+        width: 50%;
+        float: left;
+        margin-bottom: 1rem;
+    }
+}
+
+@media (max-width: 575px) {
+    .col-md-3, .col-md-2 {
+        width: 100%;
+        float: none;
+    }
+}
+
+@media (max-width: 767px) {
+    .order-actions-top .btn {
+        display: block;
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+}
+
+@media (max-width: 767px) {
+    .d-flex.align-items-start {
+        flex-direction: row;
+    }
+
+    .me-4 {
+        margin-right: 0 !important;
+        margin-bottom: 1rem;
+    }
+
+    .order-place {
+        width: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+
+
 </style>
 
 
