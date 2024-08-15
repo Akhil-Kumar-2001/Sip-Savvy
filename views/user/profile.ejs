@@ -129,7 +129,7 @@
     }
 
     .user-side-div {
-        height: 95%;
+        height: 100%;
     }
 
     .card-sidebar {
@@ -185,6 +185,48 @@
     cursor: pointer;
 }
 
+
+.card-body {
+            color: #fefeeb;
+            display: flex;
+            align-items: center;
+            gap: 10rem;
+            justify-content: center;
+            box-shadow: 0 0 10px rgba(100, 98, 98, 0.5);
+            border-radius: 15px;
+        }
+
+        .profile-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .profile-photo {
+            font-size: 10rem;
+            margin-bottom: 1rem;
+        }
+
+        .profile-form {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        @media (max-width: 767px) {
+            .card-body {
+                flex-direction: column;
+                gap: 2rem;
+                padding: 1rem;
+            }
+
+            .profile-photo {
+                font-size: 6rem;
+            }
+
+            .profile-form {
+                width: 100%;
+            }
+        }
     
 </style>
 
@@ -194,7 +236,7 @@
 
     <div class="container mt-5">
         <div class="row">
-            <div class="col-lg-3">
+            <div class="col-lg-3 col-md-4 col-sm-12 mb-3">
                 <div class="card user-side-div">
                     <div class="card-sidebar">
                         <h2><i class="bi bi-list"></i>Menu</h2>
@@ -222,14 +264,12 @@
             <div class="col-lg-9">
                 <div class="card user-profile-div">
                     <div class="card-body">
-                        <div>
-                            <i class="bi bi-person-square" style="font-size: 10rem;"></i>
+                        <div class="profile-content">
+                            <i class="bi bi-person-square profile-photo"></i>
                             <h2>Your Profile</h2>
                         </div>
-
-                       
-
-                        <form method="post" action="/update-profile" style="width: 40%;">
+        
+                        <form method="post" action="/update-profile" class="profile-form">
                             <div class="form-group mb-3">
                                 <label class="profile-text">Name</label>
                                 <input type="text" class="form-control" name="userName" required value="<%= userDetail.name %>" />
@@ -242,19 +282,16 @@
                                 <label class="profile-text">Phone Number</label>
                                 <input type="text" class="form-control" name="phoneNumber" required value="<%= userDetail.phone %>" />
                             </div>
-                            <button type="submit" class="btn btn-primary-hover-outline w-100 mb-4"
-                                id="update-btn">Update</button>
+                            <button type="submit" class="btn btn-primary-hover-outline w-100 mb-4" id="update-btn">Update</button>
                         </form>
                     </div>
                 </div>
             </div>
-
-        </div>
         <!-------- Address Column ------->
        
             
             <div class="row">
-                <div class="col-lg-3">
+                <div class="col-lg-3 col-md-4 col-sm-12 mb-3">
                     <div class="card user-side-div">
                         <div class="card-sidebar">
                             <% if(userDetail.referralCode){ %>
@@ -270,7 +307,7 @@
                     </div>
                 </div>
           <!-- <div class=" main-profile-address"> -->
-            <div class="col-lg-9">
+            <div class="col-lg-9 col-md-8 col-sm-12">
                 <div class="card user-profile-div">
                     <div class="card-address">
                         <div class="address-profile" style="width: 100%;">
@@ -282,7 +319,7 @@
                                         Add Address</i>
                                     </a>
                                     <% } else { %>
-                                        <span>Maximum 4 addresses reached</span>
+                                        <span>Maximum 3 addresses reached</span>
                                         <% } %>
                             </div>
                             <div class="address-cards">
@@ -410,6 +447,54 @@
                 </div>
             </div>
         </div>
+
+
+
+
+        <!----------------------------------- validation for user details ---------------------------------------->
+
+
+        <script>
+            document.addEventListener('DOMContentLoaded', (event) => {
+                const updateForm = document.querySelector('.profile-form');
+                const userName = document.getElementsByName('userName')[0];
+                const phoneNumber = document.getElementsByName('phoneNumber')[0];
+        
+                // Validate Name: It should not be empty, contain only letters, and be of appropriate length
+                function validateName(name) {
+                    const nameRe = /^[a-zA-Z\s]{2,50}$/;
+                    return nameRe.test(name);
+                }
+        
+                // Validate Phone Number: It should contain exactly 10 digits
+                function validatePhone(phone) {
+                    const phoneRe = /^\d{10}$/;
+                    return phoneRe.test(phone);
+                }
+        
+                // Event listener for form submission
+                updateForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    if (!validateName(userName.value.trim())) {
+                        Swal.fire({
+                            title: "Error",
+                            text: "Name must only contain letters and be between 2 and 50 characters long.",
+                            icon: "error"
+                        });
+                    } else if (!validatePhone(phoneNumber.value.trim())) {
+                        Swal.fire({
+                            title: "Error",
+                            text: "Phone number must be exactly 10 digits.",
+                            icon: "error"
+                        });
+                    } else {
+                        // If all validations pass, submit the form
+                        updateForm.submit();
+                    }
+                });
+            });
+        </script>
+        
 
         <!----------------------------------- Sweet Alert For Delete ---------------------------------------->
 
