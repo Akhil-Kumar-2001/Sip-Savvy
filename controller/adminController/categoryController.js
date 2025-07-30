@@ -6,7 +6,6 @@ const categorySchema = require("../../model/categorySchema");
 
 const category=async(req,res)=>{
         try {
-
             const search = req.query.search || ''
             const page = parseInt(req.query.page) || 1;
             const limit = parseInt(req.query.limit) || 5;
@@ -26,8 +25,6 @@ const category=async(req,res)=>{
             search,
             limit,
             page})
-
-
         } catch (error) {
             console.log(`error while rendering category ${error}`);
         }
@@ -125,5 +122,4 @@ module.exports = {
     status,
     deleteCategory,
     editCategory
-
 }

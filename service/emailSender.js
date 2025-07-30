@@ -43,7 +43,7 @@ const transporter = nodemailer.createTransport({
     auth: {
         user: process.env.SMTP_USERNAME,
         pass: process.env.SMTP_PASSWORD,
-    },
+    }
 });
 
 async function mailSender(OTP, userMail) {
