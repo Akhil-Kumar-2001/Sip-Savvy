@@ -278,10 +278,36 @@ const decrement = async (req, res) => {
   }
 };
 
+
+//------------- Cart count in the navbar ---------------
+
+
+const cartCount = async (req, res) => {
+    const userId = req.session.user;
+    if (!userId) {
+        return res
+        .status(STATUS_CODES.UNAUTHORIZED)
+        .json({ success: false, message: "User not found, login again" });
+    }
+    try {
+        const cart = await cartSchema.findOne({ userId: userId });
+        const count = cart ? cart.items.length : 0; 
+        return res
+        .status(STATUS_CODES.OK)
+        .json({ count });
+    } catch (error) {
+        console.error('Error fetching wishlist count:', error);
+        return res
+        .status(STATUS_CODES.INTERNAL_SERVER_ERROR)
+        .json({ success: false, message: "Failed to fetch wishlist count" });
+    }
+};
+
 module.exports = {
   cart,
   addToCartPost,
   removeItem,
   increment,
   decrement,
+  cartCount
 };

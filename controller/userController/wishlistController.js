@@ -88,6 +88,7 @@ const addWishlist = async (req, res) => {
 };
 
 
+
 const deleteFromWishlist = async(req,res)=>{
     const userId = req.session.user;
     const itemId = req.params.id;
@@ -109,22 +110,6 @@ const deleteFromWishlist = async(req,res)=>{
             return res.status(STATUS_CODES.NOT_FOUND).json({ success: false, message: 'Wishlist not found.' });
         }
 
-
-        // if(!wishlist) {
-        //     return res.status(404).json({ message: 'wishlist not found' })
-        // }
-
-        // const newProductList = wishlist.items.filter((wishlistProduct) => {
-        //     if (wishlistProduct.productID.id != productID) {
-        //         return wishlistProduct
-        //     }
-        // })
-
-        // wishlist.items = newProductList
-
-        //  return res.status(200).json({ success: "Product removed from wishlist" })
-
-
     } catch (error) {
         console.log(`error on deleting from wishlist ${error}`)
         return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ message: 'Failed to remove product from wishlist' })
@@ -132,9 +117,34 @@ const deleteFromWishlist = async(req,res)=>{
 }
 
 
+
+
+const wishlistCount = async (req, res) => {
+    const userId = req.session.user;
+    if (!userId) {
+        return res
+        .status(STATUS_CODES.UNAUTHORIZED)
+        .json({ success: false, message: "User not found, login again" });
+    }
+    try {
+        const wishlist = await wishlistSchema.findOne({ userId: userId });
+        const count = wishlist ? wishlist.items.length : 0; // Assuming items is an array in your schema
+        return res
+        .status(STATUS_CODES.OK)
+        .json({ count });
+    } catch (error) {
+        console.error('Error fetching wishlist count:', error);
+        return res
+        .status(STATUS_CODES.INTERNAL_SERVER_ERROR)
+        .json({ success: false, message: "Failed to fetch wishlist count" });
+    }
+};
+
+
+
 module.exports = {
     wishlistView,
-    // addToWishlist,
     deleteFromWishlist,
-    addWishlist 
+    addWishlist,
+    wishlistCount 
 }

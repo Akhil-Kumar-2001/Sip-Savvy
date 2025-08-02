@@ -23,6 +23,7 @@ async function addToCart(productId, price, user) {
                 showConfirmButton: false,
                 timer: 1200,
             })
+            updateCartCount()
         } else {
             const errorData = await response.json();
             throw new Error(errorData.error || "Failed to add product to cart");
@@ -73,6 +74,8 @@ async function addwishlist(productId, price, user) {
                     showConfirmButton: false,
                     timer: 1200,
                 })
+
+                updateWishlistCount();
             } else {
                 const errorData = await response.json();
                 throw new Error(errorData.error || "Failed to add product to wishlist");
@@ -100,3 +103,54 @@ async function addwishlist(productId, price, user) {
     }
 }
 
+
+//--------------------- wishlist count update function --------------------------
+
+
+
+async function updateWishlistCount() {
+    try {
+        const res = await fetch('/wishlist/count');
+        if (res.ok) {
+            const data = await res.json();
+            const count = data.count || 0;
+            const badge = document.getElementById('wishlist-count');
+            
+            if (count > 0) {
+                badge.textContent = count.toString();
+                badge.style.display = 'flex'; // 💡 Make it visible!
+            } else {
+                badge.textContent = '';
+                badge.style.display = 'none'; // Hide when empty
+            }
+        }
+    } catch (error) {
+        console.error('Failed to update wishlist count:', error);
+    }
+}
+
+
+//--------------------- cart count update function --------------------------
+
+
+
+async function updateCartCount() {
+    try {
+        const res = await fetch('/cart/count');
+        if (res.ok) {
+            const data = await res.json();
+            const count = data.count || 0;
+            const badge = document.getElementById('cart-count');
+            
+            if (count > 0) {
+                badge.textContent = count.toString();
+                badge.style.display = 'flex'; 
+            } else {
+                badge.textContent = '';
+                badge.style.display = 'none'; 
+            }
+        }
+    } catch (error) {
+        console.error('Failed to update wishlist count:', error);
+    }
+}

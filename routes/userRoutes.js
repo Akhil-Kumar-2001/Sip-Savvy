@@ -69,6 +69,7 @@ user.get('/add-to-cart/:id',activeUser,cartController.addToCartPost)
 user.delete('/remove-item/:id',activeUser,cartController.removeItem)
 user.post('/cart/increment',activeUser,cartController.increment)
 user.post('/cart/decrement',activeUser,cartController.decrement)
+user.get('/cart/count',activeUser,cartController.cartCount)
 
 
 
@@ -78,6 +79,7 @@ user.get('/wishlist', activeUser , wishlistController.wishlistView )
 // user.post('/add-wishlist/:productId', activeUser, wishlistController.addToWishlist)
 user.get('/add-wishlist/:id', activeUser, wishlistController.addWishlist )
 user.delete('/delete-wishlist-item/:id', activeUser, wishlistController.deleteFromWishlist)
+user.get('/wishlist/count',activeUser,wishlistController.wishlistCount)
 
 //-------------------- Checout route --------------------
 
@@ -96,8 +98,6 @@ user.post('/updateaddress/:index',activeUser,checkoutController.updateAddress)
 user.post('/get-coupon',activeUser,checkoutController.getCoupon)
 user.post('/apply-coupon',activeUser,checkoutController.applyCoupon)
 user.put('/remove-coupon',activeUser,checkoutController.removeCoupon)
-
-
 
 
 
