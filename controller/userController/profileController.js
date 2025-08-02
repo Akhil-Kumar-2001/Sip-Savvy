@@ -1,3 +1,4 @@
+const { STATUS_CODES } = require('../../constant/statusCode');
 const userSchema = require('../../model/userSchema');
 const { ObjectId } = require('mongodb');
 
@@ -22,7 +23,7 @@ const profile = async (req, res) => {
     } catch (error) {
 
         console.log(`Error while Profile Page render ${error}`);
-        res.status(404)
+        res.status(STATUS_CODES.NOT_FOUND)
     }
 }
 

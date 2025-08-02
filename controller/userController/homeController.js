@@ -4,6 +4,7 @@ const productSchema = require("../../model/productSchema")
 const categorySchema = require('../../model/categorySchema')
 const mongoose = require('mongoose');
 const { query } = require("express");
+const { STATUS_CODES } = require("../../constant/statusCode");
 
 
 // --------------------------------- Home page render ------------------------------
@@ -150,7 +151,7 @@ const allProducts = async (req, res) => {
 
   } catch (error) {
     console.log(`error in All Product rendering ${error}`);
-    res.status(500).send('An error occurred');
+    res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send('An error occurred');
   }
 };
 

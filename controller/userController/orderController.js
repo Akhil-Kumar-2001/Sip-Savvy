@@ -7,6 +7,7 @@ const path = require("path");
 
 const Razorpay = require("razorpay");
 const PDFDocument = require("pdfkit-table");
+const { STATUS_CODES } = require("../../constant/statusCode");
 
 // ------------- user order page render ----------------
 
@@ -133,7 +134,7 @@ const returnOrder = async (req, res) => {
 
     if (!orderId || !returnReason) {
       return res
-        .status(400)
+        .status(STATUS_CODES.BAD_REQUEST)
         .json({
           status: "error",
           message: "OrderId and return reason are required",
@@ -144,13 +145,13 @@ const returnOrder = async (req, res) => {
 
     if (!order) {
       return res
-        .status(404)
+        .status(STATUS_CODES.NOT_FOUND)
         .json({ status: "error", message: "Order not found" });
     }
 
     if (order.orderStatus === "Returned" || order.orderStatus === "Cancelled") {
       return res
-        .status(400)
+        .status(STATUS_CODES.BAD_REQUEST)
         .json({
           status: "error",
           message: "Order is already returned or cancelled",
@@ -162,7 +163,7 @@ const returnOrder = async (req, res) => {
     await order.save();
 
     res
-      .status(200)
+      .status(STATUS_CODES.OK)
       .json({
         status: "success",
         message: "Order return processed successfully",
@@ -170,7 +171,7 @@ const returnOrder = async (req, res) => {
   } catch (error) {
     console.error(error);
     res
-      .status(500)
+      .status(STATUS_CODES.INTERNAL_SERVER_ERROR)
       .json({
         status: "error",
         message: "An error occurred while processing the return order",
@@ -314,7 +315,7 @@ const Invoice = async (req, res) => {
     doc.end();
   } catch (err) {
     console.log(`Error on downloading the invoice pdf ${err}`);
-    res.status(500).send("Error generating invoice");
+    res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send("Error generating invoice");
   }
 };
 
@@ -332,7 +333,7 @@ const retryRazorPay = async (req, res) => {
     const order = await orderSchema.findById(orderId);
 
     if (!order) {
-      return res.status(404).send("Order not found");
+      return res.status(STATUS_CODES.NOT_FOUND).send("Order not found");
     }
 
     const razorpayOrder = await razorpay.orders.create({
@@ -342,16 +343,16 @@ const retryRazorPay = async (req, res) => {
     });
 
     if (razorpayOrder) {
-      return res.status(200).json({
+      return res.status(STATUS_CODES.OK).json({
         ...order.toObject(),
         razorpayOrderId: razorpayOrder,
       });
     } else {
-      return res.status(500).send("Razorpay order creation failed");
+      return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send("Razorpay order creation failed");
     }
   } catch (error) {
     console.error(`Error from Razorpay retry: ${error}`);
-    res.status(500).send("Internal Server Error");
+    res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send("Internal Server Error");
   }
 };
 
@@ -369,17 +370,17 @@ const retryPayment = async (req, res) => {
       new: true,
     });
     if (!order) {
-      return res.status(404).send("Order not found");
+      return res.status(STATUS_CODES.NOT_FOUND).send("Order not found");
     }
     for (let product of order.products) {
       await productSchema.findByIdAndUpdate(product.product_id, {
         $inc: { product_quantity: -product.product_quantity },
       });
     }
-    res.status(200).json(order);
+    res.status(STATUS_CODES.OK).json(order);
   } catch (error) {
     console.error(`Error from retry payment backend: ${error}`);
-    res.status(500).send("Internal Server Error");
+    res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send("Internal Server Error");
   }
 };
 

@@ -1,5 +1,6 @@
 const productSchema = require('../../model/productSchema')
 const cartSchema = require('../../model/ cartSchema')
+import { STATUS_CODES } from '../../constant/statusCode'
 
 const { ObjectId } = require('mongodb')
 
@@ -67,7 +68,7 @@ const addToCartPost = async (req, res) => {
         const ProductDetails = await productSchema.findById(productId)
       
         if (!ProductDetails || ProductDetails.productQuantity <= 0) {
-            return res.status(404).json({ error: "Product is out of stock" });
+            return res.status(STATUS_CODES.NOT_FOUND).json({ error: "Product is out of stock" });
         }
 
         const checkCart = await cartSchema.findOne({ userId: req.session.user }).populate('items.productId');
@@ -78,7 +79,7 @@ const addToCartPost = async (req, res) => {
             for (let item of checkCart.items) {
                 if (item.productId.id === productId) {
                     productExist = true;
-                    return res.status(409).json({ error: "Product is already in the cart" });
+                    return res.status(STATUS_CODES.CONFLICT).json({ error: "Product is already in the cart" });
                 }
             }
 
@@ -95,10 +96,10 @@ const addToCartPost = async (req, res) => {
             await newCart.save();
         }
 
-        return res.status(200).json({ message: "Product added to cart" });
+        return res.status(STATUS_CODES.OK).json({ message: "Product added to cart" });
     } catch (err) {
         console.log(`Error during adding product to cart: ${err}`);
-        return res.status(500).json({ error: "Internal Server Error" });
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ error: "Internal Server Error" });
     }
 }
 
@@ -109,22 +110,21 @@ const removeItem = async (req, res) => {
     const itemId = req.params.id;
 
     if (!itemId || !ObjectId.isValid(itemId)) {
-        return res.status(404).json({ success: false, message: 'Invalid item.' });
+        return res.status(STATUS_CODES.NOT_FOUND).json({ success: false, message: 'Invalid item.' });
     }
     try {
         const cart = await cartSchema.findOne({ userId: userId })
         if (cart) {
             cart.items.pull({ productId: new ObjectId(itemId) });
             await cart.save();
-            return res.status(200).json({ success: true, message: 'Item removed from the Cart' })
+            return res.status(STATUS_CODES.OK).json({ success: true, message: 'Item removed from the Cart' })
         }
         else {
-            console.log('No cart found for the current user ')
-            return res.status(404).json({ success: false, message: "We could not find a cart associated with your account. Please ensure you are logged in, or start a new cart to continue shopping." })
+            return res.status(STATUS_CODES.NOT_FOUND).json({ success: false, message: "We could not find a cart associated with your account. Please ensure you are logged in, or start a new cart to continue shopping." })
         }
     } catch (error) {
         console.log(`Error while removing the item from the cart ${error}`)
-        return res.status(500).json({ success: false, message: 'Someting went wronng,Please try agian later,' });
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: 'Someting went wronng,Please try agian later,' });
     }
 }
 
@@ -141,17 +141,17 @@ const increment = async (req, res) => {
         const max = 10
 
         if (!userId || !productId) {
-            return res.status(400).send('Invalid request')
+            return res.status(STATUS_CODES.BAD_REQUEST).send('Invalid request')
         }
         const product = await productSchema.findById(productId)
 
         if (!product) {
-            return res.status(404).send('Product Not Found')
+            return res.status(STATUS_CODES.NOT_FOUND).send('Product Not Found')
         }
         const cart = await cartSchema.findOne({ userId })
 
         if (!cart) {
-            return res.status(404).send('Cart not found')
+            return res.status(STATUS_CODES.NOT_FOUND).send('Cart not found')
         }
 
         const productInCart = cart.items.find(product => product.productId.toString() === productId)
@@ -159,22 +159,22 @@ const increment = async (req, res) => {
         if (productInCart) {
             const total = productInCart.productCount + 1;
             if (total > max) {
-                return res.status(400).send("The maximum quantity allowed per product is 10.")
+                return res.status(STATUS_CODES.BAD_REQUEST).send("The maximum quantity allowed per product is 10.")
             }
             if (total > product.productQuantity) {
-                return res.status(400).send(`Only ${product.productQuantity} units of this product is currently available.`)
+                return res.status(STATUS_CODES.BAD_REQUEST).send(`Only ${product.productQuantity} units of this product is currently available.`)
             }
             productInCart.productCount = total
             await cart.save();
-            res.status(200).json(cart);
+            res.status(STATUS_CODES.OK).json(cart);
         }
         else {
-            res.status(404).send('This product is not in your cart.')
+            res.status(STATUS_CODES.NOT_FOUND).send('This product is not in your cart.')
         }
     } catch (error) {
         console.error(`Error increasing the product quantity in your cart: ${error}`);
         showError(`Error increasing product quantity in cart: ${error}`);
-        res.status(500).send('Internal server error');
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send('Internal server error');
     }
 }
 
@@ -187,11 +187,11 @@ const decrement = async (req, res) => {
         const userId = req.session.user;
         const { productId } = req.body;
         if (!userId || !productId) {
-            return res.status(400).send('Invalid request');
+            return res.status(STATUS_CODES.BAD_REQUEST).send('Invalid request');
         }
         const cart = await cartSchema.findOne({ userId });
         if (!cart) {
-            return res.status(404).send('Cart not found');
+            return res.status(STATUS_CODES.NOT_FOUND).send('Cart not found');
         }
         const index = cart.items.findIndex(product => product.productId.toString() === productId);
 
@@ -201,14 +201,14 @@ const decrement = async (req, res) => {
                 cart.items.splice(index, 1);
             }
             await cart.save();
-            res.status(200).json(cart);
+            res.status(STATUS_CODES.OK).json(cart);
         } else {
-            res.status(404).send('This product is not in your cart.');
+            res.status(STATUS_CODES.NOT_FOUND).send('This product is not in your cart.');
         }
     } catch (error) {
         console.error(`Error decrementing  the product quantity in your cart: ${error}`);
         showError(`Error decrementing product quantity in cart: ${error}`);
-        res.status(500).send('Internal server error');
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send('Internal server error');
     }
 };
 

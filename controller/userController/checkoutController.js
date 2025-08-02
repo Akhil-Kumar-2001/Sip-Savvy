@@ -9,6 +9,7 @@ const mongoose = require("mongoose");
 const Razorpay = require("razorpay");
 const { ObjectId } = require("mongodb");
 const CartSchema = require("../../model/ cartSchema");
+const { STATUS_CODES } = require("../../constant/statusCode");
 
 // ---------------Check out page render-------------------
 
@@ -21,13 +22,13 @@ const checkout = async (req, res) => {
     const userId = req.session.user;
     const user = await userSchema.findById(userId);
     if (!user) {
-      return res.status(404).send("User not found");
+      return res.status(STATUS_CODES.NOT_FOUND).send("User not found");
     }
     const cartDetails = await cartSchema
       .findOne({ userId })
       .populate("items.productId");
     if (!cartDetails) {
-      return res.status(404).send("Cart not found. Check and try again.");
+      return res.status(STATUS_CODES.NOT_FOUND).send("Cart not found. Check and try again.");
     }
 
     // remove if any coupon is there
@@ -67,7 +68,7 @@ const checkout = async (req, res) => {
     });
   } catch (error) {
     console.log(`Error while rendering Checkout page ${error}`);
-    res.status(500).send("Error processing request. Please retry.");
+    res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send("Error processing request. Please retry.");
   }
 };
 
@@ -111,7 +112,7 @@ const placeOrder = async (req, res) => {
       .populate("items.productId");
     if (!cartItems || !cartItems.items || cartItems.items.length === 0) {
       return res
-        .status(400)
+        .status(STATUS_CODES.BAD_REQUEST)
         .json({
           success: false,
           message: "It seems your cart is empty or unavailable at the moment.",
@@ -142,7 +143,7 @@ const placeOrder = async (req, res) => {
       !userDetails.address[addressIndex]
     ) {
       return res
-        .status(400)
+        .status(STATUS_CODES.BAD_REQUEST)
         .json({ success: false, message: "Selected address is not valid." });
     }
 
@@ -150,7 +151,7 @@ const placeOrder = async (req, res) => {
       const wallet = await walletSchema.findOne({ userID: userId });
       if (!wallet || wallet.balance < cartItems.payableAmount) {
         return res
-          .status(404)
+          .status(STATUS_CODES.NOT_FOUND)
           .json({ success: false, message: "Insufficient wallet balance" });
       }
       wallet.balance -= cartItems.payableAmount;
@@ -160,7 +161,7 @@ const placeOrder = async (req, res) => {
     if (paymentDetails[paymentMode] === "Cash on delivery") {
       if (cartItems.payableAmount > 1000) {
         return res
-          .status(400)
+          .status(STATUS_CODES.BAD_REQUEST)
           .json({ success: false, message: "COD below 1000 only." });
       }
     }
@@ -205,12 +206,12 @@ const placeOrder = async (req, res) => {
 
     await cartSchema.deleteOne({ userId: req.session.user });
     return res
-      .status(200)
+      .status(STATUS_CODES.OK)
       .json({ success: true, message: "Order placed successfully!" });
   } catch (err) {
     console.error(`Error on place order ${err}`);
     return res
-      .status(500)
+      .status(STATUS_CODES.INTERNAL_SERVER_ERROR)
       .json({
         success: false,
         message: `Error on placing order: ${err.message}`,
@@ -254,7 +255,7 @@ const failedOrder = async (req, res) => {
     res.render("user/Failed-order", { title: "Order Failed" });
   } catch (error) {
     console.log(`Error while rendering the failed order page`, error);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
+    res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: "Internal Server Error" });
   }
 };
 
@@ -264,7 +265,7 @@ const paymentRender = async (req, res) => {
   try {
     const totalAmount = req.params.amount;
     if (!totalAmount) {
-      return res.status(404).json({ error: "Amount parameter is missing" });
+      return res.status(STATUS_CODES.NOT_FOUND).json({ error: "Amount parameter is missing" });
     }
 
     const instance = new Razorpay({
@@ -282,14 +283,14 @@ const paymentRender = async (req, res) => {
       if (error) {
         console.log(`Failed to create order ${error}`);
         return res
-          .status(500)
+          .status(STATUS_CODES.INTERNAL_SERVER_ERROR)
           .json({ error: `Failed to create order: ${error.message}` });
       }
-      return res.status(200).json({ orderID: order.id });
+      return res.status(STATUS_CODES.OK).json({ orderID: order.id });
     });
   } catch (error) {
     console.log(`Error while ordering in checkout ${error}`);
-    return res.status(500).json({ error: `Internal Server in razorpay error` });
+    return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ error: `Internal Server in razorpay error` });
   }
 };
 
@@ -434,12 +435,12 @@ const coupon = async (req, res) => {
     const coupon = await couponSchema.findOne({ code: couponName });
     if (!coupon) {
       console.log("Coupon not found");
-      return res.status(404).json({ error: "Coupon not found" });
+      return res.status(STATUS_CODES.NOT_FOUND).json({ error: "Coupon not found" });
     }
 
     if (!coupon.isActive || coupon.expiryDate < new Date()) {
       console.log("Coupon expired or inactive");
-      return res.status(400).json({ error: "Coupon expired" });
+      return res.status(STATUS_CODES.BAD_REQUEST).json({ error: "Coupon expired" });
     }
 
     // check if coupon already used
@@ -451,13 +452,13 @@ const coupon = async (req, res) => {
 
     // if already used return an error
     if (Used) {
-      return res.status(404).json({ error: "Coupon Already Used" });
+      return res.status(STATUS_CODES.NOT_FOUND).json({ error: "Coupon Already Used" });
     }
 
     const cart = await cartSchema.findOne({ userId });
     if (!cart) {
       console.log("Cart not found");
-      return res.status(400).json({ error: "Cart not found" });
+      return res.status(STATUS_CODES.BAD_REQUEST).json({ error: "Cart not found" });
     }
 
     const total = cart.payableAmount;
@@ -466,7 +467,7 @@ const coupon = async (req, res) => {
     if (total < coupon.minimumOrderAmount) {
       console.log("Minimum purchase limit not reached");
       return res
-        .status(400)
+        .status(STATUS_CODES.BAD_REQUEST)
         .json({
           error:
             "Minimum purchase limit not reached. Please add more items to your cart.",
@@ -489,11 +490,11 @@ const coupon = async (req, res) => {
     cart.payableAmount = discountedTotal;
     await cart.save();
 
-    res.status(200).json({ total: discountedTotal, couponDiscount });
+    res.status(STATUS_CODES.OK).json({ total: discountedTotal, couponDiscount });
   } catch (err) {
     console.log(`Error in apply coupon: ${err}`);
     res
-      .status(500)
+      .status(STATUS_CODES.INTERNAL_SERVER_ERROR)
       .json({ error: "An error occurred while applying the coupon." });
   }
 };
@@ -505,13 +506,13 @@ const getCoupon = async (req, res) => {
     const { coupon } = req.body;
 
     if (!coupon) {
-      return res.status(404).json({ error: "Invalid coupon id" });
+      return res.status(STATUS_CODES.NOT_FOUND).json({ error: "Invalid coupon id" });
     }
 
     const couponDeatils = await couponSchema.findById(coupon);
 
     return res
-      .status(200)
+      .status(STATUS_CODES.OK)
       .json({
         success: "Coupon finded",
         discount: couponDeatils.discountValue,
@@ -528,7 +529,7 @@ const applyCoupon = async (req, res) => {
 
     //if there is no coupon then send error message
     if (!couponId) {
-      return res.status(404).json({ error: "Haven't chosen any coupons yet!" });
+      return res.status(STATUS_CODES.NOT_FOUND).json({ error: "Haven't chosen any coupons yet!" });
     }
 
     //checking of already coupon used or not
@@ -539,7 +540,7 @@ const applyCoupon = async (req, res) => {
     //then send error message to the user that the coupon is already used by them
     if (checkUsedCoupon) {
       return res
-        .status(400)
+        .status(STATUS_CODES.BAD_REQUEST)
         .json({ usedCoupon: "Selected coupon has already been used by you" });
     }
 
@@ -555,7 +556,7 @@ const applyCoupon = async (req, res) => {
     //if it is expired or invalid then sending an error message to user
     if (checkExpiredCoupon) {
       return res
-        .status(400)
+        .status(STATUS_CODES.BAD_REQUEST)
         .json({ expiredCoupon: "Coupon is invalid, or expired" });
     }
 
@@ -566,7 +567,7 @@ const applyCoupon = async (req, res) => {
     // check same coupon
     if (couponId === cart.couponId) {
       return res
-        .status(400)
+        .status(STATUS_CODES.BAD_REQUEST)
         .json({ usedCoupon: "Selected coupon has already been used by you" });
     }
 
@@ -575,7 +576,7 @@ const applyCoupon = async (req, res) => {
 
     if (couponDeatils.minimumOrderAmount > cart.payableAmount) {
       return res
-        .status(404)
+        .status(STATUS_CODES.NOT_FOUND)
         .json({ minNotreached: "minimum amount not reached" });
     }
 
@@ -609,7 +610,7 @@ const applyCoupon = async (req, res) => {
     await cart.save();
     //sending response to the user
     return res
-      .status(200)
+      .status(STATUS_CODES.OK)
       .json({
         success: "coupon applied",
         payableAmount: cart.payableAmount,
@@ -635,7 +636,7 @@ const removeCoupon = async (req, res) => {
     }
 
     return res
-      .status(200)
+      .status(STATUS_CODES.OK)
       .json({ success: "coupon applied", payableAmount: cart.payableAmount });
   } catch (err) {
     console.log("error on applying coupon fetch", err);
