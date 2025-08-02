@@ -211,17 +211,30 @@
                 </div>
             </div>
     
-            <div class="col-md-6">
-                <div class="card payment-card">
-                    <h4 class="card-title"> Payment Details</h4>
-                    <div class="card-body">
-                        <p class="card-text">
-                            <strong>Method:</strong> <span class="text-success"><%= orderDetails.paymentMethod %></span><br>
-                            <strong>Status:</strong> <span class="payment-status-alert"><%= orderDetails.orderStatus %></span>
-                        </p>
-                    </div>
+             <div class="col-md-6">
+            <div class="card payment-card">
+                <h4 class="card-title">Payment Details</h4>
+                <div class="card-body">
+                    <p class="card-text">
+                        <strong>Method:</strong> <span class="text-success">
+                            <%= orderDetails.paymentMethod %>
+                        </span><br>
+                        <strong>Status:</strong> <span class="payment-status-alert">
+                            <%= orderDetails.orderStatus %>
+                        </span><br>
+
+                        <% if (orderDetails.orderStatus === 'Return Request' && orderDetails.returnReason) { %>
+                            <strong>Return Reason:</strong> <span class="text-danger">
+                                <%= orderDetails.returnReason %>
+                            </span><br>
+                        <% } %>
+                    </p>
                 </div>
             </div>
+        </div>
+
+
+
         </div>
     
         <!----------------------------- Ordered Items Section --------------------------------->

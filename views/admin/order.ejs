@@ -189,19 +189,27 @@
                                     </td>
                                     <td>
                                         <% if (order.orderStatus !=='Delivered' && order.orderStatus !=='Cancelled' &&
-                                            order.orderStatus !== 'Returned' && order.orderStatus !=='Return Request' ) {%>
-                                            <select class="status-dropdown"
+                                            order.orderStatus !== 'Returned' && order.orderStatus !=='Return Request'  && order.orderStatus !=='Return Rejected' ) {%>
+                                            <!-- <select class="status-dropdown"
                                                 onchange="updateOrderStatus('<%= order._id %>', this.value)">
                                                 <option value="Confirmed">Confirmed</option>
+                                                <option value="Cancelled">Cancelled</option>
                                                 <option value="Shipped">Shipped</option>
                                                 <option value="Delivered">Delivered</option>
-                                                <option value="Cancelled">Cancelled</option>
+                                            </select> -->
+                                            <select class="status-dropdown" onchange="updateOrderStatus('<%= order._id %>', this.value)">
+                                                <option value="Confirmed" <%= order.orderStatus === 'Confirmed' ? 'selected' : '' %>>Confirmed</option>
+                                                <option value="Cancelled" <%= order.orderStatus === 'Cancelled' ? 'selected' : '' %>>Cancelled</option>
+                                                <option value="Shipped" <%= order.orderStatus === 'Shipped' ? 'selected' : '' %>>Shipped</option>
+                                                <option value="Delivered" <%= order.orderStatus === 'Delivered' ? 'selected' : '' %>>Delivered</option>
                                             </select>
+
                                             <% } else if (order.orderStatus == 'Return Request') {%>
                                                 <select class="status-dropdown"
                                                 onchange="updateOrderStatus('<%= order._id %>', this.value)">
                                                 <option >Select Status</option>
                                                 <option value="Returned">Returned</option>
+                                                <option value="Return Rejected">Reject</option>
                                             </select>
                                             <% } %>
                                     </td>
@@ -248,6 +256,7 @@
 
             <script>
                 function updateOrderStatus(orderId, newStatus) {
+                    console.log(newStatus)
                     fetch(`/admin/order/${orderId}/status`, {
                         method: 'POST',
                         headers: {

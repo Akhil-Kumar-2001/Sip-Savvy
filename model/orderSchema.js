@@ -1,86 +1,100 @@
 const mongoose = require("mongoose");
 
-
-const schema = new mongoose.Schema({
+const schema = new mongoose.Schema(
+  {
     customer_id: {
-        type: String
+      type: String,
     },
     order_id: {
-        type: Number
+      type: Number,
     },
-    products: [{
+    products: [
+      {
         product_id: {
-            type: mongoose.Schema.Types.ObjectId ,
-            ref:"product"
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "product",
         },
         product_name: {
-            type: String
+          type: String,
         },
         product_category: {
-            type: String
+          type: String,
         },
         product_quantity: {
-            type: Number
+          type: Number,
         },
         product_price: {
-            type: Number
+          type: Number,
         },
-        
+
         product_image: {
-            type: String
+          type: String,
         },
         product_status: {
-            type: String,
-            enum:['Confirmed', 'Pending', 'Delivered', 'Returned', 'Cancelled'],
-            default:'Pending'
+          type: String,
+          enum: ["Confirmed", "Pending", "Delivered", "Returned", "Cancelled"],
+          default: "Pending",
         },
-        product_discount:{
-            type:Number
-        }
-    }],
+        product_discount: {
+          type: Number,
+        },
+      },
+    ],
     totalQuantity: {
-        type: Number
+      type: Number,
     },
     totalPrice: {
-        type: Number
+      type: Number,
     },
     address: {
-        customer_name: String,
-        customer_email: String,
-        building: String,
-        street: String,
-        city: String,
-        country: String,
-        pincode: Number,
-        phonenumber:Number,
-        landMark:String
+      customer_name: String,
+      customer_email: String,
+      building: String,
+      street: String,
+      city: String,
+      country: String,
+      pincode: Number,
+      phonenumber: Number,
+      landMark: String,
     },
     paymentMethod: {
-        type: String,
-        required: true,
-        enum: ['Cash on delivery','razorpay', 'Wallet']
+      type: String,
+      required: true,
+      enum: ["Cash on delivery", "razorpay", "Wallet"],
     },
     isCancelled: {
-        type: Boolean,
-        default: false
+      type: Boolean,
+      default: false,
     },
-    couponCode:{
-        type: String,
+    couponCode: {
+      type: String,
     },
-    couponDiscount:{
-        type: Number,
-        default: 0
+    couponDiscount: {
+      type: Number,
+      default: 0,
     },
     paymentId: {
-        type: String,
-        required: false
+      type: String,
+      required: false,
     },
     orderStatus: {
-        type: String,
-        enum:['Pending', 'Shipped', 'Confirmed', 'Delivered', 'Cancelled', 'Returned', 'Return Request' ]
-        
-    }
-},{timestamps:true})
-
+      type: String,
+      enum: [
+        "Pending",
+        "Shipped",
+        "Confirmed",
+        "Delivered",
+        "Cancelled",
+        "Returned",
+        "Return Request",
+        "Return Rejected",
+      ],
+    },
+    returnReason: {
+      type: String,
+    },
+  },
+  { timestamps: true }
+);
 
 module.exports = mongoose.model("Order", schema);
