@@ -1,56 +1,206 @@
-        <!-- Footer content -->
-        <footer class="home-footer">
-            <div class="home-footer-container">
-                <div class="home-footer-section home-footer-brand">
-                    <!-- <h2 class="home-footer-title">Sip Savvy</h2> -->
-                    <img src="/public/user/img/log2.webp" alt="">
+<style>
+    /* Footer Warning Styles */
+    .home-footer-warning {
+        background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+        padding: 15px 0;
+        margin-bottom: 0;
+        border-left: 5px solid #c0392b;
+        box-shadow: 0 2px 10px rgba(238, 90, 36, 0.3);
+        overflow: hidden;
+        position: relative;
+    }
 
-                    <p class="follow">Follow us on</p>
-                    <div class="home-footer-social-icons">
-                        <a href="#"><i class="bi bi-facebook"></i></a>
-                        <a href="#"><i class="bi bi-twitter"></i></a>
-                        <a href="#"><i class="bi bi-instagram"></i></a>
-                        <a href="#"><i class="bi bi-linkedin"></i></a>
-                    </div>
-                </div>
-                <div class="home-footer-section home-footer-contact">
-                    <h3>Contact</h3>
-                    <p>Perumon, Kollam</p>
-                    <p>sipsavvy@gmail.com</p>
-                    <p>+97-123-456-7890</p>
-                </div>
-                <div class="home-footer-section home-footer-account">
-                    <h3>Account</h3>
-                    <ul>
-                        <li><a href="#">My Account</a></li>
-                        <li><a href="#">Login / Register</a></li>
-                        <li><a href="#">Cart</a></li>
-                        <li><a href="#">Wishlist</a></li>
-                        <li><a href="#">Shop</a></li>
-                    </ul>
-                </div>
-                <div class="home-footer-section home-footer-quick-link">
-                    <h3>Quick Link</h3>
-                    <ul>
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Terms Of Use</a></li>
-                        <li><a href="#">FAQ</a></li>
-                        <li><a href="#">Contact</a></li>
-                    </ul>
-                </div>
-                <div class="home-footer-section home-footer-exclusive">
-                    <h3>Exclusive</h3>
-                    <p>Subscribe</p>
-                    <p>Get 10% off your first order</p>
-                    <form action="#">
-                        <input type="email" placeholder="Enter your email" class="footer-contact" required>
-                        <button type="submit"><i class="fas fa-paper-plane"> <i class="bi bi-arrow-right-circle"></i> </i></button>
-                    </form>
-                </div>
-            </div>
-            <div class="home-footer-bottom">
-                <p>&copy; 2024 by Sip Savvy</p>
-            </div>
-        </footer>
+    .home-footer-warning .warning-container {
+        display: inline-block;
+        white-space: nowrap;
+        animation: slide 20s linear infinite;
+    }
 
-    
+    .home-footer-warning p {
+        margin: 0;
+        color: #ffffff;
+        font-size: 14px;
+        font-weight: 500;
+        text-align: center;
+        line-height: 1.5;
+        letter-spacing: 0.5px;
+        display: inline;
+        padding: 0 30px;
+    }
+
+    .home-footer-warning strong {
+        color: #fff;
+        font-weight: 700;
+        font-size: 16px;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    @keyframes slide {
+        0% { transform: translateX(100%); }
+        100% { transform: translateX(-100%); }
+    }
+
+    /* Pause animation on hover for readability */
+    .home-footer-warning:hover .warning-container {
+        animation-play-state: paused;
+    }
+
+    /* Alternative Style Options */
+    /* Option 1: Alert Box Style */
+    .home-footer-warning.alert-style {
+        background: #ffeaa7;
+        border: 2px solid #fdcb6e;
+        border-radius: 8px;
+        margin: 20px;
+        padding: 20px;
+        box-shadow: 0 4px 15px rgba(253, 203, 110, 0.4);
+    }
+
+    .home-footer-warning.alert-style p {
+        color: #2d3436;
+        font-weight: 600;
+    }
+
+    .home-footer-warning.alert-style strong {
+        color: #e17055;
+        font-size: 18px;
+    }
+
+    /* Option 2: Dark Professional Style */
+    .home-footer-warning.dark-style {
+        background: #2c3e50;
+        border-top: 3px solid #f39c12;
+        padding: 18px 25px;
+        position: relative;
+    }
+
+    .home-footer-warning.dark-style::before {
+        content: "⚠️";
+        position: absolute;
+        left: 25px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 20px;
+    }
+
+    .home-footer-warning.dark-style p {
+        color: #ecf0f1;
+        margin-left: 35px;
+        font-size: 15px;
+    }
+
+    .home-footer-warning.dark-style strong {
+        color: #f39c12;
+        font-size: 17px;
+    }
+
+    /* Option 3: Minimalist Border Style */
+    .home-footer-warning.minimal-style {
+        background: transparent;
+        border: 2px dashed #e74c3c;
+        padding: 15px 20px;
+        margin: 15px 0;
+        border-radius: 5px;
+    }
+
+    .home-footer-warning.minimal-style p {
+        color: #2c3e50;
+        font-weight: 500;
+        text-align: center;
+    }
+
+    .home-footer-warning.minimal-style strong {
+        color: #e74c3c;
+        font-weight: 800;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .home-footer-warning {
+            padding: 12px 0;
+            margin: 0 10px 20px 10px;
+            border-radius: 5px;
+        }
+        
+        .home-footer-warning p {
+            font-size: 13px;
+            line-height: 1.4;
+            padding: 0 20px;
+        }
+        
+        .home-footer-warning strong {
+            font-size: 15px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .home-footer-warning p {
+            font-size: 12px;
+            padding: 0 15px;
+        }
+        
+        .home-footer-warning strong {
+            font-size: 14px;
+            display: block;
+            margin-bottom: 5px;
+        }
+    }
+</style>
+
+<!-- Footer content -->
+<footer class="home-footer">
+    <div class="home-footer-warning">
+        <div class="warning-container">
+            <p><strong>WARNING:</strong> You must be 21 or older to purchase or consume alcoholic beverages. Please drink responsibly. Excessive alcohol consumption may be hazardous to your health.</p>
+        </div>
+    </div>
+    <div class="home-footer-container">
+        <div class="home-footer-section home-footer-brand">
+            <img src="/public/user/img/log2.webp" alt="">
+            <p class="follow">Follow us on</p>
+            <div class="home-footer-social-icons">
+                <a href="#"><i class="bi bi-facebook"></i></a>
+                <a href="#"><i class="bi bi-twitter"></i></a>
+                <a href="#"><i class="bi bi-instagram"></i></a>
+                <a href="#"><i class="bi bi-linkedin"></i></a>
+            </div>
+        </div>
+        <div class="home-footer-section home-footer-contact">
+            <h3>Contact</h3>
+            <p>Perumon, Kollam</p>
+            <p>sipsavvy@gmail.com</p>
+            <p>+97-123-456-7890</p>
+        </div>
+        <div class="home-footer-section home-footer-account">
+            <h3>Account</h3>
+            <ul>
+                <li><a href="#">My Account</a></li>
+                <li><a href="#">Login / Register</a></li>
+                <li><a href="#">Cart</a></li>
+                <li><a href="#">Wishlist</a></li>
+                <li><a href="#">Shop</a></li>
+            </ul>
+        </div>
+        <div class="home-footer-section home-footer-quick-link">
+            <h3>Quick Link</h3>
+            <ul>
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">Terms Of Use</a></li>
+                <li><a href="#">FAQ</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </div>
+        <div class="home-footer-section home-footer-exclusive">
+            <h3>Exclusive</h3>
+            <p>Subscribe</p>
+            <p>Get 10% off your first order</p>
+            <form action="#">
+                <input type="email" placeholder="Enter your email" class="footer-contact" required>
+                <button type="submit"><i class="fas fa-paper-plane"> <i class="bi bi-arrow-right-circle"></i> </i></button>
+            </form>
+        </div>
+    </div>
+    <div class="home-footer-bottom">
+        <p>&copy; 2024 by Sip Savvy</p>
+    </div>
+</footer>
