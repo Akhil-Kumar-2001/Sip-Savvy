@@ -45,7 +45,8 @@ const getCoupons = async(req,res)=>{
 
 const addCoupon = async(req,res)=>{
     const { code, discountType, discountValue, startDate, endDate, minimumOrderAmount } = req.body;
-    
+    // console.log(startDate.toLocaleDateString(),endDate.toLocaleDateString())
+    console.log(startDate,endDate)
     if (!code || !discountType || !discountValue || !startDate || !endDate || !minimumOrderAmount) {
         return res.status(400).json({ message: 'All fields are required' });
     }
