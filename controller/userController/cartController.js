@@ -73,48 +73,44 @@ const cart = async (req, res) => {
 
 //------------------------------ add product to cart -----------------------------
 
+
+
 const addToCartPost = async (req, res) => {
   try {
     const productId = req.params.id;
-
     const userId = req.session.user;
     const productPrice = parseInt(req.query.price);
-    const productQuantity = 1;
 
     const ProductDetails = await productSchema.findById(productId);
-
     if (!ProductDetails || ProductDetails.productQuantity <= 0) {
       return res
         .status(STATUS_CODES.NOT_FOUND)
         .json({ error: "Product is out of stock" });
     }
 
-    const checkCart = await cartSchema
-      .findOne({ userId: req.session.user })
-      .populate("items.productId");
+    // Find cart and populate (to get discount for calculations)
+    let cart = await cartSchema.findOne({ userId }).populate("items.productId");
 
-    if (checkCart) {
-      let productExist = false;
-
-      for (let item of checkCart.items) {
-        if (item.productId.id === productId) {
-          productExist = true;
-          return res
-            .status(STATUS_CODES.CONFLICT)
-            .json({ error: "Product is already in the cart" });
-        }
+    // If cart exists, check for product already in cart
+    if (cart) {
+      const foundItem = cart.items.find(item => item.productId._id.toString() === productId);
+      if (foundItem) {
+        return res
+          .status(STATUS_CODES.CONFLICT)
+          .json({ error: "Product is already in the cart" });
       }
-
-      if (!productExist) {
-        checkCart.items.push({
-          productId: ProductDetails._id,
-          productCount: 1,
-          productPrice: productPrice,
-        });
-        await checkCart.save();
-      }
+      // Otherwise, add to cart
+      cart.items.push({
+        productId: ProductDetails._id,
+        productCount: 1,
+        productPrice: productPrice,
+      });
+      // **Recalculate totals using helper**
+      await calculateCartTotals(cart);
+      await cart.save();
     } else {
-      const newCart = new cartSchema({
+      // New cart
+      cart = new cartSchema({
         userId: userId,
         items: [
           {
@@ -124,7 +120,8 @@ const addToCartPost = async (req, res) => {
           },
         ],
       });
-      await newCart.save();
+      await calculateCartTotals(cart);
+      await cart.save();
     }
 
     return res
@@ -138,7 +135,10 @@ const addToCartPost = async (req, res) => {
   }
 };
 
-// ------------------Remove cart item---------------------
+
+
+
+// // ------------------Remove cart item---------------------
 
 const removeItem = async (req, res) => {
   const userId = req.session.user;
@@ -177,51 +177,68 @@ const removeItem = async (req, res) => {
   }
 };
 
+
+
+
+
 //-------------------- Quantity of item in cart ---------------------
 
+
+
 //------------- Increment Function ---------------
+
+
+
+
 
 const increment = async (req, res) => {
   try {
     const { productId } = req.body;
     const userId = req.session.user;
     const max = 10;
-
     if (!userId || !productId) {
       return res.status(STATUS_CODES.BAD_REQUEST).send("Invalid request");
     }
     const product = await productSchema.findById(productId);
-
     if (!product) {
       return res.status(STATUS_CODES.NOT_FOUND).send("Product Not Found");
     }
-    const cart = await cartSchema.findOne({ userId });
-
+    // Populate to get productDiscount during calculations!
+    let cart = await cartSchema.findOne({ userId }).populate("items.productId");
     if (!cart) {
       return res.status(STATUS_CODES.NOT_FOUND).send("Cart not found");
     }
-
     const productInCart = cart.items.find(
-      (product) => product.productId.toString() === productId
+      (item) => item.productId._id.toString() === productId
     );
-
     if (productInCart) {
-      const total = productInCart.productCount + 1;
-      if (total > max) {
+      const newCount = productInCart.productCount + 1;
+      if (newCount > max) {
         return res
           .status(STATUS_CODES.BAD_REQUEST)
           .send("The maximum quantity allowed per product is 10.");
       }
-      if (total > product.productQuantity) {
+      if (newCount > product.productQuantity) {
         return res
           .status(STATUS_CODES.BAD_REQUEST)
           .send(
-            `Only ${product.productQuantity} units of this product is currently available.`
+            `Only ${product.productQuantity} units of this product are currently available.`
           );
       }
-      productInCart.productCount = total;
+      productInCart.productCount = newCount;
+      // ***Always recalculate totals after updating the cart***
+      await calculateCartTotals(cart);
       await cart.save();
-      res.status(STATUS_CODES.OK).json(cart);
+
+      // Populate for accurate send-back (products and their categories)
+      const populatedCart = await cartSchema
+        .findById(cart._id)
+        .populate({
+          path: "items.productId",
+          populate: { path: "productCategory" },
+        });
+
+      res.status(STATUS_CODES.OK).json(populatedCart);
     } else {
       res
         .status(STATUS_CODES.NOT_FOUND)
@@ -231,26 +248,63 @@ const increment = async (req, res) => {
     console.error(
       `Error increasing the product quantity in your cart: ${error}`
     );
-    showError(`Error increasing product quantity in cart: ${error}`);
     res
       .status(STATUS_CODES.INTERNAL_SERVER_ERROR)
       .send("Internal server error");
   }
 };
 
-//------------- Decrement Function ---------------
+
+// Increment Calculation helper function 
+
+async function calculateCartTotals(cart) {
+    let totalPrice = 0;
+    let payableAmount = 0;
+
+    for (const item of cart.items) {
+        let product;
+        if (typeof item.productId === 'object' && item.productId.productDiscount !== undefined) {
+            product = item.productId;
+        } else {
+            // Fallback: repopulate (should rarely happen if populated before)
+            product = await productSchema.findById(item.productId);
+        }
+        const discount = product.productDiscount || 0;
+        const price = item.productPrice * item.productCount;
+        totalPrice += price;
+        payableAmount += Math.floor(price * (1 - discount / 100));
+    }
+
+    if (payableAmount < 1000 && cart.items.length > 0) {
+        payableAmount += 50;
+    }
+
+    cart.totalPrice = Math.round(totalPrice);
+    cart.payableAmount = Math.round(payableAmount);
+}
+
+
+
+
+//------------- Decremen Function ---------------
+
+
+
+
 
 const decrement = async (req, res) => {
   try {
     const userId = req.session.user;
     const { productId } = req.body;
     if (!userId || !productId) {
-      return res.status(STATUS_CODES.BAD_REQUEST).send("Invalid request");
+      return res.status(400).send("Invalid request");
     }
+
     const cart = await cartSchema.findOne({ userId });
     if (!cart) {
-      return res.status(STATUS_CODES.NOT_FOUND).send("Cart not found");
+      return res.status(404).send("Cart not found");
     }
+
     const index = cart.items.findIndex(
       (product) => product.productId.toString() === productId
     );
@@ -260,23 +314,49 @@ const decrement = async (req, res) => {
       if (cart.items[index].productCount <= 0) {
         cart.items.splice(index, 1);
       }
+
+      await cart.populate({ path: "items.productId", populate: { path: "productCategory" } });
+      recalculateCartTotals(cart);
+
       await cart.save();
-      res.status(STATUS_CODES.OK).json(cart);
+
+      // Populate again for response
+      const populatedCart = await cartSchema
+        .findById(cart._id)
+        .populate({ path: "items.productId", populate: { path: "productCategory" } });
+
+      res.status(200).json(populatedCart);
     } else {
-      res
-        .status(STATUS_CODES.NOT_FOUND)
-        .send("This product is not in your cart.");
+      res.status(404).send("This product is not in your cart.");
     }
   } catch (error) {
-    console.error(
-      `Error decrementing  the product quantity in your cart: ${error}`
-    );
-    showError(`Error decrementing product quantity in cart: ${error}`);
-    res
-      .status(STATUS_CODES.INTERNAL_SERVER_ERROR)
-      .send("Internal server error");
+    console.error(`Error decrementing product: ${error}`);
+    res.status(500).send("Internal server error");
   }
 };
+
+
+// Decrement Calculation helper function 
+
+
+function recalculateCartTotals(cart) {
+  let totalPrice = 0;
+  let payableAmount = 0;
+
+  cart.items.forEach(item => {
+    const price = item.productPrice * item.productCount;
+    totalPrice += price;
+    const discountPercent = item.productId.productDiscount || 0;
+    payableAmount += price * (1 - discountPercent / 100);
+  });
+
+  if (payableAmount < 1000 && payableAmount > 0) payableAmount += 50;
+
+  cart.totalPrice = Math.round(totalPrice);
+  cart.payableAmount = Math.round(payableAmount);
+}
+
+
 
 
 //------------- Cart count in the navbar ---------------

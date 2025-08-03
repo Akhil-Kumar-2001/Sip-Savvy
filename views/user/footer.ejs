@@ -1,38 +1,57 @@
 <style>
-    /* Footer Warning Styles */
+    /* Footer Warning Styles - Clean & Elegant */
     .home-footer-warning {
-        background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-        padding: 15px 0;
-        margin-bottom: 0;
-        border-left: 5px solid #c0392b;
-        box-shadow: 0 2px 10px rgba(238, 90, 36, 0.3);
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        border: 1px solid #404040;
+        border-left: 4px solid #ffffff;
+        border-right: 4px solid #ffffff;
+        border-radius: 8px;
+        padding: 16px 0;
+        margin: 15px 20px 0 20px;
+        box-shadow: 
+            0 4px 15px rgba(0, 0, 0, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
         overflow: hidden;
         position: relative;
+    }
+
+    .home-footer-warning::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #ffffff, transparent);
+        opacity: 0.6;
     }
 
     .home-footer-warning .warning-container {
         display: inline-block;
         white-space: nowrap;
-        animation: slide 20s linear infinite;
+        animation: slide 25s linear infinite;
     }
 
     .home-footer-warning p {
         margin: 0;
-        color: #ffffff;
-        font-size: 14px;
+        color: #f0f0f0;
+        font-size: 15px;
         font-weight: 500;
         text-align: center;
-        line-height: 1.5;
-        letter-spacing: 0.5px;
+        line-height: 1.6;
+        letter-spacing: 0.8px;
         display: inline;
-        padding: 0 30px;
+        padding: 0 40px;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
     }
 
     .home-footer-warning strong {
-        color: #fff;
+        color: #ffffff;
         font-weight: 700;
         font-size: 16px;
-        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
     }
 
     @keyframes slide {
@@ -46,103 +65,152 @@
     }
 
     /* Alternative Style Options */
-    /* Option 1: Alert Box Style */
-    .home-footer-warning.alert-style {
-        background: #ffeaa7;
-        border: 2px solid #fdcb6e;
-        border-radius: 8px;
-        margin: 20px;
-        padding: 20px;
-        box-shadow: 0 4px 15px rgba(253, 203, 110, 0.4);
-    }
-
-    .home-footer-warning.alert-style p {
-        color: #2d3436;
-        font-weight: 600;
-    }
-
-    .home-footer-warning.alert-style strong {
-        color: #e17055;
-        font-size: 18px;
-    }
-
-    /* Option 2: Dark Professional Style */
-    .home-footer-warning.dark-style {
-        background: #2c3e50;
-        border-top: 3px solid #f39c12;
-        padding: 18px 25px;
-        position: relative;
-    }
-
-    .home-footer-warning.dark-style::before {
-        content: "⚠️";
-        position: absolute;
-        left: 25px;
-        top: 50%;
-        transform: translateY(-50%);
-        font-size: 20px;
-    }
-
-    .home-footer-warning.dark-style p {
-        color: #ecf0f1;
-        margin-left: 35px;
-        font-size: 15px;
-    }
-
-    .home-footer-warning.dark-style strong {
-        color: #f39c12;
-        font-size: 17px;
-    }
-
-    /* Option 3: Minimalist Border Style */
+    /* Option 1: Minimalist Style */
     .home-footer-warning.minimal-style {
         background: transparent;
-        border: 2px dashed #e74c3c;
-        padding: 15px 20px;
-        margin: 15px 0;
-        border-radius: 5px;
+        border: 1px solid #333333;
+        border-left: 1px solid #333333;
+        padding: 14px 20px;
+        margin-bottom: 0;
+        position: relative;
+        box-shadow: none;
+    }
+
+    .home-footer-warning.minimal-style::before {
+        display: none;
+    }
+
+    .home-footer-warning.minimal-style::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 1px;
+        background: #ffffff;
     }
 
     .home-footer-warning.minimal-style p {
-        color: #2c3e50;
-        font-weight: 500;
-        text-align: center;
+        color: #cccccc;
+        font-weight: 300;
+        font-size: 13px;
+        letter-spacing: 0.5px;
     }
 
     .home-footer-warning.minimal-style strong {
-        color: #e74c3c;
-        font-weight: 800;
+        color: #ffffff;
+        font-weight: 500;
+        font-size: 14px;
+        text-transform: uppercase;
+    }
+
+    /* Option 2: Glass Effect Style */
+    .home-footer-warning.glass-style {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-left: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        padding: 18px 25px;
+        margin: 20px;
+        margin-bottom: 0;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .home-footer-warning.glass-style::before {
+        display: none;
+    }
+
+    .home-footer-warning.glass-style .warning-container {
+        animation: none;
+    }
+
+    .home-footer-warning.glass-style p {
+        color: #f0f0f0;
+        font-weight: 300;
+        font-size: 14px;
+        letter-spacing: 0.6px;
+        white-space: normal;
+    }
+
+    .home-footer-warning.glass-style strong {
+        color: #ffffff;
+        font-weight: 500;
+        font-size: 15px;
+        text-transform: uppercase;
+    }
+
+    /* Option 3: Subtle Glow Style */
+    .home-footer-warning.glow-style {
+        background: #1f1f1f;
+        border: 1px solid #333;
+        border-left: 1px solid #333;
+        padding: 15px 0;
+        margin-bottom: 0;
+        position: relative;
+        box-shadow: 
+            0 0 20px rgba(255, 255, 255, 0.05),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .home-footer-warning.glow-style::before {
+        display: none;
+    }
+
+    .home-footer-warning.glow-style p {
+        color: #d0d0d0;
+        font-weight: 300;
+        font-size: 14px;
+        letter-spacing: 0.7px;
+    }
+
+    .home-footer-warning.glow-style strong {
+        color: #ffffff;
+        font-weight: 500;
+        font-size: 15px;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        text-transform: uppercase;
     }
 
     /* Responsive Design */
     @media (max-width: 768px) {
         .home-footer-warning {
-            padding: 12px 0;
-            margin: 0 10px 20px 10px;
-            border-radius: 5px;
+            padding: 14px 0;
+            margin: 10px 15px 0 15px;
+            border-radius: 6px;
         }
         
         .home-footer-warning p {
             font-size: 13px;
-            line-height: 1.4;
-            padding: 0 20px;
-        }
-        
-        .home-footer-warning strong {
-            font-size: 15px;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .home-footer-warning p {
-            font-size: 12px;
-            padding: 0 15px;
+            line-height: 1.5;
+            padding: 0 25px;
+            letter-spacing: 0.6px;
         }
         
         .home-footer-warning strong {
             font-size: 14px;
-            display: block;
-            margin-bottom: 5px;
+            letter-spacing: 1.2px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .home-footer-warning {
+            padding: 12px 0;
+            margin: 10px;
+            border-radius: 5px;
+        }
+        
+        .home-footer-warning p {
+            font-size: 12px;
+            padding: 0 20px;
+            line-height: 1.4;
+            letter-spacing: 0.5px;
+        }
+        
+        .home-footer-warning strong {
+            font-size: 13px;
+            letter-spacing: 1px;
         }
     }
 </style>
