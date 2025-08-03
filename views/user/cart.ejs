@@ -447,17 +447,7 @@
                     document.getElementById("cart-item-count").innerText =
                       itemCount;
 
-                    if (itemCount === 0) {
-                      document.querySelector(".cart-card").style.display =
-                        "none";
-                      document.getElementById(
-                        "cart-empty-block"
-                      ).style.display = "flex";
-                    } else {
-                      // Optionally, you can reload summary or refetch cart to update totals
-                      // For now, reload page for safety or implement custom summary update
-                      location.reload();
-                    }
+                    location.reload();
                   });
                 } else {
                   Swal.fire("Error!", data.message, "error");
