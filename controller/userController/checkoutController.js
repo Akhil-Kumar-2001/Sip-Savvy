@@ -42,7 +42,16 @@ const checkout = async (req, res) => {
     }
 
     const currentDate = new Date();
+    
+    const usedCoupons = await orderSchema.find(
+      { customer_id: userId },
+      { couponCode: 1, _id: 0 }
+    );
+
+    const usedCouponIds = usedCoupons.map(c => c.couponCode);
+
     const coupons = await couponSchema.find({
+      _id: { $nin: usedCouponIds },   
       startDate: { $lte: currentDate },
       endDate: { $gte: currentDate },
       isActive: true,
