@@ -55,6 +55,7 @@ Explore the live platform here:
 
 ---
 
+```
 Sip-Savvy/
 │
 ├── config/         # Configuration files for environment, database, etc.
