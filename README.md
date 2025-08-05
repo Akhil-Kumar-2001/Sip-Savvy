@@ -57,20 +57,20 @@ Explore the live platform here:
 
 Sip-Savvy/
 │
-├── config/        # Configuration files for environment, database, etc.
-├── constant/      # Constants and enumerations
-├── controller/    # Express route controllers and business logic
-├── middleware/    # Custom middlewares for authentication, logging, etc.
-├── model/         # Database schema/models
-├── public/        # Static assets: CSS, client-side JS, images
-├── routes/        # Application route definitions
-├── service/       # Helper services for business logic
-├── upload/        # File upload handlers and folders
-├── uploads/       # Uploaded files (images, documents)
-├── views/         # EJS templates for rendering HTML pages
-├── app.js         # Main entry point for the Express server
-├── package.json   # Project metadata and dependency definitions
-└── README.md      # Project documentation (this file)
+├── config/         # Configuration files for environment, database, etc.
+├── constant/       # Constants and enumerations
+├── controller/     # Express route controllers and business logic
+├── middleware/     # Middlewares for authentication, logging, etc.
+├── model/          # Database schema/models
+├── public/         # Static assets: CSS, client-side JS, images
+├── routes/         # Application route definitions
+├── service/        # Helper services for business logic
+├── upload/         # File upload handlers and folders
+├── uploads/        # Uploaded files (images, documents)
+├── views/          # EJS templates for rendering HTML pages
+├── app.js          # Main entry point for the Express server
+├── package.json    # Project metadata and dependency definitions
+└── README.md       # Project documentation (this file)
 
 
 ---
