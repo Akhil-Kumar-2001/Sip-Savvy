@@ -318,7 +318,7 @@
               <div class="mt-3">
                 <p class="mb-2">Order Status</p>
                 <h6 class="mb-0 mt-2">
-                  <% if(item.orderStatus==='Pending' ) { %>
+                  <% if(item.orderStatus==='Failed' ) { %>
                   <p class="text-primary"><%= item.orderStatus %></p>
                   <% } else if(item.orderStatus==='Confirmed' ) { %>
                   <p class="text-primary"><%= item.orderStatus %></p>
@@ -377,7 +377,7 @@
                                     </div> -->
 
         <div class="order-actions-top">
-          <% if(item.orderStatus === "Pending") { %>
+          <% if(item.orderStatus === "Failed") { %>
           <a onclick="retryPayment(`<%= item._id %>`)" class="btn submit-btn"
             >Retry Payment</a
           >

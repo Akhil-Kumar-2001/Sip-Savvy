@@ -11,7 +11,9 @@ const cartController = require('../controller/userController/cartController')
 const checkoutController = require('../controller/userController/checkoutController')
 const orderController = require('../controller/userController/orderController')
 const wishlistController = require('../controller/userController/wishlistController')
-const walletController = require('../controller/userController/walletController')
+const walletController = require('../controller/userController/walletController');
+const checkPaymentLock = require('../middleware/checkPaymentCheck');
+
 
 
 //------------------------------- main -------------------------------
@@ -50,7 +52,6 @@ user.get('/product/:category',checkUser,homeController.category)
 user.get('/productdetail/:id',checkUser,productController.productDetail)
 
 
-
 //----------------------------- profile route --------------------------
 
 user.get('/profile',activeUser,profileController.profile)
@@ -59,7 +60,6 @@ user.post('/add-address',activeUser,profileController.addAddress)
 user.get('/remove-address/:index',activeUser,profileController.removeAddress)
 user.get('/edit-address/:index',activeUser,profileController.editAddress)
 user.post('/update-address/:index',activeUser,profileController.updateAddress)
-
 
 
 //----------------------------- Cart route --------------------------
@@ -72,33 +72,44 @@ user.post('/cart/decrement',activeUser,cartController.decrement)
 user.get('/cart/count',activeUser,cartController.cartCount)
 
 
-
 //------------------------------- Wishlist ---------------------------
 
 user.get('/wishlist', activeUser , wishlistController.wishlistView )
-// user.post('/add-wishlist/:productId', activeUser, wishlistController.addToWishlist)
 user.get('/add-wishlist/:id', activeUser, wishlistController.addWishlist )
 user.delete('/delete-wishlist-item/:id', activeUser, wishlistController.deleteFromWishlist)
 user.get('/wishlist/count',activeUser,wishlistController.wishlistCount)
 
-//-------------------- Checout route --------------------
+//-------------------- Checkout route with Payment Lock --------------------
 
-user.get('/checkout',activeUser,checkoutController.checkout)
+// Main checkout route with payment lock check
+user.get('/checkout', activeUser, checkPaymentLock, checkoutController.checkout)
+
+// Address management for checkout
 user.post('/checkout-address',activeUser,checkoutController.addAddress)
-user.get('/conform-order',activeUser,checkoutController.orderPage)
-user.get('/failed-order', activeUser , checkoutController.failedOrder);
-user.post('/place-order/:address/:payment',activeUser,checkoutController.placeOrder)
-user.post('/payment-render/:amount', activeUser , checkoutController.paymentRender)
 user.get('/removeaddress/:index',activeUser,checkoutController.removeAddress)
 user.get('/editaddress/:index',activeUser,checkoutController.editAddress)
 user.post('/updateaddress/:index',activeUser,checkoutController.updateAddress)
-// user.post('/applycoupon', activeUser , checkoutController.coupon)
 
+// Order completion pages
+user.get('/conform-order',activeUser,checkoutController.orderPage)
+user.get('/failed-order', activeUser , checkoutController.failedOrder);
 
+// Payment processing routes
+user.post('/payment-render/:amount', activeUser , checkoutController.paymentRender)
+
+// NEW: Payment Lock System Routes
+user.post('/create-pending-order/:address/:payment', activeUser, checkoutController.createPendingOrder)
+user.post('/update-order-status/:orderId', activeUser, checkoutController.updateOrderStatus)
+user.post('/handle-payment-abandonment/:orderId', activeUser, checkoutController.handlePaymentAbandonment)
+user.post('/handle-payment-failure/:orderId', activeUser, checkoutController.handlePaymentFailure)  // NEW route
+
+// Legacy place order route (still needed for COD and Wallet payments)
+user.post('/place-order/:address/:payment',activeUser,checkoutController.placeOrder)
+
+// Coupon management
 user.post('/get-coupon',activeUser,checkoutController.getCoupon)
 user.post('/apply-coupon',activeUser,checkoutController.applyCoupon)
 user.put('/remove-coupon',activeUser,checkoutController.removeCoupon)
-
 
 
 // ------------- Order route ------------------
@@ -110,13 +121,11 @@ user.post('/download-invoice/:orderId', activeUser , orderController.Invoice);
 user.post("/retryRazorPay",activeUser,orderController.retryRazorPay)
 user.post('/retryPayment',activeUser,orderController.retryPayment)
 
+user.get('/check-payment-status', activeUser, checkoutController.checkPaymentStatus);
 
 //--------Wallet route---------
 
-
 user.get('/wallet',activeUser,walletController.walletPage)
-
-
 
 
 //------------------ login using google ------------------ 
@@ -124,7 +133,6 @@ user.get('/wallet',activeUser,walletController.walletPage)
 user.get('/auth/google',userController.googleAuth);
 
 user.get( '/auth/google/callback',userController.googleAuthCallback);
-
 
 
 // -------------------Forgot password---------------------
@@ -136,11 +144,7 @@ user.post('/resetpassword' , forgotPassword.resetPasswordPost)
 user.get('/forgotpassword-resend' , forgotPassword.forgotResend)
 
 
-
-
 //--------------------Logout------------------------
-
-
 
 user.get('/logout',userController.logout)
 

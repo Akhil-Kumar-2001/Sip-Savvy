@@ -26,13 +26,12 @@ const schema = new mongoose.Schema(
         product_price: {
           type: Number,
         },
-
         product_image: {
           type: String,
         },
         product_status: {
           type: String,
-          enum: ["Confirmed", "Pending", "Delivered", "Returned", "Cancelled"],
+          enum: ["Confirmed", "Pending", "Delivered","Failed", "Returned", "Cancelled"],
           default: "Pending",
         },
         product_discount: {
@@ -83,18 +82,34 @@ const schema = new mongoose.Schema(
         "Pending",
         "Shipped",
         "Confirmed",
+        "Failed",
         "Delivered",
         "Cancelled",
         "Returned",
         "Return Request",
         "Return Rejected",
+        "Payment Abandoned", // New status for abandoned payments
       ],
     },
     returnReason: {
       type: String,
     },
+    // Add expiry date for pending orders
+    expiresAt: {
+      type: Date,
+      default: function() {
+        // Only set expiry for pending orders
+        if (this.orderStatus === 'Pending') {
+          return new Date(Date.now() + 10 * 60 * 1000); // 10 minutes from now
+        }
+        return undefined;
+      }
+    }
   },
   { timestamps: true }
 );
+
+// Create TTL index for automatic cleanup of pending orders
+schema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
 module.exports = mongoose.model("Order", schema);
