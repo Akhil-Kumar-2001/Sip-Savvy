@@ -63,7 +63,7 @@ const checkout = async (req, res) => {
 
     const usedCouponIds = usedCoupons
       .map((c) => c.couponCode)
-      .filter((id) => mongoose.Types.ObjectId.isValid(id)); 
+      .filter((id) => mongoose.Types.ObjectId.isValid(id));
 
     const coupons = await couponSchema.find({
       _id: { $nin: usedCouponIds },
@@ -81,7 +81,7 @@ const checkout = async (req, res) => {
     if (!wallet) {
       wallet = { balance: 0 };
     }
-    const test = req.flash('alert');
+    const test = req.flash("alert");
     console.log(test);
     res.render("user/checkout", {
       title: "Checkout",
@@ -100,48 +100,44 @@ const checkout = async (req, res) => {
   }
 };
 
-
 const checkPaymentStatus = async (req, res) => {
   try {
     const userId = req.session.user;
-    
+
     if (!userId) {
       return res.status(STATUS_CODES.UNAUTHORIZED).json({
         success: false,
-        message: "User not authenticated"
+        message: "User not authenticated",
       });
     }
 
     // Check for pending payment within last 10 minutes
     const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
-    
+
     const pendingOrder = await orderSchema.findOne({
       customer_id: userId,
       orderStatus: "Pending",
-      createdAt: { $gte: tenMinutesAgo }
+      createdAt: { $gte: tenMinutesAgo },
     });
 
     return res.status(STATUS_CODES.OK).json({
       paymentLocked: !!pendingOrder,
       pendingOrderId: pendingOrder?._id,
-      message: pendingOrder ? "Payment in progress" : "No pending payment"
+      message: pendingOrder ? "Payment in progress" : "No pending payment",
     });
-    
   } catch (error) {
-    console.error('Error checking payment status:', error);
+    console.error("Error checking payment status:", error);
     return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
       success: false,
-      message: "Error checking payment status"
+      message: "Error checking payment status",
     });
   }
 };
 
 // ---------------- order palacing ---------------
 
-
 const placeOrder = async (req, res) => {
   try {
-    console.log("placeOrder function called")
     const userId = req.session.user;
     const addressIndex = parseInt(req.params.address);
     const paymentMode = parseInt(req.params.payment);
@@ -164,12 +160,13 @@ const placeOrder = async (req, res) => {
     }
 
     const paymentDetails = ["Cash on delivery", "Wallet", "razorpay"];
-    
+
     // For Razorpay payments, don't create a new order - just return an error
     if (paymentDetails[paymentMode] === "razorpay") {
       return res.status(STATUS_CODES.BAD_REQUEST).json({
         success: false,
-        message: "Razorpay orders should use the pending order flow, not direct placement.",
+        message:
+          "Razorpay orders should use the pending order flow, not direct placement.",
       });
     }
 
@@ -225,7 +222,7 @@ const placeOrder = async (req, res) => {
       wallet.balance -= cartItems.payableAmount;
       await wallet.save();
     }
-    
+
     // Handle COD validation
     if (paymentDetails[paymentMode] === "Cash on delivery") {
       if (cartItems.payableAmount > 1000) {
@@ -287,7 +284,6 @@ const placeOrder = async (req, res) => {
     });
   }
 };
-
 
 const createPendingOrder = async (req, res) => {
   try {
@@ -455,6 +451,8 @@ const updateOrderStatus = async (req, res) => {
     return res.status(STATUS_CODES.OK).json({
       success: true,
       message: "Order confirmed successfully!",
+      orderStatus: "Confirmed", 
+      orderId: order._id,
     });
   } catch (error) {
     console.error(`Error updating order status: ${error}`);
@@ -464,7 +462,6 @@ const updateOrderStatus = async (req, res) => {
     });
   }
 };
-
 
 const paymentCleanupService = {
   cleanupAbandonedPayments: async () => {
@@ -500,10 +497,6 @@ const paymentCleanupService = {
     paymentCleanupService.cleanupAbandonedPayments();
   },
 };
-
-
-
-
 
 const handlePaymentAbandonment = async (req, res) => {
   try {
@@ -1032,7 +1025,6 @@ const removeCoupon = async (req, res) => {
   }
 };
 
-
 module.exports = {
   checkout,
   placeOrder,
@@ -1051,5 +1043,5 @@ module.exports = {
   createPendingOrder,
   updateOrderStatus,
   handlePaymentFailure,
-  checkPaymentStatus
+  checkPaymentStatus,
 };
